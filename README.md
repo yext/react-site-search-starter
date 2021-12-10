@@ -1,30 +1,34 @@
-# Answers Headless React
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) template.
 
-answers-headless-react is the official React UI Bindings layer for @yext/answers-headless.
-It lets your React components read data from a answers-headless, and dispatch actions to update state.
+## Available Scripts
 
-<div>
-  <a href="https://npmjs.org/package/@yext/answers-headless-react">
-    <img src="https://img.shields.io/npm/v/@yext/answers-headless-react" alt="NPM version"/>
-  </a>
-  <a href="./LICENSE">
-    <img src="https://img.shields.io/badge/License-BSD%203--Clause-blue.svg" alt="License"/>
-  </a>
-  <a href='https://coveralls.io/github/yext/answers-headless-react?branch=main'>
-    <img src='https://coveralls.io/repos/github/yext/answers-headless-react/badge.svg?branch=main' alt='Coverage Status' />
-  </a>
-</div>
-<br>
+In the project directory, you can run:
 
-## License
+### `npm start`
 
-Yext Answers-core is an open-sourced library licensed under the [BSD-3 License](./LICENSE).
+Runs the app in the development mode.<br />
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## Development
+The page will reload if you make edits.<br />
+You will also see any lint errors in the console.
 
-First, run `npm install`, and then `npm run install-sample-app` to set up the testing app.
+### `npm test`
 
-Then, run `npm start` to kick off the development server.
-Finally, run `npm run watch` (in a separate terminal) to rebuild the react bindings layer whenever source code changes are mode.
+Launches the test runner in the interactive watch mode.<br />
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-The development server will automatically reload when updates are made to the build output folder, or any of the sample-app source code.
+### `npm run build`
+
+Builds the app for production to the `build` folder.<br />
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.<br />
+Your app is ready to be deployed!
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Learn More
+
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+
+To learn React, check out the [React documentation](https://reactjs.org/).
