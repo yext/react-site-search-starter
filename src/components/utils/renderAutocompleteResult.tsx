@@ -7,7 +7,7 @@ export interface AutocompleteResultCssClasses {
 }
 
 export const builtInCssClasses = {
-  option: 'flex',
+  option: 'flex whitespace-pre-wrap',
   icon: 'w-8 mx-2'
 }
 
