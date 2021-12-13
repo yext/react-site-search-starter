@@ -153,7 +153,7 @@ export default function InputDropdown({
       if (newSectionIndex < 0) {
         newSectionIndex = undefined;
         onInputChange(latestUserInput);
-        onDropdownLeave && onDropdownLeave(latestUserInput);
+        onDropdownLeave?.(latestUserInput);
       } else if (newSectionIndex > numSections - 1) {
         newSectionIndex = numSections - 1;
       }
