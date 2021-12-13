@@ -17,11 +17,11 @@ If you would like to customize the sample site, first fork the repo from Github 
   - Note: The URL will need to be updated if you are cloning a forked site
 - To run the app in development mode, run `npm start`
 
-### Customizing the search site
+### Customizing the Search Site
 First open up `src/App.tsx` in a code editor and update the `apiKey` and the `experienceKey` to match the keys associated with your
 answers experience configuration.
 
-Next modify the `const routes` object so that the `verticalKeys` for the pages match the verticalKeys for your search experience.
+Modify the `const routes` object so that the `verticalKeys` for the pages match the verticalKeys for your search experience.
 Feel free to remove any routes which are not needed for your experience. If you would like to add a new page, copy one of the
 existing pages from `src/pages` and modify it to suit your needs.
 
@@ -31,7 +31,7 @@ keys needed for your search experience. To view the configuration options for ea
 
 Finally, update the config inside `src/utils/constants` to match the api and experience keys used above.
 
-## Creating a production build
+## Creating a Production Build
 
 To create an optimized production build, run `npm run build`
 The site will be available in the `build` folder which can be served with a command such as `npx serve -s build`
