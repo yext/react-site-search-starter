@@ -14,13 +14,13 @@ export default function renderHighlightedValue ({ value = '', matchedSubstrings 
   let curr = 0;
   for (let { offset, length } of substrings) {
     if (offset > curr) {
-      highlightedJSX.push(<span key={curr}>{value.substring(curr, offset)}</span>)
+      highlightedJSX.push(<span className='whitespace-pre-wrap' key={curr}>{value.substring(curr, offset)}</span>)
     }
     highlightedJSX.push(<strong key={offset}>{value.substring(offset, offset + length)}</strong>)
     curr = offset + length;
   }
   if (curr < value.length) {
-    highlightedJSX.push(<span key={curr}>{value.substring(curr)}</span>)
+    highlightedJSX.push(<span className='whitespace-pre-wrap' key={curr}>{value.substring(curr)}</span>)
   }
   return <>{highlightedJSX}</>;
 }
