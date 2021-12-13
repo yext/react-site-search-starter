@@ -47,10 +47,7 @@ export default function Facets (props: FacetsProps): JSX.Element {
   }
 
   const handleFacetOptionChange = (fieldId: string, option: DisplayableFacetOption) => {
-    option.selected
-      ?  answersActions.unselectFacetOption(fieldId, option)
-      :  answersActions.selectFacetOption(fieldId, option);
-    
+    answersActions.setFacetOption(fieldId, option, option.selected);
     if (searchOnChange) { 
       executeSearch();
     }
