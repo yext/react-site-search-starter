@@ -90,10 +90,11 @@ export default function InputDropdown({
   }
 
   let numSections = 0;
-  const childrenWithProps = recursivelyMapChildren(children, (child, index) => {
+  const childrenWithProps = recursivelyMapChildren(children, child => {
     if (!(React.isValidElement(child) && child.type === DropdownSection)) {
       return child;
     }
+    const sectionIndex = numSections;
     numSections++;
 
     let childProps = child.props as DropdownSectionProps;
@@ -111,19 +112,19 @@ export default function InputDropdown({
       setFocusedOptionId(focusedOptionId);
     };
 
-    if (focusedSectionIndex === undefined) {
+    if (sectionIndex === undefined) {
       return React.cloneElement(child, { 
         onLeaveSectionFocus,
         options: modifiedOptions,
         isFocused: false,
-        key: `${index}-${childrenKey}`
+        key: `${sectionIndex}-${childrenKey}`
       });
-    } else if (index === focusedSectionIndex) {
+    } else if (sectionIndex === focusedSectionIndex) {
       return React.cloneElement(child, {
         onLeaveSectionFocus,
         options: modifiedOptions,
         isFocused: true,
-        key: `${index}-${childrenKey}`,
+        key: `${sectionIndex}-${childrenKey}`,
         onFocusChange: modifiedOnFocusChange
       });
     } else {
@@ -131,7 +132,7 @@ export default function InputDropdown({
         onLeaveSectionFocus,
         options: modifiedOptions,
         isFocused: false,
-        key: `${index}-${childrenKey}`
+        key: `${sectionIndex}-${childrenKey}`
       });
     }
   });
