@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { provideAnswersHeadless, VerticalResults, AnswersHeadless, UniversalLimit } from '@yext/answers-headless-react';
-import { answersConfig } from '../config/answersConfig';
+import { answersHeadlessConfig } from '../config/answersHeadlessConfig';
 import useDebouncedFunction from './useDebouncedFunction';
 import useComponentMountStatus from "./useComponentMountStatus";
 
@@ -22,7 +22,7 @@ export function useEntityPreviews(headlessId: string, debounceTime: number):[ En
   const headlessRef = useRef<AnswersHeadless>();
   if (!headlessRef.current) {
     headlessRef.current = provideAnswersHeadless({
-      ...answersConfig,
+      ...answersHeadlessConfig,
       headlessId
     });
   }
