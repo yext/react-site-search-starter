@@ -7,7 +7,9 @@
 </div>
 <br>
 
-The React Site Search Starter is an example repo of an Answers experience built with React.
+The React Site Search Starter is an example repo of an Answers experience built with React and
+[Answers Headless](https://github.com/yext/answers-headless) using
+[Answers Headless React](https://github.com/yext/answers-headless-react) bindings.
 It is intended to be forked and modified to create a custom Answers experience.
 
 ## Getting Started
