@@ -112,14 +112,7 @@ export default function InputDropdown({
       setFocusedOptionId(focusedOptionId);
     };
 
-    if (focusedSectionIndex === undefined) {
-      return React.cloneElement(child, { 
-        onLeaveSectionFocus,
-        options: modifiedOptions,
-        isFocused: false,
-        key: `${currentSectionIndex}-${childrenKey}`
-      });
-    } else if (focusedSectionIndex === currentSectionIndex) {
+    if (focusedSectionIndex === currentSectionIndex) {
       return React.cloneElement(child, {
         onLeaveSectionFocus,
         options: modifiedOptions,
