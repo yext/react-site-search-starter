@@ -56,7 +56,7 @@ padding around the `Navigation` component can be adjusted by passing in the foll
 
 The `cssCompositionMethod` prop customizes how the `customCssClasses` is combined with the built-in styling for the component.
 - 'merge' keeps the component's built-in classes and adds the custom classes to them (default).
-- 'replace' ignore all of the component’s built-in classes and only uses the custom classes.
+- 'replace' ignores all of the component’s built-in classes and only uses the custom classes.
 - 'assign' keeps the component's built-in classes, however custom classes will completely override their associated built-in classes.
  
 For example, suppose a component has a built-in theme of `{ icon: 'flex', button: 'px-4' }`,
