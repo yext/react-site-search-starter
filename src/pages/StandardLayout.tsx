@@ -1,6 +1,6 @@
 import Navigation from '../components/Navigation';
 import { useAnswersState } from '@yext/answers-headless-react';
-import { universalResultsConfig } from '../universalResultsConfig';
+import { universalResultsConfig } from '../config/universalResultsConfig';
 import { LayoutComponent } from '../PageRouter';
 import SearchBar from '../components/SearchBar';
 import SampleVisualSearchBar from '../components/VisualAutocomplete/SampleVisualSearchBar';

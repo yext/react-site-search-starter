@@ -1,5 +1,5 @@
-import { StandardCard } from './components/cards/StandardCard';
-import { VerticalConfig } from './components/UniversalResults';
+import { StandardCard } from '../components/cards/StandardCard';
+import { VerticalConfig } from '../components/UniversalResults';
 
 export type UniversalResultsConfig = Record<string, VerticalConfig>;
 

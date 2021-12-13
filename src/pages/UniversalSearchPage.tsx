@@ -1,6 +1,6 @@
 import UniversalResults from '../components/UniversalResults';
 import DirectAnswer from '../components/DirectAnswer';
-import { UniversalResultsConfig } from '../universalResultsConfig';
+import { UniversalResultsConfig } from '../config/universalResultsConfig';
 import SpellCheck from '../components/SpellCheck';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
 
