@@ -14,7 +14,7 @@ It is intended to be forked and modified to create a custom Answers experience.
 
 ## Getting Started
 
-If you would like to customize the sample site, first fork the repo from Github using the 'Fork' button on the top right of the Github page
+To customize the sample site, first fork the repo from Github using the 'Fork' button on the top right of the Github page
 - Next, clone the repo with the command: `git clone https://github.com/yext/react-site-search-starter.git`
   - Note: The URL will need to be updated if you are cloning a forked site
 - To run the app in development mode, run `npm start`
