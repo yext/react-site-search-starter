@@ -1,38 +1,27 @@
 const universalSearchTests = [
   {
-    name: 'universal-search',
-  },
-  {
-    name: 'universal-search--spellcheck',
-    commands: [{ type: 'search', params: ['office sparce', 'input'] }]
+    name: 'universal-search'
   }
 ];
 
 const verticalSearchTests = [
   {
     name: 'vertical-search',
-    commands: [{ type: 'click', params: ['a[href="/people"]'] }]
+    commands: [{ type: 'click', params: ['a[href="/events"]'] }]
   },
   {
     name: 'vertical-search',
     commands: [
-      { type: 'click', params: ['a[href="/people"]'] },
-      { type: 'search', params: ['engineer', 'input'] }
-    ]
+      { type: 'click', params: ['a[href="/jobs"]'] }]
   },
   {
-    name: 'vertical-search--financial-professional',
-    commands: [
-      { type: 'click', params: ['a[href="/financial_professionals"]'] },
-      { type: 'search', params: ['connor', 'input'] }
-    ]
+    name: 'vertical-search--locations',
+    commands: [{ type: 'click', params: ['a[href="/locations"]'] }]
   },
   {
-    name: 'vertical-search--healthcare-professional',
+    name: 'vertical-search--faqs',
     commands: [
-      { type: 'click', params: ['a[href="/healthcare_professionals"]'] },
-      { type: 'search', params: ['bob', 'input'] }
-    ]
+      { type: 'click', params: ['a[href="/faqs"]'] }]
   }
 ];
 
