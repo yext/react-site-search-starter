@@ -31,9 +31,7 @@ const StandardLayout: LayoutComponent = ({ page }) => {
         />
         : <SampleVisualSearchBar />
       }
-      <Navigation links={navLinks} customCssClasses={
-        { nav: 'pt-10' }
-      }/>
+      <Navigation links={navLinks} />
       {page}
     </>
   )
