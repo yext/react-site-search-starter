@@ -25,6 +25,7 @@ interface Props {
   renderLogo?: () => JSX.Element | null,
   onInputChange: (value: string) => void,
   onInputFocus: (value: string) => void,
+  onDropdownLeave?: (value: string) => void,
   cssClasses?: InputDropdownCssClasses
 }
 
@@ -66,6 +67,7 @@ export default function InputDropdown({
   renderLogo = () => null,
   onInputChange,
   onInputFocus,
+  onDropdownLeave,
   cssClasses = {}
 }: React.PropsWithChildren<Props>): JSX.Element | null {
   const [{
@@ -145,6 +147,7 @@ export default function InputDropdown({
       if (newSectionIndex < 0) {
         newSectionIndex = undefined;
         onInputChange(latestUserInput);
+        onDropdownLeave?.(latestUserInput);
       } else if (newSectionIndex > numSections - 1) {
         newSectionIndex = numSections - 1;
       }

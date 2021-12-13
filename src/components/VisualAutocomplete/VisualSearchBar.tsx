@@ -221,6 +221,9 @@ export default function VisualSearchBar({
             updateEntityPreviews(value);
             autocompletePromiseRef.current = executeAutocomplete();
           }}
+          onDropdownLeave={value => {
+            updateEntityPreviews(value);
+          }}
           renderSearchButton={() =>
             <SearchButton
               className={cssClasses.submitButton}
