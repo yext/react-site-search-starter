@@ -1,4 +1,5 @@
 import { AppliedQueryFilter, DisplayableFacet } from '@yext/answers-headless-react';
+//TODO (yen-tt): update this to be import from @yext/answers-headless-react when new version is publish
 import { SelectableFilter } from '@yext/answers-headless/lib/esm/models/utils/selectablefilter';
 import { DisplayableFilter } from '../models/displayableFilter';
 import { getFilterDisplayValue } from './filterutils';

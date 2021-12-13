@@ -1,4 +1,5 @@
 import { AppliedQueryFilter } from "@yext/answers-headless-react";
+//TODO (yen-tt): update this to be import from @yext/answers-headless-react when new version is publish
 import { FiltersState } from "@yext/answers-headless/lib/esm/models/slices/filters";
 import { DisplayableFilter } from "../models/displayableFilter";
 import { GroupedFilters } from "../models/groupedFilters";
