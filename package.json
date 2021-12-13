@@ -82,7 +82,7 @@
     "test": "node scripts/test.js --watchAll=false",
     "wcag": "./tests/wcag/index.js",
     "eslint": "eslint",
-    "generate-notices": "generate-license-file --input package.json --output THIRD-PARTY-NOTICES"
+    "generate-notices": "generate-license-file --input package.json --output THIRD-PARTY-NOTICES && node ./scripts/remove-repo-license.js"
   },
   "eslintConfig": {
     "extends": [
