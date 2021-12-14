@@ -135,11 +135,7 @@ export default function VisualSearchBar({
       if (hideVerticalLinks) {
         return;
       }
-      /**
-       * TODO (yen-tt): mocked data is used for testing purposes.
-       * Should be replace with result.verticalKeys when backend work is done.
-       */
-      const verticalKeys = ['faqs', 'events'];
+      const verticalKeys = result.verticalKeys;
       let verticalLinks: VerticalLink[]|undefined = verticalKeys?.map(verticalKey => {
         return { 
           label: verticalKeyToLabel ? verticalKeyToLabel(verticalKey) : verticalKey,
