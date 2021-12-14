@@ -198,5 +198,9 @@
     "jest": "^27.2.0",
     "msw": "^0.35.0",
     "uuid": "^8.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yext/react-site-search-starter.git"
   }
 }
