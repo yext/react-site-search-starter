@@ -25,6 +25,7 @@ interface Props {
   renderLogo?: () => JSX.Element | null,
   onInputChange: (value: string) => void,
   onInputFocus: (value: string) => void,
+  onDropdownLeave?: (value: string) => void,
   cssClasses?: InputDropdownCssClasses
 }
 
@@ -66,6 +67,7 @@ export default function InputDropdown({
   renderLogo = () => null,
   onInputChange,
   onInputFocus,
+  onDropdownLeave,
   cssClasses = {}
 }: React.PropsWithChildren<Props>): JSX.Element | null {
   const [{
@@ -90,10 +92,11 @@ export default function InputDropdown({
   }
 
   let numSections = 0;
-  const childrenWithProps = recursivelyMapChildren(children, (child, index) => {
+  const childrenWithProps = recursivelyMapChildren(children, child => {
     if (!(React.isValidElement(child) && child.type === DropdownSection)) {
       return child;
     }
+    const currentSectionIndex = numSections;
     numSections++;
 
     let childProps = child.props as DropdownSectionProps;
@@ -111,19 +114,12 @@ export default function InputDropdown({
       setFocusedOptionId(focusedOptionId);
     };
 
-    if (focusedSectionIndex === undefined) {
-      return React.cloneElement(child, { 
-        onLeaveSectionFocus,
-        options: modifiedOptions,
-        isFocused: false,
-        key: `${index}-${childrenKey}`
-      });
-    } else if (index === focusedSectionIndex) {
+    if (focusedSectionIndex === currentSectionIndex) {
       return React.cloneElement(child, {
         onLeaveSectionFocus,
         options: modifiedOptions,
         isFocused: true,
-        key: `${index}-${childrenKey}`,
+        key: `${currentSectionIndex}-${childrenKey}`,
         onFocusChange: modifiedOnFocusChange
       });
     } else {
@@ -131,7 +127,7 @@ export default function InputDropdown({
         onLeaveSectionFocus,
         options: modifiedOptions,
         isFocused: false,
-        key: `${index}-${childrenKey}`
+        key: `${currentSectionIndex}-${childrenKey}`
       });
     }
   });
@@ -151,6 +147,7 @@ export default function InputDropdown({
       if (newSectionIndex < 0) {
         newSectionIndex = undefined;
         onInputChange(latestUserInput);
+        onDropdownLeave?.(latestUserInput);
       } else if (newSectionIndex > numSections - 1) {
         newSectionIndex = numSections - 1;
       }
