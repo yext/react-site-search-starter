@@ -79,7 +79,7 @@ export function AppliedFiltersDisplay ({
         console.error('A Filter with a NearFilterValue is not a supported RemovableFilter.');
         return;
       }
-      answersAction.unselectFacetOption(fieldId, { matcher, value });
+      answersAction.setFacetOption(fieldId, { matcher, value }, false);
       answersAction.executeVerticalQuery();
     }
   

@@ -1,6 +1,5 @@
-import { SearchIntent } from "@yext/answers-headless";
 import { useLayoutEffect } from "react";
-import { useAnswersActions } from "@yext/answers-headless-react";
+import { useAnswersActions, SearchIntent } from "@yext/answers-headless-react";
 import { executeSearch, getSearchIntents, updateLocationIfNeeded } from "../utils/search-operations";
 
 /**
