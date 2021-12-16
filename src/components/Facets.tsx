@@ -1,6 +1,6 @@
 import { useAnswersState, useAnswersActions, DisplayableFacetOption } from '@yext/answers-headless-react'
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
-import Facet, { FacetTextConfig } from './Facet';
+import Facet,{ OverridableFacetConfig } from './Facet';
 import { Divider } from './StaticFilters';
 
 
@@ -9,7 +9,7 @@ interface FacetsProps {
   searchable?: boolean,
   collapsible?: boolean,
   defaultExpanded?: boolean,
-  facetConfigs?: Record<string, FacetTextConfig>,
+  facetConfigs?: Record<string, OverridableFacetConfig>,
   customCssClasses?: FacetsCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
@@ -57,15 +57,18 @@ export default function Facets (props: FacetsProps): JSX.Element {
     .filter(facet => facet.options?.length > 0)
     .map((facet, index, facetArray) => {
       const isLastFacet = index === facetArray.length -1;
-      const config = facetConfigs?.[facet.fieldId] ?? {};
+      const overrideConfig = facetConfigs?.[facet.fieldId] ?? {};
+      const config = {
+        searchable,
+        collapsible,
+        defaultExpanded,
+        ...overrideConfig
+      }
       return (
         <div key={facet.fieldId}>
           <Facet
             facet={facet}
             {...config}
-            searchable={searchable}
-            collapsible={collapsible}
-            defaultExpanded={defaultExpanded}
             onToggle={handleFacetOptionChange} />
           {!isLastFacet && <Divider customCssClasses={{ divider: cssClasses.divider }}/>}
         </div>

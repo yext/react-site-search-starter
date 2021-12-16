@@ -5,16 +5,16 @@ import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCs
 
 export type onFacetChangeFn = (fieldId: string, option: DisplayableFacetOption) => void
 
-export interface FacetTextConfig {
+export interface OverridableFacetConfig {
+  searchable?: boolean,
   placeholderText?: string,
-  label?: string
+  label?: string,
+  collapsible?: boolean,
+  defaultExpanded?: boolean
 }
 
-interface FacetProps extends FacetTextConfig {
+interface FacetProps extends OverridableFacetConfig {
   facet: DisplayableFacet,
-  searchable?: boolean,
-  collapsible?: boolean,
-  defaultExpanded?: boolean,
   onToggle: onFacetChangeFn,
   customCssclasses?: FacetCssClasses,
   cssCompositionMethod?: CompositionMethod
@@ -44,7 +44,7 @@ export default function Facet(props: FacetProps): JSX.Element {
     collapsible,
     defaultExpanded,
     label,
-    placeholderText,
+    placeholderText='Search here...',
     customCssclasses,
     cssCompositionMethod 
   } = props;
@@ -70,7 +70,7 @@ export default function Facet(props: FacetProps): JSX.Element {
           && <input
             className='Facet__search' 
             type='text' 
-            placeholder={placeholderText || 'Search here...'} 
+            placeholder={placeholderText} 
             value={filterValue} 
             onChange={e => setFilterValue(e.target.value)}/>}
         <div className={cssClasses.optionsContainer}>
