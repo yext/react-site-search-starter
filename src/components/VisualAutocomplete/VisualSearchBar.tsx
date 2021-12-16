@@ -202,40 +202,38 @@ export default function VisualSearchBar({
 
   return (
     <div className={cssClasses.container}>
-      <div className={cssClasses.inputDropdownContainer}>
-        <InputDropdown
-          inputValue={query}
-          placeholder={placeholder}
-          screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
-          screenReaderInstructionsId={screenReaderInstructionsId}
-          screenReaderText={getScreenReaderText(autocompleteResults)}
-          onSubmit={executeQuery}
-          onInputChange={value => {
-            answersActions.setQuery(value);
-          }}
-          onInputFocus={value => {
-            updateEntityPreviews(value);
-            autocompletePromiseRef.current = executeAutocomplete();
-          }}
-          onDropdownLeave={value => {
-            updateEntityPreviews(value);
-          }}
-          renderSearchButton={() =>
-            <SearchButton
-              className={cssClasses.submitButton}
-              handleClick={executeQuery}
-              isLoading={isLoading}
-            />
-          }
-          renderLogo={() => <YextLogoIcon />}
-          cssClasses={cssClasses}
-          forceHideDropdown={autocompleteResults.length === 0 && verticalResultsArray.length === 0 && !haveRecentSearches}
-        >
-          {!hideRecentSearches && renderRecentSearches()}
-          {renderQuerySuggestions()}
-          {entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray)}
-        </InputDropdown>
-      </div>
+      <InputDropdown
+        inputValue={query}
+        placeholder={placeholder}
+        screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
+        screenReaderInstructionsId={screenReaderInstructionsId}
+        screenReaderText={getScreenReaderText(autocompleteResults)}
+        onSubmit={executeQuery}
+        onInputChange={value => {
+          answersActions.setQuery(value);
+        }}
+        onInputFocus={value => {
+          updateEntityPreviews(value);
+          autocompletePromiseRef.current = executeAutocomplete();
+        }}
+        onDropdownLeave={value => {
+          updateEntityPreviews(value);
+        }}
+        renderSearchButton={() =>
+          <SearchButton
+            className={cssClasses.submitButton}
+            handleClick={executeQuery}
+            isLoading={isLoading}
+          />
+        }
+        renderLogo={() => <YextLogoIcon />}
+        cssClasses={cssClasses}
+        forceHideDropdown={autocompleteResults.length === 0 && verticalResultsArray.length === 0 && !haveRecentSearches}
+      >
+        {!hideRecentSearches && renderRecentSearches()}
+        {renderQuerySuggestions()}
+        {entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray)}
+      </InputDropdown>
     </div>
   )
 }

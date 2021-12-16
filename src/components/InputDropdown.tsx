@@ -1,9 +1,12 @@
+import classNames from "classnames";
 import React, { useReducer, KeyboardEvent, useRef, useEffect, useState, FocusEvent } from "react"
 import DropdownSection, { DropdownSectionProps } from "./DropdownSection";
 import ScreenReader from "./ScreenReader";
 import recursivelyMapChildren from './utils/recursivelyMapChildren';
 
 export interface InputDropdownCssClasses {
+  inputDropdownContainer?: string,
+  inputDropdownContainer___active?: string,
   dropdownContainer?: string,
   inputElement?: string,
   inputContainer?: string,
@@ -206,8 +209,13 @@ export default function InputDropdown({
     }
   }
 
+  const inputDropdownContainerCssClasses = cssClasses.inputDropdownContainer___active
+    ? classNames(cssClasses.inputDropdownContainer, 
+      { [cssClasses.inputDropdownContainer___active]: shouldDisplayDropdown })
+    : cssClasses.inputDropdownContainer;
+
   return (
-    <div ref={inputDropdownRef} onBlur={handleBlur}>
+    <div className={inputDropdownContainerCssClasses} ref={inputDropdownRef} onBlur={handleBlur}>
       <div className={cssClasses?.inputContainer}>
         <div className={cssClasses.logoContainer}>
           {renderLogo()}
