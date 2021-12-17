@@ -1,6 +1,6 @@
 import { useAnswersState, useAnswersActions, DisplayableFacetOption } from '@yext/answers-headless-react'
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
-import Facet,{ OverridableFacetConfig } from './Facet';
+import Facet,{ FacetConfig } from './Facet';
 import { Divider } from './StaticFilters';
 
 
@@ -9,7 +9,7 @@ interface FacetsProps {
   searchable?: boolean,
   collapsible?: boolean,
   defaultExpanded?: boolean,
-  facetConfigs?: Record<string, OverridableFacetConfig>,
+  facetConfigs?: Record<string, FacetConfig>,
   customCssClasses?: FacetsCssClasses,
   cssCompositionMethod?: CompositionMethod
 }

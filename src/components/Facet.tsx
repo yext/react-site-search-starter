@@ -5,7 +5,7 @@ import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCs
 
 export type onFacetChangeFn = (fieldId: string, option: DisplayableFacetOption) => void
 
-export interface OverridableFacetConfig {
+export interface FacetConfig {
   searchable?: boolean,
   placeholderText?: string,
   label?: string,
@@ -13,7 +13,7 @@ export interface OverridableFacetConfig {
   defaultExpanded?: boolean
 }
 
-interface FacetProps extends OverridableFacetConfig {
+interface FacetProps extends FacetConfig {
   facet: DisplayableFacet,
   onToggle: onFacetChangeFn,
   customCssclasses?: FacetCssClasses,
