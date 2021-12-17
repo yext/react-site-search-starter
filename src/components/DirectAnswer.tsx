@@ -35,7 +35,6 @@ const defaultCSSClasses: DirectAnswerCssClasses = {
 
 export default function DirectAnswer(props: DirectAnswerProps): JSX.Element | null {
   const directAnswerResult = useAnswersState(state => state.directAnswer.result);
-  console.log(directAnswerResult)
   const isLoading = useAnswersState(state => state.searchStatus.isLoading || false);
   if (!directAnswerResult) {
     return null;
