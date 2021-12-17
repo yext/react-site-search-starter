@@ -5,36 +5,42 @@ import DropdownSection, { DropdownSectionCssClasses, Option } from "./DropdownSe
 import { processTranslation } from "./utils/processTranslation";
 import { useSynchronizedRequest } from "../hooks/useSynchronizedRequest";
 import renderAutocompleteResult, { AutocompleteResultCssClasses } from "./utils/renderAutocompleteResult";
+import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
 
 const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
 
-interface FilterSearchCssClasses extends InputDropdownCssClasses, DropdownSectionCssClasses, AutocompleteResultCssClasses {}
+interface FilterSearchCssClasses extends InputDropdownCssClasses, DropdownSectionCssClasses, AutocompleteResultCssClasses {
+  container?: string,
+  label?: string
+}
 
 const builtInCssClasses: FilterSearchCssClasses = {
-  dropdownContainer: 'Autocomplete',
-  inputElement: 'FilterSearch__input',
-  inputContainer: 'FilterSearch__inputContainer',
-  sectionContainer: 'Autocomplete__dropdownSection',
-  sectionLabel: 'Autocomplete__sectionLabel',
-  optionsContainer: 'Autocomplete_sectionOptions',
-  optionContainer: 'Autocomplete__option',
-  focusedOption: 'bg-gray-100'
+  container: 'mb-2',
+  label: 'mb-2 font-medium',
+  dropdownContainer: 'absolute z-10 shadow-lg rounded-md border border-gray-200 bg-white pt-3 pb-1 px-4 mt-1',
+  inputElement: 'bg-white outline-none h-full w-full p-1 rounded-md border-2 border-gray-200 focus:border-blue-600',
+  sectionContainer: 'pb-2',
+  sectionLabel: 'text-gray-700 font-semibold pb-2',
+  focusedOption: 'bg-gray-100',
+  option: 'text-gray-700 pb-1',
 }
 
 export interface FilterSearchProps {
-  title: string,
+  label: string,
   sectioned: boolean,
   searchFields: Omit<SearchParameterField, 'fetchEntities'>[],
   screenReaderInstructionsId: string,
-  customCssClasses?: FilterSearchCssClasses
+  customCssClasses?: FilterSearchCssClasses,
+  cssCompositionMethod?: CompositionMethod
 }
 
 export default function FilterSearch ({
-  title,
+  label,
   sectioned,
   searchFields,
   screenReaderInstructionsId,
-  customCssClasses
+  customCssClasses,
+  cssCompositionMethod
 }: FilterSearchProps): JSX.Element {
   const answersActions = useAnswersActions();
   const [input, setInput] = useState('');
@@ -42,7 +48,7 @@ export default function FilterSearch ({
   const searchParamFields = searchFields.map((searchField) => {
     return { ...searchField, fetchEntities: false }
   });
-  const cssClasses = { ...builtInCssClasses, ...customCssClasses };
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
   const [filterSearchResponse, executeFilterSearch] = useSynchronizedRequest<string, FilterSearchResponse>(inputValue =>
     answersActions.executeFilterSearch(inputValue ?? '', sectioned, searchParamFields)
@@ -96,11 +102,11 @@ export default function FilterSearch ({
   }
 
   return (
-    <div className='FilterSearch'>
-      <h1>{title}</h1>
+    <div className={cssClasses.container}>
+      <h1 className={cssClasses.label}>{label}</h1>
       <InputDropdown
         inputValue={input}
-        placeholder='this is filter search...'
+        placeholder='Search here ...'
         screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
         screenReaderInstructionsId={screenReaderInstructionsId}
         screenReaderText={screenReaderText}
@@ -116,9 +122,9 @@ export default function FilterSearch ({
         {sections.map((section, sectionIndex) => {
           return (
             <DropdownSection
-              key={`Autocomplete__section-${sectionIndex}`}
+              key={`${section.label}-${sectionIndex}`}
               options={section.results}
-              optionIdPrefix={`Autocomplete__option-${sectionIndex}`}
+              optionIdPrefix={`${section.label}-${sectionIndex}`}
               onFocusChange={value => {
                 setInput(value);
               }}

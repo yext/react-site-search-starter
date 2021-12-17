@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useReducer, KeyboardEvent, useRef, useEffect, useState, FocusEvent } from "react"
+import React, { useReducer, KeyboardEvent, useRef, useEffect, useState, FocusEvent, Children } from "react"
 import DropdownSection, { DropdownSectionProps } from "./DropdownSection";
 import ScreenReader from "./ScreenReader";
 import recursivelyMapChildren from './utils/recursivelyMapChildren';
@@ -259,7 +259,7 @@ export default function InputDropdown({
           : ''
         }
       />
-      {shouldDisplayDropdown &&
+      {shouldDisplayDropdown && Children.count(children) !== 0 &&
         <>
           <div className={cssClasses.divider}></div>
           <div className={cssClasses.dropdownContainer} ref={dropdownRef}>
