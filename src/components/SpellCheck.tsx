@@ -6,14 +6,14 @@ interface SpellCheckCssClasses {
   container?: string,
   helpText?: string,
   spellCheck___loading?: string,
-  spellCheckLink?: string
+  link?: string
 }
 
 const builtInCssClasses: SpellCheckCssClasses = {
   container: 'text-lg pt-3',
   helpText: 'text-gray-600',
   spellCheck___loading: 'opacity-50',
-  spellCheckLink: 'text-blue-600 font-bold cursor-pointer hover:underline focus:underline'
+  link: 'text-blue-600 font-bold cursor-pointer hover:underline focus:underline'
 }
 
 interface Props {
@@ -26,7 +26,7 @@ export default function SpellCheck ({ isVertical, customCssClasses, cssCompositi
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const correctedQuery = useAnswersState(state => state.spellCheck.correctedQuery);
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
-  const spellCheckClassNames = cssClasses.spellCheck___loading
+  const containerClassNames = cssClasses.spellCheck___loading
     ? classNames(cssClasses.container, { [cssClasses.spellCheck___loading]: isLoading })
     : cssClasses.container;
   const answersActions = useAnswersActions();
@@ -34,9 +34,9 @@ export default function SpellCheck ({ isVertical, customCssClasses, cssCompositi
     return null;
   }
   return (
-    <div className={spellCheckClassNames}>
+    <div className={containerClassNames}>
       <span className={cssClasses.helpText}>Did you mean </span>
-      <button className={cssClasses.spellCheckLink} onClick={() => {
+      <button className={cssClasses.link} onClick={() => {
         answersActions.setQuery(correctedQuery);
         isVertical
           ? answersActions.executeVerticalQuery()
