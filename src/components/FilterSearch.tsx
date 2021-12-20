@@ -16,13 +16,13 @@ interface FilterSearchCssClasses extends InputDropdownCssClasses, DropdownSectio
 
 const builtInCssClasses: FilterSearchCssClasses = {
   container: 'mb-2',
-  label: 'mb-2 font-medium',
-  dropdownContainer: 'absolute z-10 shadow-lg rounded-md border border-gray-200 bg-white pt-3 pb-1 px-4 mt-1',
-  inputElement: 'bg-white outline-none h-full w-full p-1 rounded-md border-2 border-gray-200 focus:border-blue-600',
+  label: 'mb-2 text-sm font-medium',
+  dropdownContainer: 'absolute z-10 shadow-lg rounded-md border border-gray-300 bg-white pt-3 pb-1 px-4 mt-1',
+  inputElement: 'text-sm bg-white outline-none h-9 w-full p-1 rounded-md border border-gray-300 focus:border-blue-600',
   sectionContainer: 'pb-2',
-  sectionLabel: 'text-gray-700 font-semibold pb-2',
+  sectionLabel: 'text-sm text-gray-700 font-semibold pb-2',
   focusedOption: 'bg-gray-100',
-  option: 'text-gray-700 pb-1',
+  option: 'text-sm text-gray-700 pb-1',
 }
 
 export interface FilterSearchProps {

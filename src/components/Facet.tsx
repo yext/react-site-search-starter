@@ -30,7 +30,7 @@ export interface FacetCssClasses {
 }
 
 const builtInCssClasses: FacetCssClasses = {
-  facetLabel: 'text-gray-900 font-medium mb-4',
+  facetLabel: 'text-gray-900 text-sm font-medium mb-4',
   optionsContainer: 'flex flex-col space-y-3',
   option: 'flex items-center space-x-3',
   optionInput: 'w-3.5 h-3.5 form-checkbox border border-gray-300 rounded-sm text-blue-600 focus:ring-blue-500',
