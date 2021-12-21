@@ -20,12 +20,13 @@ interface FacetProps extends FacetConfig {
   cssCompositionMethod?: CompositionMethod
 }
 
-interface FacetCssClasses {
+export interface FacetCssClasses {
   facetLabel?: string,
   optionsContainer?: string,
   option?: string,
   optionInput?: string,
-  optionLabel?: string
+  optionLabel?: string,
+  searchableInputElement?: string
 }
 
 const builtInCssClasses: FacetCssClasses = {
@@ -68,7 +69,7 @@ export default function Facet(props: FacetProps): JSX.Element {
       <div {...(collapsible ? getCollapseProps() : {})}>
         {searchable 
           && <input
-            className='Facet__search' 
+            className={cssClasses.searchableInputElement} 
             type='text' 
             placeholder={placeholderText} 
             value={filterValue} 

@@ -1,6 +1,6 @@
 import { useAnswersState, useAnswersActions, DisplayableFacetOption } from '@yext/answers-headless-react'
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
-import Facet,{ FacetConfig } from './Facet';
+import Facet,{ FacetConfig, FacetCssClasses } from './Facet';
 import { Divider } from './StaticFilters';
 
 
@@ -14,13 +14,18 @@ interface FacetsProps {
   cssCompositionMethod?: CompositionMethod
 }
 
-interface FacetsCssClasses {
+interface FacetsCssClasses extends FacetCssClasses {
   container?: string,
-  divider?: string
+  divider?: string,
+  buttonsContainer?: string,
+  button?: string
 }
 
 const builtInCssClasses: FacetsCssClasses = {
-  container: 'md:w-40'
+  searchableInputElement: 'text-sm bg-white h-9 w-full outline-none p-1 mb-2 rounded-md border border-gray-300 focus:border-blue-600',
+  container: 'md:w-40',
+  buttonsContainer: 'flex justify-between mt-5',
+  button: 'border border-gray-300 px-2.5 py-1 rounded-md'
 }
 
 export default function Facets (props: FacetsProps): JSX.Element {
@@ -69,6 +74,7 @@ export default function Facets (props: FacetsProps): JSX.Element {
           <Facet
             facet={facet}
             {...config}
+            customCssclasses={cssClasses}
             onToggle={handleFacetOptionChange} />
           {!isLastFacet && <Divider customCssClasses={{ divider: cssClasses.divider }}/>}
         </div>
@@ -80,9 +86,9 @@ export default function Facets (props: FacetsProps): JSX.Element {
       <div>
         {facetComponents}
       </div>
-      <div>
-        {!searchOnChange && <button onClick={executeSearch}>Apply</button>}
-        <button onClick={handleResetFacets}>Reset all</button>
+      <div className={cssClasses.buttonsContainer}>
+        {!searchOnChange && <button onClick={executeSearch} className={cssClasses.button}>Apply</button>}
+        <button onClick={handleResetFacets} className={cssClasses.button}>Reset all</button>
       </div>
     </div>
   )

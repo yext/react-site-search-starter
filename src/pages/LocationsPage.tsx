@@ -9,6 +9,7 @@ import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import Facets from '../components/Facets';
 import FilterSearch from '../components/FilterSearch';
+import { Divider } from '../components/StaticFilters';
 
 const filterSearchFields = [{
   fieldApiName: 'name',
@@ -30,10 +31,11 @@ export default function LocationsPage({ verticalKey }: {
     <div className='pt-7 flex'> 
       <div>
         <FilterSearch
-          title='Filter Search!'
+          label='Filter Search'
           sectioned={true}
           searchFields={filterSearchFields}
           screenReaderInstructionsId='FilterSearchId'/>
+        <Divider />
         <Facets
           searchOnChange={true}
           searchable={true}
