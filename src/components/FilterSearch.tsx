@@ -120,11 +120,12 @@ export default function FilterSearch ({
         cssClasses={cssClasses}
       >
         {sections.map((section, sectionIndex) => {
+          const sectionId = section.label ? `${section.label}-${sectionIndex}` : `${sectionIndex}`;
           return (
             <DropdownSection
-              key={`${section.label}-${sectionIndex}`}
+              key={sectionId}
               options={section.results}
-              optionIdPrefix={`${section.label}-${sectionIndex}`}
+              optionIdPrefix={sectionId}
               onFocusChange={value => {
                 setInput(value);
               }}
