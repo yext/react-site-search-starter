@@ -1,5 +1,5 @@
 import Navigation from '../components/Navigation';
-import { useAnswersState } from '@yext/answers-headless-react';
+import { SearchTypeEnum, useAnswersState } from '@yext/answers-headless-react';
 import { universalResultsConfig } from '../config/universalResultsConfig';
 import { LayoutComponent } from '../PageRouter';
 import SearchBar from '../components/SearchBar';
@@ -20,13 +20,12 @@ const navLinks = [
  * A LayoutComponent that provides a SearchBar and Navigation tabs to a given page.
  */
 const StandardLayout: LayoutComponent = ({ page }) => {
-  const isVertical = useAnswersState(state => !!state.vertical.verticalKey);
+  const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
   return (
     <>
       {isVertical
         ? <SearchBar
           placeholder='Search...'
-          isVertical={isVertical}
           screenReaderInstructionsId='SearchBar__srInstructions'
         />
         : <SampleVisualSearchBar />

@@ -2,7 +2,6 @@ import { useAnswersActions, useAnswersState, LocationBiasMethod } from '@yext/an
 import { executeSearch, getUserLocation  } from '../utils/search-operations';
 
 interface Props {
-  isVertical: boolean,
   geolocationOptions?: PositionOptions,
   cssClasses?: {
     container: string,
@@ -22,7 +21,8 @@ const defaultCSSClasses = {
 
 export default function LocationBias(props: Props) {
   const answersActions = useAnswersActions();
-  const { isVertical, geolocationOptions, cssClasses: customCssClasses } = props;
+  const { geolocationOptions, cssClasses: customCssClasses } = props;
+  const isVertical = useAnswersState(s => s.meta.searchType) === 'vertical';
   const locationBias = useAnswersState(s => s.location.locationBias)
   const cssClasses = Object.assign(defaultCSSClasses, customCssClasses);
 

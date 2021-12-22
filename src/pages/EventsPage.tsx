@@ -39,9 +39,7 @@ export default function EventsPage({ verticalKey }: {
       </div>
       <div className='ml-10 flex-grow'>
         <DirectAnswer />
-        <SpellCheck
-          isVertical={true}
-        />
+        <SpellCheck />
         <ResultsCount />
         <AppliedFilters
           hiddenFields={['builtin.entityType']}
@@ -62,7 +60,7 @@ export default function EventsPage({ verticalKey }: {
           CardComponent={StandardCard}
           displayAllResults={true}
         />
-        <LocationBias isVertical={true} />
+        <LocationBias />
       </div>
     </div>
   )

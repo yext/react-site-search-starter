@@ -14,9 +14,7 @@ export default function UniversalSearchPage(props: { universalResultsConfig: Uni
 
   return (
     <div>
-      <SpellCheck
-        isVertical={false}
-      />
+      <SpellCheck />
       <DirectAnswer />
       <UniversalResults
         appliedFiltersConfig={universalResultsFilterConfig}

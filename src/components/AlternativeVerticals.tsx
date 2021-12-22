@@ -140,7 +140,7 @@ export default function AlternativeVerticals ({
       <li key={suggestion.verticalKey} className={cssClasses.suggestion}>
         <button className={cssClasses.suggestionButton}
           onClick={() => {
-            actions.setVerticalKey(suggestion.verticalKey);
+            actions.setVertical(suggestion.verticalKey);
             actions.executeVerticalQuery();
           }}>
           <div className={cssClasses.verticalIcon}><Star/></div>

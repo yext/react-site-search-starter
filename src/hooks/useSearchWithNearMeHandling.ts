@@ -1,4 +1,4 @@
-import { AnswersHeadless } from '@yext/answers-headless-react';
+import { AnswersHeadless, SearchTypeEnum } from '@yext/answers-headless-react';
 import { executeSearch, updateLocationIfNeeded } from '../utils/search-operations';
 import { MutableRefObject, useRef } from 'react';
 import { AutocompleteResponse, SearchIntent } from '@yext/answers-headless-react';
@@ -14,7 +14,6 @@ type AutocompleteRef = MutableRefObject<Promise<AutocompleteResponse | undefined
  */
 export default function useSearchWithNearMeHandling(
   answersActions: AnswersHeadless,
-  isVertical: boolean = false,
   geolocationOptions?: PositionOptions,
 ): [QueryFunc, AutocompleteRef] {
   /**
@@ -22,6 +21,7 @@ export default function useSearchWithNearMeHandling(
    * before the search execution in order to retrieve the search intents
    */
   const autocompletePromiseRef = useRef<Promise<AutocompleteResponse | undefined>>();
+  const isVertical = answersActions.state.meta.searchType === SearchTypeEnum.Vertical;
 
   async function executeQuery() {
     let intents: SearchIntent[] = [];
