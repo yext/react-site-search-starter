@@ -2138,7 +2138,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 The following NPM package may be included in this product:
 
- - @yext/answers-headless-react@0.9.0
+ - @yext/answers-headless-react@0.9.2-beta.0
 
 This package contains the following license and notice below:
 
@@ -2179,7 +2179,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 The following NPM package may be included in this product:
 
- - @yext/answers-headless@0.3.1
+ - @yext/answers-headless@0.9.1-beta.0
 
 This package contains the following license and notice below:
 
@@ -25555,12 +25555,11 @@ This package contains the following license and notice below:
 
 -----------
 
-The following NPM packages may be included in this product:
+The following NPM package may be included in this product:
 
  - typescript@4.1.6
- - typescript@4.5.3
 
-These packages each contain the following license and notice below:
+This package contains the following license and notice below:
 
 Apache License
 
