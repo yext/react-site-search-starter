@@ -1,6 +1,10 @@
 const universalSearchTests = [
   {
     name: 'universal-search'
+  },
+  {
+    name: 'universal-search--spellcheck',
+    commands: [{ type: 'search', params: ['cawfee', 'input'] }]
   }
 ];
 
@@ -10,9 +14,11 @@ const verticalSearchTests = [
     commands: [{ type: 'click', params: ['a[href="/events"]'] }]
   },
   {
-    name: 'vertical-search',
+    name: 'vertical-search--no-results',
     commands: [
-      { type: 'click', params: ['a[href="/jobs"]'] }]
+      { type: 'click', params: ['a[href="/jobs"]'] },
+      { type: 'search', params: ['zelle', 'input'] }
+    ]
   },
   {
     name: 'vertical-search--locations',

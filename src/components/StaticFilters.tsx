@@ -42,7 +42,7 @@ const builtInCssClasses: StaticFiltersCssClasses = {
   optionsContainer: 'flex flex-col space-y-3',
   option: 'flex items-center space-x-3',
   optionInput: 'w-3.5 h-3.5 form-checkbox border border-gray-300 rounded-sm text-blue-600 focus:ring-blue-500',
-  optionLabel: 'text-gray-500 text-sm font-normal'
+  optionLabel: 'text-gray-600 text-sm font-normal'
 }
 
 export default function StaticFilters(props: StaticFiltersProps): JSX.Element {

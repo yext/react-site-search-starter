@@ -5,27 +5,28 @@ import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCs
 
 export type onFacetChangeFn = (fieldId: string, option: DisplayableFacetOption) => void
 
-export interface FacetTextConfig {
+export interface FacetConfig {
+  searchable?: boolean,
   placeholderText?: string,
-  label?: string
+  label?: string,
+  collapsible?: boolean,
+  defaultExpanded?: boolean
 }
 
-interface FacetProps extends FacetTextConfig {
+interface FacetProps extends FacetConfig {
   facet: DisplayableFacet,
-  searchable?: boolean,
-  collapsible?: boolean,
-  defaultExpanded?: boolean,
   onToggle: onFacetChangeFn,
   customCssclasses?: FacetCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
 
-interface FacetCssClasses {
+export interface FacetCssClasses {
   facetLabel?: string,
   optionsContainer?: string,
   option?: string,
   optionInput?: string,
-  optionLabel?: string
+  optionLabel?: string,
+  searchableInputElement?: string
 }
 
 const builtInCssClasses: FacetCssClasses = {
@@ -33,7 +34,7 @@ const builtInCssClasses: FacetCssClasses = {
   optionsContainer: 'flex flex-col space-y-3',
   option: 'flex items-center space-x-3',
   optionInput: 'w-3.5 h-3.5 form-checkbox border border-gray-300 rounded-sm text-blue-600 focus:ring-blue-500',
-  optionLabel: 'text-gray-500 text-sm font-normal'
+  optionLabel: 'text-gray-600 text-sm font-normal'
 }
 
 export default function Facet(props: FacetProps): JSX.Element {
@@ -44,7 +45,7 @@ export default function Facet(props: FacetProps): JSX.Element {
     collapsible,
     defaultExpanded,
     label,
-    placeholderText,
+    placeholderText='Search here...',
     customCssclasses,
     cssCompositionMethod 
   } = props;
@@ -68,9 +69,9 @@ export default function Facet(props: FacetProps): JSX.Element {
       <div {...(collapsible ? getCollapseProps() : {})}>
         {searchable 
           && <input
-            className='Facet__search' 
+            className={cssClasses.searchableInputElement} 
             type='text' 
-            placeholder={placeholderText || 'Search here...'} 
+            placeholder={placeholderText} 
             value={filterValue} 
             onChange={e => setFilterValue(e.target.value)}/>}
         <div className={cssClasses.optionsContainer}>

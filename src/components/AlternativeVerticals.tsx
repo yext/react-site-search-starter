@@ -1,8 +1,36 @@
 import { processTranslation } from './utils/processTranslation';
-import { ReactComponent as Chevron } from '../icons/chevron.svg';
 import { ReactComponent as Star } from '../icons/star.svg';
 import { useAnswersState, useAnswersActions, VerticalResults } from '@yext/answers-headless-react';
-import '../sass/AlternativeVerticals.scss';
+import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
+import classNames from 'classnames';
+
+interface AlternativeVerticalsCssClasses {
+  container?: string,
+  alternativeVerticals___loading?: string,
+  noResultsText?: string,
+  categoriesText?: string,
+  suggestions?: string,
+  suggestionList?: string,
+  suggestion?: string,
+  suggestionButton?: string,
+  verticalIcon?: string,
+  verticalLink?: string,
+  allCategoriesLink?: string 
+}
+
+const builtInCssClasses: AlternativeVerticalsCssClasses = {
+  container: 'flex flex-col justify-between border rounded-lg mb-4 p-4 shadow-sm',
+  alternativeVerticals___loading: 'opacity-50',
+  noResultsText: 'text-lg text-gray-900 pb-2',
+  categoriesText: 'text-gray-500',
+  suggestions: 'pt-4 text-blue-600',
+  suggestionList: 'pt-4',
+  suggestion: 'pb-4',
+  suggestionButton: 'inline-flex items-center cursor-pointer hover:underline focus:underline',
+  verticalIcon: 'w-4 mr-2',
+  verticalLink: 'font-bold',
+  allCategoriesLink: 'text-blue-600 cursor-pointer hover:underline focus:underline'
+}
 
 interface VerticalConfig {
   label: string,
@@ -20,11 +48,19 @@ function isVerticalSuggestion (suggestion: VerticalSuggestion | null): suggestio
 interface Props {
   currentVerticalLabel: string,
   verticalsConfig: VerticalConfig[],
-  displayAllResults?: boolean
+  displayAllResults?: boolean,
+  customCssClasses?: AlternativeVerticalsCssClasses,
+  cssCompositionMethod?: CompositionMethod
 }
 
-export default function AlternativeVerticals (props: Props): JSX.Element | null {
-  const { currentVerticalLabel, verticalsConfig, displayAllResults = true } = props;
+export default function AlternativeVerticals ({
+  currentVerticalLabel,
+  verticalsConfig,
+  displayAllResults = true,
+  customCssClasses,
+  cssCompositionMethod
+}: Props): JSX.Element | null {
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
   const alternativeVerticals = useAnswersState(state => state.vertical.noResults?.alternativeVerticals) || [];
   const allResultsForVertical = useAnswersState(state => state.vertical.noResults?.allResultsForVertical.results) || [];
@@ -33,6 +69,11 @@ export default function AlternativeVerticals (props: Props): JSX.Element | null 
 
   const verticalSuggestions = buildVerticalSuggestions(verticalsConfig, alternativeVerticals);
   const isShowingAllResults = displayAllResults && allResultsForVertical.length > 0;
+
+  const isLoading = useAnswersState(state => state.searchStatus.isLoading);
+  const containerClassNames = cssClasses.alternativeVerticals___loading
+    ? classNames(cssClasses.container, { [cssClasses.alternativeVerticals___loading]: isLoading })
+    : cssClasses.container;
 
   function buildVerticalSuggestions(
     verticalsConfig: VerticalConfig[],
@@ -60,21 +101,21 @@ export default function AlternativeVerticals (props: Props): JSX.Element | null 
   }
 
   return  (
-    <div className='AlternativeVerticals'>
+    <div className={containerClassNames}>
       {renderNoResultsInfo()}
       {verticalSuggestions &&
-        <div className='AlternativeVerticals__suggestionsWrapper'>
-          <div className='AlternativeVerticals__details'>
+        <div className={cssClasses.suggestions}>
+          <div className={cssClasses.categoriesText}>
             <span>
               {processTranslation({
-                phrase: 'The following search category yielded results for ',
-                pluralForm: 'The following search categories yielded results for ',
+                phrase: 'This category yielded results for - ',
+                pluralForm: 'These categories yielded results for - ',
                 count: verticalSuggestions.length
               })}
             </span>
-            <span className='AlternativeVerticals__detailsQuery'>"{query}":</span>
+            <strong>{query}</strong>
           </div>
-          <ul className='AlternativeVerticals__suggestionList'>
+          <ul className={cssClasses.suggestionList}>
             {verticalSuggestions.map(renderSuggestion)}
           </ul>
           {renderUniversalDetails()}
@@ -85,29 +126,25 @@ export default function AlternativeVerticals (props: Props): JSX.Element | null 
 
   function renderNoResultsInfo() {
     return (
-      <div className='AlternativeVerticals__noResultsInfo'>
-        <em className='AlternativeVerticals__noResultsInfo--emphasized'>No results found</em><span> in {currentVerticalLabel}. </span>
-        {isShowingAllResults && <>
-          <span>Showing </span>
-          <em className="AlternativeVerticals__noResultsInfo--emphasized">all {currentVerticalLabel}</em>
-          <span> instead.</span>
-        </>}
+      <div className={cssClasses.noResultsText}>
+        <span>No results found in {currentVerticalLabel}.</span>
+        {isShowingAllResults &&
+          <span> Showing all {currentVerticalLabel} instead.</span>
+        }
       </div>
     );
   }
 
   function renderSuggestion(suggestion: VerticalSuggestion) {
     return (
-      <li key={suggestion.verticalKey} className="AlternativeVerticals__suggestion">
-        <button className='AlternativeVerticals__suggestionLink AlternativeVerticals__button'
+      <li key={suggestion.verticalKey} className={cssClasses.suggestion}>
+        <button className={cssClasses.suggestionButton}
           onClick={() => {
             actions.setVerticalKey(suggestion.verticalKey);
             actions.executeVerticalQuery();
           }}>
-          <div className='AlternativeVerticals__verticalIconWrapper'><Star/></div>
-          <span className='AlternativeVerticals__suggestionVerticalLabel'>{suggestion.label}</span>
-          <span className='AlternativeVerticals__suggestionNumResults'>({suggestion.resultsCount} results)</span>
-          <div className='AlternativeVerticals__chevronIconWrapper'><Chevron/></div>
+          <div className={cssClasses.verticalIcon}><Star/></div>
+          <span className={cssClasses.verticalLink}>{suggestion.label}</span>
         </button>
       </li>
     );
@@ -115,11 +152,11 @@ export default function AlternativeVerticals (props: Props): JSX.Element | null 
 
   function renderUniversalDetails() {
     return (
-      <div className='AlternativeVerticals__universalDetails'>
-        <span>Alternatively you can </span>
-        <button className='AlternativeVerticals__button AlternativeVerticals__universalDetailsButton' 
+      <div className={cssClasses.categoriesText}>
+        <span>View results across </span>
+        <button className={cssClasses.allCategoriesLink} 
           onClick={actions.executeUniversalQuery}>
-          <span>view results across all search categories</span>
+          <span>all search categories.</span>
         </button>
       </div>
     );

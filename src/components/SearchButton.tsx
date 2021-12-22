@@ -12,6 +12,7 @@ export default function SearchButton ({ handleClick, isLoading, className }: Pro
     <button
       className={className}
       onClick={handleClick}
+      aria-label='Submit Search'
     >
       {isLoading
         ? <LoadingIndicator />
