@@ -17,12 +17,12 @@ const builtInCssClasses: SpellCheckCssClasses = {
 }
 
 interface Props {
-  isVertical: boolean,
   customCssClasses?: SpellCheckCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
 
-export default function SpellCheck ({ isVertical, customCssClasses, cssCompositionMethod }: Props): JSX.Element | null {
+export default function SpellCheck ({ customCssClasses, cssCompositionMethod }: Props): JSX.Element | null {
+  const isVertical = useAnswersState(s => s.meta.searchType) === 'vertical';
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const correctedQuery = useAnswersState(state => state.spellCheck.correctedQuery);
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);

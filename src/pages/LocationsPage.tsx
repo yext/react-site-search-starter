@@ -44,9 +44,7 @@ export default function LocationsPage({ verticalKey }: {
       </div>
       <div className='ml-10 flex-grow'>
         <DirectAnswer />
-        <SpellCheck
-          isVertical={true}
-        />
+        <SpellCheck />
         <ResultsCount />
         <AppliedFilters
           hiddenFields={['builtin.entityType']}
@@ -67,7 +65,7 @@ export default function LocationsPage({ verticalKey }: {
           CardComponent={StandardCard}
           displayAllResults={true}
         />
-        <LocationBias isVertical={true} />
+        <LocationBias />
       </div>
     </div>
   )

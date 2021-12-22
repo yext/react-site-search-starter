@@ -16,9 +16,7 @@ export default function FAQsPage({ verticalKey }: {
   return (
     <div className='pt-7'>
       <DirectAnswer />
-      <SpellCheck
-        isVertical={true}
-      />
+      <SpellCheck />
       <ResultsCount />
       <AppliedFilters
         hiddenFields={['builtin.entityType']}
@@ -39,7 +37,7 @@ export default function FAQsPage({ verticalKey }: {
         CardComponent={StandardCard}
         displayAllResults={true}
       />
-      <LocationBias isVertical={true} />
+      <LocationBias />
     </div>
   )
 }

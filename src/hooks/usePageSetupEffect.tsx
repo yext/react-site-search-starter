@@ -19,8 +19,8 @@ export default function usePageSetupEffect(verticalKey?: string) {
       ...stateToClear
     });
     verticalKey
-      ? answersActions.setVerticalKey(verticalKey)
-      : answersActions.setVerticalKey('');
+      ? answersActions.setVertical(verticalKey)
+      : answersActions.setUniversal();
     const executeQuery = async () => {
       let searchIntents: SearchIntent[] = [];
       if (!answersActions.state.location.userLocation) {

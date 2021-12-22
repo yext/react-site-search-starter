@@ -14,7 +14,6 @@ type AutocompleteRef = MutableRefObject<Promise<AutocompleteResponse | undefined
  */
 export default function useSearchWithNearMeHandling(
   answersActions: AnswersHeadless,
-  isVertical: boolean = false,
   geolocationOptions?: PositionOptions,
 ): [QueryFunc, AutocompleteRef] {
   /**
@@ -22,6 +21,7 @@ export default function useSearchWithNearMeHandling(
    * before the search execution in order to retrieve the search intents
    */
   const autocompletePromiseRef = useRef<Promise<AutocompleteResponse | undefined>>();
+  const isVertical = answersActions.state.meta.searchType === 'vertical';
 
   async function executeQuery() {
     let intents: SearchIntent[] = [];

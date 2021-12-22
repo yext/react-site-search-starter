@@ -121,11 +121,11 @@ describe('AppliedFilters component works as expected', () => {
 });
 
 function createAnswersHeadless(): AnswersHeadless {
-  const answers = provideAnswersHeadless({
+  return provideAnswersHeadless({
     apiKey: 'fake api key',
     experienceKey: 'fake exp key',
     locale: 'en',
+    verticalKey: 'fakeVerticalKey'
   });
-  answers.setVerticalKey('fakeVerticalKey');
-  return answers;
+
 }
