@@ -1,4 +1,4 @@
-import { useAnswersState, useAnswersActions } from '@yext/answers-headless-react'
+import { useAnswersState, useAnswersActions, SearchTypeEnum } from '@yext/answers-headless-react'
 import classNames from 'classnames';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function SpellCheck ({ customCssClasses, cssCompositionMethod }: Props): JSX.Element | null {
-  const isVertical = useAnswersState(s => s.meta.searchType) === 'vertical';
+  const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const correctedQuery = useAnswersState(state => state.spellCheck.correctedQuery);
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
