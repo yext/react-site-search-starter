@@ -2,14 +2,16 @@ import { useAnswersState, DirectAnswerType, DirectAnswer as DirectAnswerModel } 
 import renderHighlightedValue from './utils/renderHighlightedValue';
 import classNames from 'classnames';
 import { ReactNode } from 'react';
+import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 
 interface DirectAnswerProps {
-  cssClasses?: DirectAnswerCssClasses
+  customCssClasses?: DirectAnswerCssClasses,
+  cssCompositionMethod?: CompositionMethod
 }
 
 interface DirectAnswerCssClasses {
   container?: string,
-  containerLoading?: string,
+  container___loading?: string,
   fieldValueTitle?: string,
   featuredSnippetTitle?: string,
   content?: string,
@@ -20,9 +22,9 @@ interface DirectAnswerCssClasses {
   highlighted?: string
 }
 
-const defaultCSSClasses: DirectAnswerCssClasses = {
-  container: 'p-4 border border-color-zinc-200',
-  containerLoading: 'opacity-50',
+const builtInCssClasses: DirectAnswerCssClasses = {
+  container: 'p-4 border rounded-lg shadow-sm',
+  container___loading: 'opacity-50',
   fieldValueTitle: 'mb-4 text-gray-500',
   featuredSnippetTitle: 'mb-4 font-bold text-xl',
   content: '',
@@ -36,10 +38,12 @@ const defaultCSSClasses: DirectAnswerCssClasses = {
 export default function DirectAnswer(props: DirectAnswerProps): JSX.Element | null {
   const directAnswerResult = useAnswersState(state => state.directAnswer.result);
   const isLoading = useAnswersState(state => state.searchStatus.isLoading || false);
+  const composedCssClasses = useComposedCssClasses(builtInCssClasses, props.customCssClasses, props.cssCompositionMethod);
   if (!directAnswerResult) {
     return null;
   }
-  const cssClasses = getCssClasses(props.cssClasses, isLoading, directAnswerResult);
+  const cssClasses = getCssClassesForAnswerType(composedCssClasses, directAnswerResult.type);
+  
   const title = directAnswerResult.type === DirectAnswerType.FeaturedSnippet
     ? directAnswerResult.value
     : `${directAnswerResult.entityName} / ${directAnswerResult.fieldName}`
@@ -52,47 +56,37 @@ export default function DirectAnswer(props: DirectAnswerProps): JSX.Element | nu
     const isSnippet = directAnswerResult.type === DirectAnswerType.FeaturedSnippet;
     const name = directAnswerResult.relatedResult.name;
     if (isSnippet && name) {
-      return <>
+      return <div className={cssClasses.viewDetailsLinkContainer}>
         Read more about <a className={cssClasses.viewDetailsLink} href={link}>
           {directAnswerResult.relatedResult.name}
         </a>
-      </>
+      </div>
     } else if (!isSnippet && link) {
       return <a href={link} className={cssClasses.viewDetailsLink}>View Details</a>
     }
   }
 
+  const containerCssClasses = cssClasses.container___loading
+    ? classNames(cssClasses.container, { [cssClasses.container___loading ]: isLoading })
+    : cssClasses.container;
+
   return (
-    <div className={cssClasses.container}>
+    <div className={containerCssClasses}>
       {title &&
         <div className={cssClasses.title}>{title}</div>}
       <div className={cssClasses.content}>
         <div className={cssClasses.description}>{description}</div>
-        {link && 
-          <div className={cssClasses.viewDetailsLinkContainer}>
-            {getLinkText(directAnswerResult)}
-          </div>
-        }
+        {link && getLinkText(directAnswerResult)}
       </div>
     </div>
   )
 }
 
-function getCssClasses(
-  customCssClasses: DirectAnswerCssClasses | undefined,
-  isLoading: boolean,
-  directAnswerResult: DirectAnswerModel
-) {
-  const cssClasses = Object.assign(defaultCSSClasses, customCssClasses);
-  const containerCssClasses = classNames(cssClasses.container, { [cssClasses.containerLoading || '']: isLoading });
-  const isSnippet = directAnswerResult.type === DirectAnswerType.FeaturedSnippet;
+function getCssClassesForAnswerType(cssClasses: DirectAnswerCssClasses, type: DirectAnswerType) {
+  const isSnippet = type === DirectAnswerType.FeaturedSnippet;
   return {
-    container: containerCssClasses,
+    ...cssClasses,
     title: isSnippet ? cssClasses.featuredSnippetTitle : cssClasses.fieldValueTitle,
-    content: cssClasses.content,
-    description: isSnippet ? cssClasses.featuredSnippetDescription : cssClasses.fieldValueDescription,
-    viewDetailsLinkContainer: cssClasses.viewDetailsLinkContainer,
-    viewDetailsLink: cssClasses.viewDetailsLink,
-    highlighted: cssClasses.highlighted
+    description: isSnippet ? cssClasses.featuredSnippetDescription : cssClasses.fieldValueDescription
   }
 }
