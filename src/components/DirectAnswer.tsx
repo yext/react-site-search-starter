@@ -56,16 +56,16 @@ export default function DirectAnswer(props: DirectAnswerProps): JSX.Element | nu
     const isSnippet = directAnswerResult.type === DirectAnswerType.FeaturedSnippet;
     const name = directAnswerResult.relatedResult.name;
 
-    return <div className={cssClasses.viewDetailsLinkContainer}>
-      {isSnippet && name && <>
+    return <>
+      {isSnippet && name && <div className={cssClasses.viewDetailsLinkContainer}>
         Read more about <a className={cssClasses.viewDetailsLink} href={link}>
           {directAnswerResult.relatedResult.name}
         </a>
-      </>}
-      {!isSnippet && link && <>
+      </div>}
+      {!isSnippet && link && <div className={cssClasses.viewDetailsLinkContainer}>
         <a href={link} className={cssClasses.viewDetailsLink}>View Details</a>
-      </>}
-    </div>
+      </div>}
+    </>
   }
 
   const containerCssClasses = cssClasses.container___loading
