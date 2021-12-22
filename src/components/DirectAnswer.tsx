@@ -26,12 +26,12 @@ const builtInCssClasses: DirectAnswerCssClasses = {
   container: 'p-4 border rounded-lg shadow-sm',
   container___loading: 'opacity-50',
   fieldValueTitle: 'mb-4 text-gray-500',
-  featuredSnippetTitle: 'mb-4 font-bold text-xl',
+  featuredSnippetTitle: 'mb-4 font-bold text-xl text-gray-800',
   content: '',
-  fieldValueDescription: 'font-bold text-xl',
+  fieldValueDescription: 'font-bold text-xl text-gray-800',
   featuredSnippetDescription: '',
   viewDetailsLink: 'text-blue-600',
-  viewDetailsLinkContainer: 'pt-4',
+  viewDetailsLinkContainer: 'pt-4 text-gray-500',
   highlighted: 'bg-blue-100'
 };
 
@@ -55,15 +55,17 @@ export default function DirectAnswer(props: DirectAnswerProps): JSX.Element | nu
   function getLinkText(directAnswerResult: DirectAnswerModel) {
     const isSnippet = directAnswerResult.type === DirectAnswerType.FeaturedSnippet;
     const name = directAnswerResult.relatedResult.name;
-    if (isSnippet && name) {
-      return <div className={cssClasses.viewDetailsLinkContainer}>
+
+    return <div className={cssClasses.viewDetailsLinkContainer}>
+      {isSnippet && name && <>
         Read more about <a className={cssClasses.viewDetailsLink} href={link}>
           {directAnswerResult.relatedResult.name}
         </a>
-      </div>
-    } else if (!isSnippet && link) {
-      return <a href={link} className={cssClasses.viewDetailsLink}>View Details</a>
-    }
+      </>}
+      {!isSnippet && link && <>
+        <a href={link} className={cssClasses.viewDetailsLink}>View Details</a>
+      </>}
+    </div>
   }
 
   const containerCssClasses = cssClasses.container___loading
