@@ -17,7 +17,7 @@ interface NavigationCssClasses {
 }
 
 const builtInCssClasses: NavigationCssClasses = {
-  nav: 'border-b border-gray-200 text-gray-600 flex space-x-6 font-medium pt-4',
+  nav: 'border-b border-gray-200 text-gray-600 flex space-x-6 font-medium mb-6',
   navLink: 'whitespace-nowrap py-4 px-1 font-medium text-md border-b-2 border-opacity-0 hover:border-gray-300',
   activeNavLink: 'text-blue-600 border-blue-600 border-b-2 border-opacity-100 hover:border-blue-600',
   menuButtonContainer: 'relative flex flex-grow justify-end mr-4',
