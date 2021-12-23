@@ -138,7 +138,7 @@ export default function AlternativeVerticals ({
   function renderSuggestion(suggestion: VerticalSuggestion) {
     return (
       <li key={suggestion.verticalKey} className={cssClasses.suggestion}>
-        <Link className={cssClasses.suggestionButton} to={`/${suggestion.verticalKey}?query=${query}`}>
+        <Link className={cssClasses.suggestionButton} to={`/${suggestion.verticalKey}`}>
           <div className={cssClasses.verticalIcon}><Star/></div>
           <span className={cssClasses.verticalLink}>{suggestion.label}</span>
         </Link>
@@ -150,8 +150,8 @@ export default function AlternativeVerticals ({
     return (
       <div className={cssClasses.categoriesText}>
         <span>View results across </span>
-        <Link className={cssClasses.allCategoriesLink} to={`/?query=${query}`}>
-          <span>all search categories.</span>
+        <Link className={cssClasses.allCategoriesLink} to='/'>
+          all search categories.
         </Link>
       </div>
     );
