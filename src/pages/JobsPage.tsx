@@ -14,7 +14,7 @@ export default function JobsPage({ verticalKey }: {
   usePageSetupEffect(verticalKey);
 
   return (
-    <div className='pt-7'>
+    <div className=''>
       <DirectAnswer />
       <SpellCheck />
       <ResultsCount />

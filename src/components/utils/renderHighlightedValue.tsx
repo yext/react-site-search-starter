@@ -1,10 +1,19 @@
 import { HighlightedValue } from "@yext/answers-headless-react";
 
+const defaultCssClasses: HighlightedValueCssClasses = {
+  highlighted: 'font-bold'
+}
+
+interface HighlightedValueCssClasses {
+  highlighted?: string
+}
+
 /**
  * Renders a HighlightedValue with highlighting based on its matchedSubstrings.
  * @returns JSX.Element
  */
-export default function renderHighlightedValue ({ value = '', matchedSubstrings }: Partial<HighlightedValue>): JSX.Element {
+export default function renderHighlightedValue ({ value = '', matchedSubstrings }: Partial<HighlightedValue>, customCssClasses?: HighlightedValueCssClasses): JSX.Element {
+  const cssClasses = { ...defaultCssClasses, ...customCssClasses };
   if (!matchedSubstrings || matchedSubstrings.length === 0) {
     return <span>{value}</span>;
   }
@@ -16,7 +25,7 @@ export default function renderHighlightedValue ({ value = '', matchedSubstrings 
     if (offset > curr) {
       highlightedJSX.push(<span key={curr}>{value.substring(curr, offset)}</span>)
     }
-    highlightedJSX.push(<strong key={offset}>{value.substring(offset, offset + length)}</strong>)
+    highlightedJSX.push(<span key={offset} className={cssClasses.highlighted}>{value.substring(offset, offset + length)}</span>)
     curr = offset + length;
   }
   if (curr < value.length) {
