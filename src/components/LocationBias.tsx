@@ -1,37 +1,42 @@
 import { useAnswersActions, useAnswersState, LocationBiasMethod } from '@yext/answers-headless-react';
 import { executeSearch, getUserLocation  } from '../utils/search-operations';
+import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
+
+interface LocationBiasCssClasses {
+  container?: string,
+  location?: string,
+  source?: string,
+  button?: string
+}
+
+const builtInCssClasses: LocationBiasCssClasses = {
+  container: 'text-sm text-gray-500 text-center m-auto',
+  location: 'font-semibold',
+  button: 'text-blue-600 cursor-pointer hover:underline focus:underline',
+};
 
 interface Props {
   geolocationOptions?: PositionOptions,
-  cssClasses?: {
-    container: string,
-    location: string,
-    source: string,
-    button: string
-  }
+  customCssClasses?: LocationBiasCssClasses,
+  cssCompositionMethod?: CompositionMethod
 }
 
-
-const defaultCSSClasses = {
-  container: 'LocationBias',
-  location: 'LocationBias__location',
-  source: 'LocationBias__source',
-  button: 'LocationBias__button',
-};
-
-export default function LocationBias(props: Props) {
+export default function LocationBias({
+  geolocationOptions,
+  customCssClasses,
+  cssCompositionMethod
+}: Props): JSX.Element | null {
   const answersActions = useAnswersActions();
-  const { geolocationOptions, cssClasses: customCssClasses } = props;
   const isVertical = useAnswersState(s => s.meta.searchType) === 'vertical';
   const locationBias = useAnswersState(s => s.location.locationBias)
-  const cssClasses = Object.assign(defaultCSSClasses, customCssClasses);
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
   if (!locationBias?.displayName) return null;
 
   const attributionMessage = 
-      locationBias?.method === LocationBiasMethod.Ip ? '(based on your internet address)'
-        : locationBias?.method === LocationBiasMethod.Device ? '(based on your device)'
-          : '';
+      locationBias?.method === LocationBiasMethod.Ip ? ' (based on your internet address) - '
+        : locationBias?.method === LocationBiasMethod.Device ? ' (based on your device) - '
+          : ' - ';
 
   async function handleGeolocationClick() {
     try {
@@ -51,11 +56,9 @@ export default function LocationBias(props: Props) {
       <span className={cssClasses.location}>
         {locationBias.displayName}
       </span>
-      {attributionMessage !== '' && (
-        <span className={cssClasses.source}>
-          {attributionMessage}
-        </span>
-      )}
+      <span className={cssClasses.source}>
+        {attributionMessage}
+      </span>
       <button 
         className={cssClasses.button}
         onClick={handleGeolocationClick}
