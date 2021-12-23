@@ -3,6 +3,7 @@ import { ReactComponent as Star } from '../icons/star.svg';
 import { useAnswersState, useAnswersActions, VerticalResults } from '@yext/answers-headless-react';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 
 interface AlternativeVerticalsCssClasses {
   container?: string,
@@ -138,14 +139,10 @@ export default function AlternativeVerticals ({
   function renderSuggestion(suggestion: VerticalSuggestion) {
     return (
       <li key={suggestion.verticalKey} className={cssClasses.suggestion}>
-        <button className={cssClasses.suggestionButton}
-          onClick={() => {
-            actions.setVertical(suggestion.verticalKey);
-            actions.executeVerticalQuery();
-          }}>
+        <Link className={cssClasses.suggestionButton} to={`/${suggestion.verticalKey}?query=${query}`}>
           <div className={cssClasses.verticalIcon}><Star/></div>
           <span className={cssClasses.verticalLink}>{suggestion.label}</span>
-        </button>
+        </Link>
       </li>
     );
   }
@@ -154,10 +151,9 @@ export default function AlternativeVerticals ({
     return (
       <div className={cssClasses.categoriesText}>
         <span>View results across </span>
-        <button className={cssClasses.allCategoriesLink} 
-          onClick={actions.executeUniversalQuery}>
+        <Link className={cssClasses.allCategoriesLink} to={`/?query=${query}`}>
           <span>all search categories.</span>
-        </button>
+        </Link>
       </div>
     );
   }
