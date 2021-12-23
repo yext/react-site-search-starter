@@ -28,7 +28,7 @@ export default function LocationsPage({ verticalKey }: {
   usePageSetupEffect(verticalKey);
 
   return (
-    <div className='pt-7 flex'> 
+    <div className='flex'> 
       <div>
         <FilterSearch
           label='Filter Search'
