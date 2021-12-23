@@ -14,7 +14,7 @@ export default function FAQsPage({ verticalKey }: {
   usePageSetupEffect(verticalKey);
 
   return (
-    <div className='pt-7'>
+    <div>
       <DirectAnswer />
       <SpellCheck />
       <ResultsCount />

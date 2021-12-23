@@ -31,7 +31,7 @@ export default function EventsPage({ verticalKey }: {
   usePageSetupEffect(verticalKey);
 
   return (
-    <div className='pt-7 flex'>
+    <div className='flex'>
       <div>
         <StaticFilters
           filterConfig={staticFiltersConfig}
