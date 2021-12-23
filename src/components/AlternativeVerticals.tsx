@@ -1,6 +1,6 @@
 import { processTranslation } from './utils/processTranslation';
 import { ReactComponent as Star } from '../icons/star.svg';
-import { useAnswersState, useAnswersActions, VerticalResults } from '@yext/answers-headless-react';
+import { useAnswersState, VerticalResults } from '@yext/answers-headless-react';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import classNames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -66,7 +66,6 @@ export default function AlternativeVerticals ({
   const alternativeVerticals = useAnswersState(state => state.vertical.noResults?.alternativeVerticals) || [];
   const allResultsForVertical = useAnswersState(state => state.vertical.noResults?.allResultsForVertical.results) || [];
   const query = useAnswersState(state => state.query.mostRecentSearch);
-  const actions = useAnswersActions();
 
   const verticalSuggestions = buildVerticalSuggestions(verticalsConfig, alternativeVerticals);
   const isShowingAllResults = displayAllResults && allResultsForVertical.length > 0;
