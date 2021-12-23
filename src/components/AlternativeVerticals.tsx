@@ -1,8 +1,9 @@
 import { processTranslation } from './utils/processTranslation';
 import { ReactComponent as Star } from '../icons/star.svg';
-import { useAnswersState, useAnswersActions, VerticalResults } from '@yext/answers-headless-react';
+import { useAnswersState, VerticalResults } from '@yext/answers-headless-react';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import classNames from 'classnames';
+import { Link } from 'react-router-dom';
 
 interface AlternativeVerticalsCssClasses {
   container?: string,
@@ -65,7 +66,6 @@ export default function AlternativeVerticals ({
   const alternativeVerticals = useAnswersState(state => state.vertical.noResults?.alternativeVerticals) || [];
   const allResultsForVertical = useAnswersState(state => state.vertical.noResults?.allResultsForVertical.results) || [];
   const query = useAnswersState(state => state.query.mostRecentSearch);
-  const actions = useAnswersActions();
 
   const verticalSuggestions = buildVerticalSuggestions(verticalsConfig, alternativeVerticals);
   const isShowingAllResults = displayAllResults && allResultsForVertical.length > 0;
@@ -138,14 +138,10 @@ export default function AlternativeVerticals ({
   function renderSuggestion(suggestion: VerticalSuggestion) {
     return (
       <li key={suggestion.verticalKey} className={cssClasses.suggestion}>
-        <button className={cssClasses.suggestionButton}
-          onClick={() => {
-            actions.setVertical(suggestion.verticalKey);
-            actions.executeVerticalQuery();
-          }}>
+        <Link className={cssClasses.suggestionButton} to={`/${suggestion.verticalKey}`}>
           <div className={cssClasses.verticalIcon}><Star/></div>
           <span className={cssClasses.verticalLink}>{suggestion.label}</span>
-        </button>
+        </Link>
       </li>
     );
   }
@@ -154,10 +150,9 @@ export default function AlternativeVerticals ({
     return (
       <div className={cssClasses.categoriesText}>
         <span>View results across </span>
-        <button className={cssClasses.allCategoriesLink} 
-          onClick={actions.executeUniversalQuery}>
-          <span>all search categories.</span>
-        </button>
+        <Link className={cssClasses.allCategoriesLink} to='/'>
+          all search categories.
+        </Link>
       </div>
     );
   }
