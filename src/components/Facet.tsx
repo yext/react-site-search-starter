@@ -84,7 +84,8 @@ export default function Facet(props: FacetProps): JSX.Element {
           {facetOptions.map(option => 
             renderCheckboxOption({
               option: { id: option.displayName, label: `${option.displayName} (${option.count})` },
-              optionHandler: () => onToggle(facet.fieldId, option)
+              optionHandler: () => onToggle(facet.fieldId, option),
+              selected: option.selected
             })
           )}
         </div>
