@@ -1,15 +1,7 @@
 import { useAnswersActions, useAnswersState, Filter, Matcher } from '@yext/answers-headless-react';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import { isDuplicateFilter } from '../utils/filterutils';
-
-interface CheckBoxProps {
-  fieldId: string,
-  value: string,
-  label: string,
-  selected: boolean,
-  optionHandler: Function,
-  cssClasses?: Pick<StaticFiltersCssClasses, 'option' | 'optionInput' | 'optionLabel'>
-}
+import renderCheckboxOption, { CheckboxOptionCssClasses } from './utils/renderCheckboxOption';
 
 interface FilterOption {
   fieldId: string,
@@ -26,23 +18,17 @@ interface StaticFiltersProps {
   cssCompositionMethod?: CompositionMethod
 }
 
-interface StaticFiltersCssClasses {
+interface StaticFiltersCssClasses extends CheckboxOptionCssClasses {
   container?: string,
   title?: string,
   optionsContainer?: string,
-  option?: string,
-  optionInput?: string,
-  optionLabel?: string,
   divider?: string
 }
 
 const builtInCssClasses: StaticFiltersCssClasses = {
   container: 'md:w-40',
   title: 'text-gray-900 text-sm font-medium mb-4',
-  optionsContainer: 'flex flex-col space-y-3',
-  option: 'flex items-center space-x-3',
-  optionInput: 'w-3.5 h-3.5 form-checkbox border border-gray-300 rounded-sm text-blue-600 focus:ring-blue-500',
-  optionLabel: 'text-gray-600 text-sm font-normal'
+  optionsContainer: 'flex flex-col space-y-3'
 }
 
 export default function StaticFilters(props: StaticFiltersProps): JSX.Element {
@@ -77,42 +63,23 @@ export default function StaticFilters(props: StaticFiltersProps): JSX.Element {
         return <fieldset key={`${index}-${filterSet.title}`}>
           <legend className={cssClasses.title}>{filterSet.title}</legend>
           <div className={cssClasses.optionsContainer}>
-            {filterSet.options.map((option, index) => (
-              <CheckboxFilter
-                fieldId={option.fieldId}
-                value={option.value}
-                label={option.label}
-                key={index}
-                selected={getOptionSelectStatus(option)}
-                optionHandler={handleFilterOptionChange}
-                cssClasses={cssClasses}
-              />
-            ))}
+            {filterSet.options.map((option, index) => {
+              const filter = {
+                fieldId: option.fieldId,
+                matcher: Matcher.Equals,
+                value: option.value
+              }
+              return renderCheckboxOption({
+                option: { id: `${index}`, label: option.label },
+                optionHandler: selected => handleFilterOptionChange(filter, selected),
+                selected: getOptionSelectStatus(option)
+              });
+            }
+            )}
           </div>
           {!isLastFilterSet && <Divider customCssClasses={{ divider: cssClasses.divider }}/>}
         </fieldset>
       })}
-    </div>
-  );
-}
-
-function CheckboxFilter({ fieldId, value, label, selected, optionHandler, cssClasses = {} }: CheckBoxProps) {
-  const filter = {
-    fieldId: fieldId,
-    matcher: Matcher.Equals,
-    value: value
-  }
-  const id = fieldId + "_" + value
-  return (
-    <div className={cssClasses.option}>
-      <input 
-        type="checkbox"
-        id={id}
-        checked={selected}
-        className={cssClasses.optionInput}
-        onChange={evt => optionHandler(filter, evt.target.checked)}
-      />
-      <label className={cssClasses.optionLabel} htmlFor={id}>{label}</label>
     </div>
   );
 }
