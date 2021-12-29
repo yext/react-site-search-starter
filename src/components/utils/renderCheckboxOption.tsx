@@ -11,7 +11,7 @@ export interface CheckboxOptionCssClasses {
 
 interface CheckBoxOptionProps {
   option: CheckboxOption,
-  optionHandler: (isChecked: boolean) => void,
+  onClick: (isChecked: boolean) => void,
   selected?: boolean,
   customCssClasses?: CheckboxOptionCssClasses
 }
@@ -23,7 +23,7 @@ const builtInCssClasses: CheckboxOptionCssClasses = {
 }
 
 export default function renderCheckboxOption({
-  option, selected, optionHandler, customCssClasses
+  option, selected, onClick, customCssClasses
 }: CheckBoxOptionProps) {
   const cssClasses = { ...builtInCssClasses, ...customCssClasses };
   return (
@@ -33,7 +33,7 @@ export default function renderCheckboxOption({
         id={option.id}
         checked={selected}
         className={cssClasses.optionInput}
-        onChange={evt => optionHandler(evt.target.checked)}
+        onChange={evt => onClick(evt.target.checked)}
       />
       <label className={cssClasses.optionLabel} htmlFor={option.id}>{option.label}</label>
     </div>

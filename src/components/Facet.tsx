@@ -70,7 +70,7 @@ export default function Facet(props: FacetProps): JSX.Element {
     <fieldset>
       <button className={cssClasses.labelContainer} {...(collapsible ? getToggleProps() : {})}>
         <div className={cssClasses.label}>{label || facet.displayName}</div>
-        <DropdownIcon className={modifiedLabelIconCssClasses}/>
+        {collapsible && <DropdownIcon className={modifiedLabelIconCssClasses}/>}
       </button>
       <div {...(collapsible ? getCollapseProps() : {})}>
         {searchable 
@@ -84,7 +84,7 @@ export default function Facet(props: FacetProps): JSX.Element {
           {facetOptions.map(option => 
             renderCheckboxOption({
               option: { id: option.displayName, label: `${option.displayName} (${option.count})` },
-              optionHandler: () => onToggle(facet.fieldId, option),
+              onClick: () => onToggle(facet.fieldId, option),
               selected: option.selected
             })
           )}
