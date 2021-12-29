@@ -2,6 +2,8 @@ import { useAnswersUtilities, DisplayableFacet, DisplayableFacetOption } from '@
 import { useState } from 'react';
 import useCollapse from 'react-collapsed';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
+import renderCheckboxOption, { CheckboxOptionCssClasses } from './utils/renderCheckboxOption';
+import { ReactComponent as DropdownIcon } from '../icons/chevron.svg';
 
 export type onFacetChangeFn = (fieldId: string, option: DisplayableFacetOption) => void
 
@@ -20,21 +22,19 @@ interface FacetProps extends FacetConfig {
   cssCompositionMethod?: CompositionMethod
 }
 
-export interface FacetCssClasses {
-  facetLabel?: string,
+export interface FacetCssClasses extends CheckboxOptionCssClasses {
+  label?: string,
+  labelIcon?: string,
+  labelContainer?: string,
   optionsContainer?: string,
-  option?: string,
-  optionInput?: string,
-  optionLabel?: string,
   searchableInputElement?: string
 }
 
 const builtInCssClasses: FacetCssClasses = {
-  facetLabel: 'text-gray-900 text-sm font-medium mb-4',
+  label: 'text-gray-900 text-sm font-medium',
+  labelIcon: 'w-3',
+  labelContainer: 'w-full flex justify-between items-center mb-4',
   optionsContainer: 'flex flex-col space-y-3',
-  option: 'flex items-center space-x-3',
-  optionInput: 'w-3.5 h-3.5 form-checkbox border border-gray-300 rounded-sm text-blue-600 focus:ring-blue-500',
-  optionLabel: 'text-gray-600 text-sm font-normal'
 }
 
 export default function Facet(props: FacetProps): JSX.Element {
@@ -53,9 +53,14 @@ export default function Facet(props: FacetProps): JSX.Element {
   const answersUtilities = useAnswersUtilities();
   const hasSelectedFacet = !!facet.options.find(o => o.selected);
   const [ filterValue, setFilterValue ] = useState('');
-  const { getCollapseProps, getToggleProps } = useCollapse({
+  const { getCollapseProps, getToggleProps, isExpanded } = useCollapse({
     defaultExpanded: hasSelectedFacet || defaultExpanded
   });
+
+  cssClasses.labelIcon = cssClasses.labelIcon ?? '';
+  const modifiedLabelIconCssClasses = isExpanded
+    ? cssClasses.labelIcon
+    : cssClasses.labelIcon + ' transform rotate-180';
 
   const facetOptions = searchable
     ? answersUtilities.searchThroughFacet(facet, filterValue).options
@@ -63,8 +68,9 @@ export default function Facet(props: FacetProps): JSX.Element {
 
   return (
     <fieldset>
-      <button className={cssClasses.facetLabel} {...(collapsible ? getToggleProps() : {})}>
-        {label || facet.displayName} 
+      <button className={cssClasses.labelContainer} {...(collapsible ? getToggleProps() : {})}>
+        <div className={cssClasses.label}>{label || facet.displayName}</div>
+        {collapsible && <DropdownIcon className={modifiedLabelIconCssClasses}/>}
       </button>
       <div {...(collapsible ? getCollapseProps() : {})}>
         {searchable 
@@ -76,38 +82,14 @@ export default function Facet(props: FacetProps): JSX.Element {
             onChange={e => setFilterValue(e.target.value)}/>}
         <div className={cssClasses.optionsContainer}>
           {facetOptions.map(option => 
-            <FacetOption 
-              key={option.displayName} 
-              fieldId={facet.fieldId}
-              option={option}
-              onToggle={onToggle}
-              cssClasses={cssClasses}/>
+            renderCheckboxOption({
+              option: { id: option.displayName, label: `${option.displayName} (${option.count})` },
+              onClick: () => onToggle(facet.fieldId, option),
+              selected: option.selected
+            })
           )}
         </div>
       </div>
     </fieldset>
-  )
-}
-
-interface FacetOptionProps { 
-  fieldId: string, 
-  option: DisplayableFacetOption, 
-  onToggle: onFacetChangeFn,
-  cssClasses?: Pick<FacetCssClasses, 'option' | 'optionInput' | 'optionLabel'>
-}
-
-function FacetOption(props: FacetOptionProps): JSX.Element {
-  const { fieldId, onToggle, option, cssClasses = {} } = props;
-  return (
-    <div className={cssClasses.option}>
-      <input
-        className={cssClasses.optionInput}
-        onChange={() => onToggle(fieldId, option)}
-        checked={option.selected}
-        type='checkbox'
-        id={option.displayName}
-      />
-      <label className={cssClasses.optionLabel} htmlFor={option.displayName}>{option.displayName} ({option.count})</label>
-    </div>
   )
 }
