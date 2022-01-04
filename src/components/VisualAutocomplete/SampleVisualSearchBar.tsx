@@ -2,7 +2,6 @@ import VisualSearchBar from './VisualSearchBar';
 import { Result } from '@yext/answers-headless-react';
 import EntityPreviews from './EntityPreviews';
 import { universalResultsConfig } from '../../config/universalResultsConfig';
-import { Divider } from '../../components/StaticFilters';
 
 /**
  * This is an example of how to use the VisualSearchBar component.
@@ -49,10 +48,7 @@ interface FaqData {
 function FaqCard({ result }: CardProps) {
   const faqData: FaqData = result.rawData;
   return (<div key={faqData.question}>
-    <Divider 
-      customCssClasses={{ divider: 'h-px bg-gray-200 mt-1 mb-3 mx-2.5' }}
-      cssCompositionMethod='replace'
-    />
+    <div className='h-px bg-gray-200 mt-1 mb-3 mx-2.5'></div>
     <div tabIndex={0} className='flex flex-col mx-4 mb-3 rounded-md'>
       <div className='text-gray-900 text-lg font-medium pb-1'>{faqData.question}</div>
       <div>{faqData.answer}</div>
