@@ -1,14 +1,28 @@
-import { MovieCard } from '../components/cards/MovieCard';
+import { StandardCard } from '../components/cards/StandardCard';
 import { VerticalConfig } from '../components/UniversalResults';
 
 export type UniversalResultsConfig = Record<string, VerticalConfig>;
 
 export const universalResultsConfig: UniversalResultsConfig = {
-  movie: {
-    label: 'Movie',
+  faqs: {
+    label: 'FAQs',
+    viewAllButton: true,
     cardConfig: {
-      CardComponent: MovieCard,
-      showOrdinal: true
+      CardComponent: StandardCard,
+      showOrdinal: false
     }
   },
+  events: {
+    label: 'Events',
+    cardConfig: {
+      CardComponent: StandardCard,
+      showOrdinal: false
+    }
+  },
+  jobs: {
+    label: 'Jobs',
+  },
+  locations: {
+    label: 'Locations',
+  }
 }
