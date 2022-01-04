@@ -46,8 +46,9 @@ interface NavigationProps {
 
 export default function Navigation({ links, customCssClasses, cssCompositionMethod }: NavigationProps) {
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
-  // Close the menu when clicking the document
   const currentVertical = useAnswersState(state => state.vertical.verticalKey);
+
+  // Close the menu when clicking the document
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLButtonElement>(null);
   const handleDocumentClick = (e: MouseEvent) => {
