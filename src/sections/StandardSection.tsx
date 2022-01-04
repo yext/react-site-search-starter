@@ -32,7 +32,6 @@ const StandardSection: SectionComponent = function (props: StandardSectionConfig
         results={results}
         CardComponent={cardComponent}
         {...(cardConfig && { cardConfig })}
-        customCssClasses={{ styles: "grid gap-2 grid-cols-3" }}
       />
     </section>
   );
