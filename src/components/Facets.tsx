@@ -22,7 +22,7 @@ interface FacetsCssClasses extends FacetCssClasses {
 }
 
 const builtInCssClasses: FacetsCssClasses = {
-  searchableInputElement: 'text-sm bg-white h-9 w-full outline-none p-1 mb-2 rounded-md border border-gray-300 focus:border-blue-600',
+  searchableInputElement: 'text-sm bg-white h-9 w-full outline-none p-2 mb-2 rounded-md border border-gray-300 focus:border-blue-600',
   container: 'md:w-40',
   buttonsContainer: 'flex justify-between mt-5',
   button: 'border border-gray-300 px-2.5 py-1 rounded-md'

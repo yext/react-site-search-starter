@@ -31,7 +31,7 @@ export interface FacetCssClasses extends CheckboxOptionCssClasses {
 }
 
 const builtInCssClasses: FacetCssClasses = {
-  label: 'text-gray-900 text-sm font-medium',
+  label: 'text-gray-900 text-sm font-medium text-left',
   labelIcon: 'w-3',
   labelContainer: 'w-full flex justify-between items-center mb-4',
   optionsContainer: 'flex flex-col space-y-3',
