@@ -29,8 +29,8 @@ const builtInCssClasses: NavigationCssClasses = {
   menuButton___menuOpen: 'bg-gray-100 text-gray-800',
   menuButton___hasActiveLink: 'text-blue-600',
   menuContainer: 'absolute flex flex-col bg-white border top-14 py-2 rounded-lg shadow-lg',
-  menuNavLink: 'text-gray-700 text-lg px-4 py-2 border-2 border-opacity-0 rounded-sm hover:bg-gray-100 focus:bg-gray-200 focus:border-gray-400',
-  menuActiveNavLink: 'text-blue-600 focus:bg-blue-50 focus:border-blue-700'
+  menuNavLink: 'text-gray-700 text-lg px-4 py-2 border-2 border-opacity-0 rounded-sm hover:bg-gray-100 focus:border-blue-700',
+  menuActiveNavLink: 'text-blue-600'
 }
 
 interface LinkData {
