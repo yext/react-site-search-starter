@@ -21,10 +21,10 @@ import { ReactComponent as MagnifyingGlassIcon } from '../../icons/magnifying_gl
 const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
 const builtInCssClasses: VisualSearchBarCssClasses = { 
   ...builtInSearchBarCssClasses, 
-  recentSearchesOptionContainer: 'flex items-center py-1 px-2 cursor-pointer',
-  recentSearchesIcon: 'w-4',
-  recentSearchesOption: 'ml-2',
-  verticalLink: 'ml-14 text-gray-600'
+  recentSearchesOptionContainer: 'flex items-center h-6.5 px-3.5 pb-3 cursor-pointer',
+  recentSearchesIcon: 'w-4 mx-1 text-gray-500',
+  recentSearchesOption: 'pl-3',
+  verticalLink: '-mt-1 ml-14 text-gray-600'
 };
 
 interface VisualSearchBarCssClasses extends SearchBarCssClasses {

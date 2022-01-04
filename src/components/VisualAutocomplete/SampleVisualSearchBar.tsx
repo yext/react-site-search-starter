@@ -18,15 +18,15 @@ export default function SampleVisualSearchBar() {
         <div className={isLoading ? 'opacity-50' : ''}>
           <EntityPreviews verticalKey='events'>
             {results => (
-              <div className='flex'>
-                {results.map(r => <EventCard result={r} key={r.name} />)}
+              <div className='flex ml-4 mt-1'>
+                {results.map((r, index) => <EventCard result={r} key={`${index}-${r.name}`} />)}
               </div>
             )}
           </EntityPreviews>
           <EntityPreviews verticalKey='faqs' limit={2}>
             {results => (
               <div className='flex flex-col'>
-                {results.map(r => <FaqCard result={r} key={r.name} />)}
+                {results.map((r, index) => <FaqCard result={r} key={`${index}-${r.name}`} />)}
               </div>
             )}
           </EntityPreviews>
@@ -47,12 +47,13 @@ interface FaqData {
 
 function FaqCard({ result }: CardProps) {
   const faqData: FaqData = result.rawData;
-  return (
-    <div tabIndex={0} className='flex flex-col m-4 rounded-md p-2'>
-      <div className='text-lg font-medium pb-1'>{faqData.question}</div>
+  return (<div key={faqData.question}>
+    <div className='h-px bg-gray-200 mt-1 mb-3 mx-2.5'></div>
+    <div tabIndex={0} className='flex flex-col mx-4 mb-3 rounded-md'>
+      <div className='text-gray-900 text-lg font-medium pb-1'>{faqData.question}</div>
       <div>{faqData.answer}</div>
     </div>
-  )
+  </div>)
 }
 
 interface EventData {
@@ -63,7 +64,7 @@ function EventCard({ result }: CardProps) {
   const eventData: EventData = result.rawData;
   const venueName = eventData.venueName;
   return (
-    <div tabIndex={0} className='flex flex-col m-4 border rounded-md p-3 text-lg'>
+    <div tabIndex={0} className='flex flex-col mb-3 mr-4 border rounded-md p-3 text-lg'>
       <div className='font-medium pb-1'>{result.name}</div>
       <div className='text-base'>{venueName}</div>
     </div>
