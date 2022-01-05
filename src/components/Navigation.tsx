@@ -91,12 +91,9 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
   const { search } = useLocation();
   const visibleLinks = links.slice(0, links.length - numOverflowLinks);
   const overflowLinks = links.slice(-numOverflowLinks);
-  let menuContainsActiveLink = false;
-  overflowLinks.forEach(({ to }) => {
-    if (to === currentVertical || (to === '/' && currentVertical === undefined)) {
-      menuContainsActiveLink = true;
-    }
-  })
+  const menuContainsActiveLink = overflowLinks.some(({ to }) =>
+    to === currentVertical || (to === '/' && currentVertical === undefined)
+  );
   let menuButtonClassNames = cssClasses.menuButton___menuOpen
     ? classNames(cssClasses.menuButton, {
       [cssClasses.menuButton___menuOpen]: menuOpen
