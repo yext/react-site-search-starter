@@ -10,27 +10,27 @@ interface NavigationCssClasses {
   linksWrapper?: string,
   menuWrapper?: string,
   navLink?: string,
-  activeNavLink?: string,
+  navLink___active?: string,
   menuButton?: string,
   menuButtonContainer?: string,
   menuButton___menuOpen?: string,
   menuButton___hasActiveLink?: string,
   menuContainer?: string,
   menuNavLink?: string,
-  menuActiveNavLink?: string
+  menuNavLink___active?: string
 }
 
 const builtInCssClasses: NavigationCssClasses = {
   nav: 'border-b border-gray-200 text-gray-600 flex space-x-6 font-medium mb-6',
   navLink: 'whitespace-nowrap py-3 px-1 mt-1 font-medium text-md border-b-2 border-opacity-0 hover:border-gray-300',
-  activeNavLink: 'text-blue-600 border-blue-600 border-b-2 border-opacity-100 hover:border-blue-600',
+  navLink___active: 'text-blue-600 border-blue-600 border-b-2 border-opacity-100 hover:border-blue-600',
   menuButtonContainer: 'relative flex flex-grow justify-end mr-4',
   menuButton: 'flex items-center text-gray-600 font-medium text-md my-1 p-3 border-opacity-0 rounded-md hover:bg-gray-200',
   menuButton___menuOpen: 'bg-gray-100 text-gray-800',
   menuButton___hasActiveLink: 'text-blue-600',
   menuContainer: 'absolute flex flex-col bg-white border top-14 py-2 rounded-lg shadow-lg',
-  menuNavLink: 'text-gray-700 text-lg px-4 py-2 border-2 border-opacity-0 rounded-sm hover:bg-gray-100 focus:border-blue-700',
-  menuActiveNavLink: 'text-blue-600'
+  menuNavLink: 'text-gray-600 text-lg px-4 py-2 hover:bg-gray-100 hover:text-gray-800 focus:text-gray-800',
+  menuNavLink___active: 'text-blue-600 hover:text-blue-600 focus:text-blue-600'
 }
 
 interface LinkData {
@@ -91,10 +91,10 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
   const { search } = useLocation();
   const visibleLinks = links.slice(0, links.length - numOverflowLinks);
   const overflowLinks = links.slice(-numOverflowLinks);
-  let isActiveLinkInMenu = false;
+  let menuContainsActiveLink = false;
   overflowLinks.forEach(({ to }) => {
     if (to === currentVertical || (to === '/' && currentVertical === undefined)) {
-      isActiveLinkInMenu = true;
+      menuContainsActiveLink = true;
     }
   })
   let menuButtonClassNames = cssClasses.menuButton___menuOpen
@@ -104,7 +104,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
     : cssClasses.menuButton;
   menuButtonClassNames = cssClasses.menuButton___hasActiveLink
     ? classNames(menuButtonClassNames, {
-      [cssClasses.menuButton___hasActiveLink]: isActiveLinkInMenu
+      [cssClasses.menuButton___hasActiveLink]: menuContainsActiveLink
     })
     : menuButtonClassNames;
   return (
@@ -123,7 +123,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
             <div className={cssClasses.menuContainer}>
               {menuOpen && overflowLinks.map(l => renderLink(l, search, {
                 navLink: cssClasses.menuNavLink,
-                activeNavLink: cssClasses.menuActiveNavLink
+                navLink___active: cssClasses.menuNavLink___active
               }))}
             </div>
           }
@@ -136,14 +136,14 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 function renderLink(
   linkData: LinkData,
   queryParams: string,
-  cssClasses: { navLink?: string, activeNavLink?: string }) 
+  cssClasses: { navLink?: string, navLink___active?: string }) 
 {
   const { to, label } = linkData;
   return (
     <NavLink
       key={to}
       className={cssClasses.navLink}
-      activeClassName={cssClasses.activeNavLink}
+      activeClassName={cssClasses.navLink___active}
       to={`${to}${queryParams}`}
       exact={true}
     >
