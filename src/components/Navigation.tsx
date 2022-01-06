@@ -94,16 +94,11 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
   const menuContainsActiveLink = overflowLinks.some(({ to }) =>
     to === currentVertical || (to === '/' && currentVertical === undefined)
   );
-  let menuButtonClassNames = cssClasses.menuButton___menuOpen
-    ? classNames(cssClasses.menuButton, {
-      [cssClasses.menuButton___menuOpen]: menuOpen
-    })
-    : cssClasses.menuButton;
-  menuButtonClassNames = cssClasses.menuButton___hasActiveLink
-    ? classNames(menuButtonClassNames, {
-      [cssClasses.menuButton___hasActiveLink]: menuContainsActiveLink
-    })
-    : menuButtonClassNames;
+  const menuButtonClassNames = classNames(cssClasses.menuButton, {
+    [cssClasses.menuButton___menuOpen ?? '']: menuOpen,
+    [cssClasses.menuButton___hasActiveLink ?? '']: menuContainsActiveLink
+  });
+
   return (
     <nav className={cssClasses.nav} ref={navigationRef}>
       {visibleLinks.map(l => renderLink(l, search, cssClasses))}
