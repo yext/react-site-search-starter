@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import React, { useReducer, KeyboardEvent, useRef, useEffect, useState, FocusEvent, Children } from "react"
+import React, { useReducer, KeyboardEvent, useRef, useEffect, useState, useMemo, FocusEvent, Children } from "react"
 import DropdownSection, { DropdownSectionProps } from "./DropdownSection";
 import ScreenReader from "./ScreenReader";
 import recursivelyMapChildren from './utils/recursivelyMapChildren';
@@ -85,7 +85,7 @@ export default function InputDropdown({
   const [latestUserInput, setLatestUserInput] = useState(inputValue);
   const [childrenKey, setChildrenKey] = useState(0);
   const [screenReaderKey, setScreenReaderKey] = useState(0);
-  const screenReaderInstructionsId = uuid();
+  const screenReaderInstructionsId = useMemo(() => uuid(), []);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
