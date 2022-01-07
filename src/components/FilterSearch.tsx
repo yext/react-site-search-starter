@@ -108,7 +108,6 @@ export default function FilterSearch ({
         inputValue={input}
         placeholder='Search here ...'
         screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
-        screenReaderInstructionsId={screenReaderInstructionsId}
         screenReaderText={screenReaderText}
         onlyAllowDropdownOptionSubmissions={true}
         onInputChange={newInput => {
