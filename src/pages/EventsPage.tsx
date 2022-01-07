@@ -8,6 +8,9 @@ import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import StaticFilters from '../components/StaticFilters';
+import CollapsibleFilterDrawer from '../components/CollapsibleFilterDrawer';
+import ExpandFiltersButton from '../components/ExpandFiltersButton';
+import { PageView, usePageView } from '../hooks/usePageView';
 
 const staticFiltersConfig = [{
   title: 'Venue',
@@ -28,40 +31,46 @@ const staticFiltersConfig = [{
 export default function EventsPage({ verticalKey }: {
   verticalKey: string
 }) {
+  const [pageView, setPageView] = usePageView();
   usePageSetupEffect(verticalKey);
 
   return (
     <div className='flex'>
-      <div>
+      <CollapsibleFilterDrawer
+        pageView={pageView}
+        setPageView={setPageView}
+      >
         <StaticFilters
           filterConfig={staticFiltersConfig}
         />
-      </div>
-      <div className='ml-10 flex-grow'>
-        <DirectAnswer />
-        <SpellCheck />
-        <ResultsCount />
-        <AppliedFilters
-          hiddenFields={['builtin.entityType']}
-          customCssClasses={{
-            nlpFilter: 'mb-4',
-            removableFilter: 'mb-4'
-          }}
-        />
-        <AlternativeVerticals
-          currentVerticalLabel='Events'
-          verticalsConfig={[
-            { label: 'FAQs', verticalKey: 'faqs' },
-            { label: 'Jobs', verticalKey: 'jobs' },
-            { label: 'Locations', verticalKey: 'locations' }
-          ]}
-        />
-        <VerticalResults
-          CardComponent={StandardCard}
-          displayAllResults={true}
-        />
-        <LocationBias />
-      </div>
+      </CollapsibleFilterDrawer>
+      { (pageView === PageView.Desktop || pageView === PageView.MobileFiltersCollapsed) &&
+        <div className='flex-grow'>
+          <DirectAnswer />
+          <SpellCheck />
+          <div className='flex'>
+            <ResultsCount />
+            {pageView === PageView.MobileFiltersCollapsed && 
+              <ExpandFiltersButton onClick={() => setPageView(PageView.MobileFiltersExpanded)}/>}
+          </div>
+          <AppliedFilters
+            hiddenFields={['builtin.entityType']}
+          />
+          <AlternativeVerticals
+            currentVerticalLabel='Events'
+            verticalsConfig={[
+              { label: 'FAQs', verticalKey: 'faqs' },
+              { label: 'Jobs', verticalKey: 'jobs' },
+              { label: 'Locations', verticalKey: 'locations' }
+            ]}
+          />
+          <VerticalResults
+            CardComponent={StandardCard}
+            displayAllResults={true}
+          />
+          <LocationBias />
+        </div>
+      }
     </div>
   )
 }

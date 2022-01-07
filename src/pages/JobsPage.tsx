@@ -20,10 +20,6 @@ export default function JobsPage({ verticalKey }: {
       <ResultsCount />
       <AppliedFilters
         hiddenFields={['builtin.entityType']}
-        customCssClasses={{
-          nlpFilter: 'mb-4',
-          removableFilter: 'mb-4'
-        }}
       />
       <AlternativeVerticals
         currentVerticalLabel='Jobs'
