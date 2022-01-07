@@ -189,8 +189,11 @@ export default function InputDropdown({
   });
 
   function handleInputElementKeydown(evt: KeyboardEvent<HTMLInputElement>) {
+    if (['ArrowDown', 'ArrowUp'].includes(evt.key)) {
+      evt.preventDefault();
+    }
+
     if (evt.key === 'Enter' 
-      && evt.target === inputRef.current
       && focusedSectionIndex === undefined
       && !onlyAllowDropdownOptionSubmissions
     ) {
