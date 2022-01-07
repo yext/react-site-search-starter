@@ -60,13 +60,13 @@ export default function DropdownSection({
   }
 
   function handleKeyDown(evt: globalThis.KeyboardEvent) {
-    if (['ArrowDown', 'ArrowUp', 'ArrowRight', 'ArrowLeft'].includes(evt.key)) {
+    if (['ArrowDown', 'ArrowUp'].includes(evt.key)) {
       evt.preventDefault();
     }
 
-    if (evt.key === 'ArrowDown' || evt.key === 'ArrowRight') {
+    if (evt.key === 'ArrowDown') {
       incrementOptionFocus();
-    } else if (evt.key === 'ArrowUp' || evt.key === 'ArrowLeft') {
+    } else if (evt.key === 'ArrowUp') {
       decrementOptionFocus();
     } else if (evt.key === 'Enter') {
       options[focusedOptionIndex].onSelect();
