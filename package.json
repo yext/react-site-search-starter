@@ -82,7 +82,7 @@
     "test": "node scripts/test.js --watchAll=false",
     "wcag": "./tests/wcag/index.js",
     "eslint": "eslint",
-    "generate-notices": "generate-license-file --input package.json --output THIRD-PARTY-NOTICES && node ./scripts/remove-repo-license.js"
+    "generate-notices": "generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite"
   },
   "eslintConfig": {
     "extends": [
@@ -185,7 +185,7 @@
     ]
   },
   "devDependencies": {
-    "generate-license-file": "^1.2.0",
+    "generate-license-file": "^1.3.0",
     "@axe-core/puppeteer": "^4.3.2",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.0",
