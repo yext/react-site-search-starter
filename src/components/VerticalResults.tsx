@@ -59,19 +59,19 @@ function renderResult(CardComponent: CardComponent, cardConfig: CardConfigTypes,
 interface VerticalResultsProps {
   CardComponent: CardComponent,
   cardConfig?: CardConfigTypes,
-  displayAllResults?: boolean,
+  displayAllOnNoResults?: boolean,
   customCssClasses?: VerticalResultsCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
 
 export default function VerticalResults(props: VerticalResultsProps): JSX.Element | null {
-  const { displayAllResults = true, ...otherProps } = props;
+  const { displayAllOnNoResults = true, ...otherProps } = props;
 
   const verticalResults = useAnswersState(state => state.vertical.results) || [];
   const allResultsForVertical = useAnswersState(state => state.vertical?.noResults?.allResultsForVertical.results) || [];
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
 
-  const results = verticalResults.length === 0 && displayAllResults
+  const results = verticalResults.length === 0 && displayAllOnNoResults
     ? allResultsForVertical
     : verticalResults
 
