@@ -6,29 +6,29 @@ import Facets from "./Facets";
 import StaticFilters, { Divider } from "./StaticFilters";
 import recursivelyMapChildren from "./utils/recursivelyMapChildren";
 
-interface CollapsibleFilterDrawerCssClasses {
+interface CollapsibleFilterContainerCssClasses {
   container___desktop?: string,
   container___mobileFiltersExpanded?: string,
   divider?: string
 }
 
-const builtInCssClasses: CollapsibleFilterDrawerCssClasses = {
+const builtInCssClasses: CollapsibleFilterContainerCssClasses = {
   container___desktop: 'mr-10',
   container___mobileFiltersExpanded: 'py-5 px-4 flex flex-col overflow-x-hidden fixed bg-white inset-0 z-10',
-  divider: 'w-screen right-4 border-t border-gray-200 my-4'
+  divider: 'w-screen relative right-4 border-t border-gray-200 my-4'
 }
 
 interface Props {
-  customCssClasses?: CollapsibleFilterDrawerCssClasses,
+  customCssClasses?: CollapsibleFilterContainerCssClasses,
   cssCompositionMethod?: CompositionMethod,
   pageView: PageView,
   setPageView: (pageView: PageView) => void
 };
 
 /**
- * Responsible for managing the CollapsibleFilterDrawer based on the current PageView
+ * Responsible for managing the CollapsibleFilterContainer based on the current PageView
  */
-export default function CollapsibleFilterDrawer({
+export default function CollapsibleFilterContainer({
   children,
   pageView,
   setPageView,
@@ -39,7 +39,7 @@ export default function CollapsibleFilterDrawer({
   if (pageView === PageView.Desktop) {
     return <div className={cssClasses.container___desktop}>{children}</div>;
   } else if (pageView === PageView.MobileFiltersExpanded) {
-    const childrenWithWithUpdatedDividers = recursivelyMapChildren(children, child => {
+    const childrenWithUpdatedDividers = recursivelyMapChildren(children, child => {
       if (child.type !== Facets && child.type !== StaticFilters && child.type !== Divider ) {
         return child;
       }
@@ -49,7 +49,7 @@ export default function CollapsibleFilterDrawer({
       <div className={cssClasses.container___mobileFiltersExpanded}>
         <CollapseFiltersButton onClick={() => setPageView(PageView.MobileFiltersCollapsed)} />
         <Divider customCssClasses={{ divider: cssClasses.divider }} cssCompositionMethod='assign'/>
-        {childrenWithWithUpdatedDividers}
+        {childrenWithUpdatedDividers}
       </div>
     );
   }

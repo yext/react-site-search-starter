@@ -8,7 +8,7 @@ import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import StaticFilters from '../components/StaticFilters';
-import CollapsibleFilterDrawer from '../components/CollapsibleFilterDrawer';
+import CollapsibleFilterContainer from '../components/CollapsibleFilterContainer';
 import ExpandFiltersButton from '../components/ExpandFiltersButton';
 import { PageView, usePageView } from '../hooks/usePageView';
 
@@ -36,14 +36,14 @@ export default function EventsPage({ verticalKey }: {
 
   return (
     <div className='flex'>
-      <CollapsibleFilterDrawer
+      <CollapsibleFilterContainer
         pageView={pageView}
         setPageView={setPageView}
       >
         <StaticFilters
           filterConfig={staticFiltersConfig}
         />
-      </CollapsibleFilterDrawer>
+      </CollapsibleFilterContainer>
       { (pageView === PageView.Desktop || pageView === PageView.MobileFiltersCollapsed) &&
         <div className='flex-grow'>
           <DirectAnswer />

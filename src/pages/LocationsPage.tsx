@@ -7,7 +7,7 @@ import SpellCheck from '../components/SpellCheck';
 import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
-import CollapsibleFilterDrawer from '../components/CollapsibleFilterDrawer';
+import CollapsibleFilterContainer from '../components/CollapsibleFilterContainer';
 import Facets from '../components/Facets';
 import FilterSearch from '../components/FilterSearch';
 import { Divider } from '../components/StaticFilters';
@@ -33,7 +33,7 @@ export default function LocationsPage({ verticalKey }: {
 
   return (
     <div className='flex'> 
-      <CollapsibleFilterDrawer
+      <CollapsibleFilterContainer
         pageView={pageView}
         setPageView={setPageView}
       >
@@ -48,7 +48,7 @@ export default function LocationsPage({ verticalKey }: {
           searchable={true}
           collapsible={true}
           defaultExpanded={true}/>
-      </CollapsibleFilterDrawer>
+      </CollapsibleFilterContainer>
       { (pageView === PageView.Desktop || pageView === PageView.MobileFiltersCollapsed) &&
         <div className='flex-grow'>
           <DirectAnswer />
