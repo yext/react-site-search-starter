@@ -105,16 +105,18 @@ interface PaginationCssClasses {
   labelContainer?: string,
   label?: string,
   selectedLabel?: string,
-  iconContainer?: string,
+  leftIconContainer?: string,
+  rightIconContainer?: string,
   icon?: string
 }
 
 const builtInPaginationCssClasses: PaginationCssClasses = {
   container: 'flex justify-center mb-4',
-  labelContainer: 'inline-flex rounded-md shadow-sm border border-gray-300 -space-x-px',
-  label: 'relative z-0 inline-flex items-center px-4 py-2 text-sm font-semibold border-l border-r border-gray-300 text-gray-500',
-  selectedLabel: 'relative z-10 inline-flex items-center px-4 py-2 text-sm font-semibold border border-blue-600 text-blue-600',
-  iconContainer: 'inline-flex items-center px-3.5 py-2',
+  labelContainer: 'inline-flex shadow-sm -space-x-px',
+  label: 'z-0 inline-flex items-center px-4 py-2 text-sm font-semibold border border-gray-300 text-gray-500',
+  selectedLabel: 'z-10 inline-flex items-center px-4 py-2 text-sm font-semibold border border-blue-600 text-blue-600 bg-blue-50',
+  leftIconContainer: 'inline-flex items-center px-3.5 py-2 border border-gray-300 rounded-l-md',
+  rightIconContainer: 'inline-flex items-center px-3.5 py-2 border border-gray-300 rounded-r-md',
   icon: 'w-3 text-gray-500'
 }
 
@@ -172,7 +174,7 @@ function Pagination(props: PaginationProps): JSX.Element {
       <nav className={cssClasses.labelContainer} aria-label="Pagination">
         <button
           aria-label='Navigate to the previous results page'
-          className={cssClasses.iconContainer}
+          className={cssClasses.leftIconContainer}
           onClick={() => executeSearchWithNewOffset(offset - limit)} disabled={pageNumber === 1}
         >
           <PageNavigationIcon className={cssClasses.icon + ' transform -rotate-90'}/>
@@ -189,7 +191,7 @@ function Pagination(props: PaginationProps): JSX.Element {
         })}
         <button
           aria-label='Navigate to the next results page'
-          className={cssClasses.iconContainer}
+          className={cssClasses.rightIconContainer}
           onClick={() => executeSearchWithNewOffset(offset + limit)} disabled={pageNumber === maxPageCount}
         >
           <PageNavigationIcon className={cssClasses.icon + ' transform rotate-90'}/>
