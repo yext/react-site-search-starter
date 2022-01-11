@@ -8,6 +8,10 @@ import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import StaticFilters from '../components/StaticFilters';
+import FilterDisplayManager from '../components/FilterDisplayManager';
+import ViewFiltersButton from '../components/ViewFiltersButton';
+import { useContext } from 'react';
+import { PageView, PageViewContext } from '../context/PageViewContext';
 
 const staticFiltersConfig = [{
   title: 'Venue',
@@ -28,39 +32,42 @@ const staticFiltersConfig = [{
 export default function EventsPage({ verticalKey }: {
   verticalKey: string
 }) {
+  const { pageView } = useContext(PageViewContext);
   usePageSetupEffect(verticalKey);
 
   return (
     <div className='flex'>
-      <div>
+      <FilterDisplayManager>
         <StaticFilters
           filterConfig={staticFiltersConfig}
         />
-      </div>
-      <div className='ml-10 flex-grow'>
-        <DirectAnswer />
-        <SpellCheck />
-        <ResultsCount />
-        <AppliedFilters
-          hiddenFields={['builtin.entityType']}
-          customCssClasses={{
-            nlpFilter: 'mb-4',
-            removableFilter: 'mb-4'
-          }}
-        />
-        <AlternativeVerticals
-          currentVerticalLabel='Events'
-          verticalsConfig={[
-            { label: 'FAQs', verticalKey: 'faqs' },
-            { label: 'Jobs', verticalKey: 'jobs' },
-            { label: 'Locations', verticalKey: 'locations' }
-          ]}
-        />
-        <VerticalResults
-          CardComponent={StandardCard}
-        />
-        <LocationBias />
-      </div>
+      </FilterDisplayManager>
+      { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
+        <div className='flex-grow'>
+          <DirectAnswer />
+          <SpellCheck />
+          <div className='flex'>
+            <ResultsCount />
+            {pageView === PageView.FiltersHiddenMobile && 
+              <ViewFiltersButton />}
+          </div>
+          <AppliedFilters
+            hiddenFields={['builtin.entityType']}
+          />
+          <AlternativeVerticals
+            currentVerticalLabel='Events'
+            verticalsConfig={[
+              { label: 'FAQs', verticalKey: 'faqs' },
+              { label: 'Jobs', verticalKey: 'jobs' },
+              { label: 'Locations', verticalKey: 'locations' }
+            ]}
+          />
+          <VerticalResults
+            CardComponent={StandardCard}
+          />
+          <LocationBias />
+        </div>
+      }
     </div>
   )
 }

@@ -25,7 +25,8 @@ const builtInCssClasses: FacetsCssClasses = {
   searchableInputElement: 'text-sm bg-white h-9 w-full outline-none p-2 mb-2 rounded-md border border-gray-300 focus:border-blue-600',
   container: 'md:w-40',
   buttonsContainer: 'flex justify-between mt-5',
-  button: 'border border-gray-300 px-2.5 py-1 rounded-md'
+  button: 'border border-gray-300 px-2.5 py-1 rounded-md',
+  divider: 'w-full h-px bg-gray-200 my-4'
 }
 
 export default function Facets (props: FacetsProps): JSX.Element {
@@ -76,7 +77,7 @@ export default function Facets (props: FacetsProps): JSX.Element {
             {...config}
             customCssclasses={cssClasses}
             onToggle={handleFacetOptionChange} />
-          {!isLastFacet && <Divider customCssClasses={{ divider: cssClasses.divider }}/>}
+          {!isLastFacet && <Divider customCssClasses={{ divider: cssClasses.divider }} cssCompositionMethod='replace'/>}
         </div>
       );
     });

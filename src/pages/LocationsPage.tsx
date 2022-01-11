@@ -7,9 +7,13 @@ import SpellCheck from '../components/SpellCheck';
 import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
+import FilterDisplayManager from '../components/FilterDisplayManager';
 import Facets from '../components/Facets';
 import FilterSearch from '../components/FilterSearch';
 import { Divider } from '../components/StaticFilters';
+import ViewFiltersButton from '../components/ViewFiltersButton';
+import { useContext } from 'react';
+import { PageView, PageViewContext } from '../context/PageViewContext';
 
 const filterSearchFields = [{
   fieldApiName: 'name',
@@ -25,11 +29,12 @@ const filterSearchFields = [{
 export default function LocationsPage({ verticalKey }: {
   verticalKey: string
 }) {
+  const { pageView } = useContext(PageViewContext);
   usePageSetupEffect(verticalKey);
 
   return (
     <div className='flex'> 
-      <div>
+      <FilterDisplayManager>
         <FilterSearch
           label='Filter Search'
           sectioned={true}
@@ -40,31 +45,33 @@ export default function LocationsPage({ verticalKey }: {
           searchable={true}
           collapsible={true}
           defaultExpanded={true}/>
-      </div>
-      <div className='ml-10 flex-grow'>
-        <DirectAnswer />
-        <SpellCheck />
-        <ResultsCount />
-        <AppliedFilters
-          hiddenFields={['builtin.entityType']}
-          customCssClasses={{
-            nlpFilter: 'mb-4',
-            removableFilter: 'mb-4'
-          }}
-        />
-        <AlternativeVerticals
-          currentVerticalLabel='Locations'
-          verticalsConfig={[
-            { label: 'FAQs', verticalKey: 'faqs' },
-            { label: 'Jobs', verticalKey: 'jobs' },
-            { label: 'Events', verticalKey: 'events' }
-          ]}
-        />
-        <VerticalResults
-          CardComponent={StandardCard}
-        />
-        <LocationBias />
-      </div>
+      </FilterDisplayManager>
+      { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
+        <div className='flex-grow'>
+          <DirectAnswer />
+          <SpellCheck />
+          <div className='flex'>
+            <ResultsCount />
+            {pageView === PageView.FiltersHiddenMobile && 
+              <ViewFiltersButton />}
+          </div>
+          <AppliedFilters
+            hiddenFields={['builtin.entityType']}
+          />
+          <AlternativeVerticals
+            currentVerticalLabel='Locations'
+            verticalsConfig={[
+              { label: 'FAQs', verticalKey: 'faqs' },
+              { label: 'Jobs', verticalKey: 'jobs' },
+              { label: 'Events', verticalKey: 'events' }
+            ]}
+          />
+          <VerticalResults
+            CardComponent={StandardCard}
+          />
+          <LocationBias />
+        </div>
+      }
     </div>
   )
 }

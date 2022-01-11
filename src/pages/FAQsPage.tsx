@@ -20,10 +20,6 @@ export default function FAQsPage({ verticalKey }: {
       <ResultsCount />
       <AppliedFilters
         hiddenFields={['builtin.entityType']}
-        customCssClasses={{
-          nlpFilter: 'mb-4',
-          removableFilter: 'mb-4'
-        }}
       />
       <AlternativeVerticals
         currentVerticalLabel='FAQs'

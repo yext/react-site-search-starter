@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
-import { AppliedFiltersDisplay, AppliedFiltersProps } from "../components/AppliedFilters";
+import { AppliedFiltersCssClasses, AppliedFiltersDisplay, AppliedFiltersProps } from "../components/AppliedFilters";
 import { ResultsCountConfig } from "../components/ResultsCount";
 import { useComposedCssClasses, CompositionMethod } from "../hooks/useComposedCssClasses";
 import { ReactComponent as CollectionIcon } from '../icons/collection.svg';
 import { useAnswersState } from '@yext/answers-headless-react';
 import { DisplayableFilter } from "../models/displayableFilter";
 
-interface SectionHeaderCssClasses {
+interface SectionHeaderCssClasses extends AppliedFiltersCssClasses {
   sectionHeaderContainer?: string,
   sectionHeaderIconContainer?: string,
   sectionHeaderLabel?: string,
@@ -21,7 +21,10 @@ const builtInCssClasses: SectionHeaderCssClasses = {
   sectionHeaderLabel: 'font-bold text-gray-800 text-base pl-3', 
   viewMoreContainer: 'flex justify-end flex-grow ml-auto font-medium text-gray-800',
   viewMoreLink: 'text-blue-600 pr-1 pl-3',
-  appliedFiltersContainer: 'ml-3'
+  appliedFiltersContainer: 'ml-3 flex flex-wrap',
+  nlpFilter: 'border rounded-3xl px-3 py-1.5 text-sm font-medium italic text-gray-800 mr-2',
+  removableFilter: 'flex items-center border rounded-3xl px-3 py-1.5 text-sm font-medium text-gray-900 mr-2',
+  removeFilterButton: 'w-2 h-2 text-gray-500 m-1.5'
 }
 
 interface SectionHeaderConfig {
@@ -57,9 +60,8 @@ export default function SectionHeader(props: SectionHeaderConfig): JSX.Element {
         {resultsCountConfig &&
            <ResultsCountDisplay resultsLength={resultsCountConfig.resultsLength} resultsCount={resultsCountConfig.resultsCount} />} */}
       {appliedFiltersConfig &&
-        <div className={cssClasses.appliedFiltersContainer}>
-          <AppliedFiltersDisplay displayableFilters={displayableFilters}/>
-        </div>}
+        <AppliedFiltersDisplay displayableFilters={displayableFilters} customCssClasses={cssClasses} cssCompositionMethod='replace'/>
+      }
       {viewAllButton && 
         <div className={cssClasses.viewMoreContainer}>
           <Link className={cssClasses.viewMoreLink} to={`/${verticalKey}?query=${latestQuery}`}>
