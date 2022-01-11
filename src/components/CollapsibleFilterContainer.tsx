@@ -49,7 +49,12 @@ export default function CollapsibleFilterContainer({
     });
     return (
       <div className={cssClasses.container___mobileFiltersExpanded}>
-        <CollapseFiltersButton onClick={() => setPageView(PageView.MobileFiltersCollapsed)} buttonCssClasses={cssClasses.collapseFiltersButton} />
+        <button
+          className={cssClasses.collapseFiltersButton}
+          onClick={() => setPageView(PageView.MobileFiltersCollapsed)}
+        >
+          <CloseXIcon />
+        </button>
         <Divider customCssClasses={{ divider: cssClasses.divider }} cssCompositionMethod='assign'/>
         {childrenWithUpdatedDividers}
       </div>
@@ -70,20 +75,4 @@ function customizeComponentDivider(child: ReactElement, dividerCssClass?: string
     },
     cssCompositionMethod: 'assign'
   });
-}
-
-interface CollapseFiltersButtonProps {
-  onClick?: () => void,
-  buttonCssClasses?: string
-}
-
-function CollapseFiltersButton ({ onClick, buttonCssClasses }: CollapseFiltersButtonProps) {
-  return (
-    <button
-      className={buttonCssClasses}
-      onClick={onClick}
-    >
-      <CloseXIcon />
-    </button>
-  );
 }
