@@ -12,7 +12,7 @@ interface NavigationCssClasses {
   navLinkContainer?: string,
   navLinkContainer___active?: string,
   navLink?: string,
-  navLink___active?: string,
+  kebabIcon?: string,
   menuButton?: string,
   menuButtonContainer?: string,
   menuButton___menuOpen?: string,
@@ -28,8 +28,9 @@ const builtInCssClasses: NavigationCssClasses = {
   navLinkContainer: 'whitespace-nowrap py-3 mt-1 font-medium text-md border-b-2 border-opacity-0 hover:border-gray-300',
   navLink: 'py-3 px-2',
   navLinkContainer___active: 'text-blue-600 border-blue-600 border-opacity-100 hover:border-blue-600',
+  kebabIcon: 'pointer-events-none',
   menuButtonContainer: 'relative flex flex-grow justify-end mr-4',
-  menuButton: 'flex items-center text-gray-600 font-medium text-md mt-0.5 p-3 border-opacity-0 rounded-md hover:bg-gray-200',
+  menuButton: 'flex items-center text-gray-600 font-medium text-md h-12 mt-0.5 p-3 border-opacity-0 rounded-md hover:bg-gray-200',
   menuButton___menuOpen: 'bg-gray-100 text-gray-800',
   menuButton___hasActiveLink: 'text-blue-600',
   menuContainer: 'absolute flex-col bg-white border top-14 py-2 rounded-lg shadow-lg',
@@ -93,13 +94,12 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
     return () => window.removeEventListener('resize', resizeListener);
   }, [handleResize]);
 
-  const { search } = useLocation();
   const visibleLinks = links.slice(0, links.length - numOverflowLinks);
   const overflowLinks = links.slice(-numOverflowLinks);
   const isActiveLink = ({ to }: LinkData) => to === currentVertical || (to === '/' && currentVertical === undefined)
   const activeVisibleLinkIndex = visibleLinks.findIndex(isActiveLink);
   const activeMenuLinkIndex = overflowLinks.findIndex(isActiveLink);
-  const menuContainsActiveLink = overflowLinks.some(isActiveLink);
+  const menuContainsActiveLink = activeMenuLinkIndex >= 0;
   const menuButtonClassNames = classNames(cssClasses.menuButton, {
     [cssClasses.menuButton___menuOpen ?? '']: menuOpen,
     [cssClasses.menuButton___hasActiveLink ?? '']: menuContainsActiveLink
@@ -107,7 +107,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 
   return (
     <nav className={cssClasses.nav} ref={navigationRef}>
-      {visibleLinks.map((l, index) => renderLink(l, index===activeVisibleLinkIndex, search, cssClasses))}
+      {visibleLinks.map((l, index) => renderLink(l, index === activeVisibleLinkIndex, cssClasses))}
       {numOverflowLinks > 0 &&
         <div className={cssClasses.menuButtonContainer}>
           <button
@@ -115,11 +115,11 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
             ref={menuRef}
             onClick={() => setMenuOpen(!menuOpen)}
           >
-            <KebabIcon /> More
+            <KebabIcon className={cssClasses.kebabIcon} /> More
           </button>
           {menuOpen && 
             <div className={cssClasses.menuContainer}>
-              {menuOpen && overflowLinks.map((l, index) => renderLink(l, index === activeMenuLinkIndex, search, {
+              {menuOpen && overflowLinks.map((l, index) => renderLink(l, index === activeMenuLinkIndex, {
                 navLink: cssClasses.menuNavLink,
                 navLinkContainer: cssClasses.menuNavLinkContainer,
                 navLinkContainer___active: cssClasses.menuNavLinkContainer___active
@@ -135,19 +135,17 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 function renderLink(
   linkData: LinkData,
   isActiveLink: boolean,
-  queryParams: string,
-  cssClasses: { navLinkContainer?: string, navLinkContainer___active?: string, navLink?: string, navLink___active?: string }) 
+  cssClasses: { navLinkContainer?: string, navLinkContainer___active?: string, navLink?: string }) 
 {
   const { to, label } = linkData;
-  const navLinkContainerClasses = classNames(cssClasses.navLinkContainer, {
-    [cssClasses.navLinkContainer___active ?? '']: isActiveLink
-  })
+  const navLinkContainerClasses = cssClasses.navLinkContainer___active 
+    ? classNames(cssClasses.navLinkContainer, { [cssClasses.navLinkContainer___active]: isActiveLink }) 
+    : cssClasses.navLinkContainer;
   return (
-    <div className={navLinkContainerClasses}>
+    <div className={navLinkContainerClasses} key={to}>
       <NavLink
-        key={to}
         className={cssClasses.navLink}
-        to={`${to}${queryParams}`}
+        to={`${to}`}
         exact={true}
       >
         {label}
