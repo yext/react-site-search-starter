@@ -71,7 +71,6 @@ export default function LocationsPage({ verticalKey }: {
           />
           <VerticalResults
             CardComponent={StandardCard}
-            displayAllResults={true}
           />
           <LocationBias />
         </div>

@@ -66,7 +66,6 @@ export default function EventsPage({ verticalKey }: {
           />
           <VerticalResults
             CardComponent={StandardCard}
-            displayAllResults={true}
           />
           <LocationBias />
         </div>
