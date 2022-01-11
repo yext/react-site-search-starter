@@ -49,7 +49,7 @@ function isVerticalSuggestion (suggestion: VerticalSuggestion | null): suggestio
 interface Props {
   currentVerticalLabel: string,
   verticalsConfig: VerticalConfig[],
-  displayAllResults?: boolean,
+  displayAllOnNoResults?: boolean,
   customCssClasses?: AlternativeVerticalsCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
@@ -57,7 +57,7 @@ interface Props {
 export default function AlternativeVerticals ({
   currentVerticalLabel,
   verticalsConfig,
-  displayAllResults = true,
+  displayAllOnNoResults = true,
   customCssClasses,
   cssCompositionMethod
 }: Props): JSX.Element | null {
@@ -68,7 +68,7 @@ export default function AlternativeVerticals ({
   const query = useAnswersState(state => state.query.mostRecentSearch);
 
   const verticalSuggestions = buildVerticalSuggestions(verticalsConfig, alternativeVerticals);
-  const isShowingAllResults = displayAllResults && allResultsForVertical.length > 0;
+  const isShowingAllResults = displayAllOnNoResults && allResultsForVertical.length > 0;
 
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
   const containerClassNames = cssClasses.alternativeVerticals___loading

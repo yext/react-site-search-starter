@@ -1,8 +1,9 @@
 import classNames from "classnames";
-import React, { useReducer, KeyboardEvent, useRef, useEffect, useState, FocusEvent, Children } from "react"
+import React, { useReducer, KeyboardEvent, useRef, useEffect, useState, useMemo, FocusEvent, Children } from "react"
 import DropdownSection, { DropdownSectionProps } from "./DropdownSection";
 import ScreenReader from "./ScreenReader";
 import recursivelyMapChildren from './utils/recursivelyMapChildren';
+import { v4 as uuid } from 'uuid';
 
 export interface InputDropdownCssClasses {
   inputDropdownContainer?: string,
@@ -19,7 +20,6 @@ interface Props {
   inputValue?: string,
   placeholder?: string,
   screenReaderInstructions: string,
-  screenReaderInstructionsId: string,
   screenReaderText: string,
   onlyAllowDropdownOptionSubmissions?: boolean,
   forceHideDropdown?: boolean,
@@ -60,7 +60,6 @@ export default function InputDropdown({
   inputValue = '',
   placeholder,
   screenReaderInstructions,
-  screenReaderInstructionsId,
   screenReaderText,
   onlyAllowDropdownOptionSubmissions,
   forceHideDropdown,
@@ -86,11 +85,12 @@ export default function InputDropdown({
   const [latestUserInput, setLatestUserInput] = useState(inputValue);
   const [childrenKey, setChildrenKey] = useState(0);
   const [screenReaderKey, setScreenReaderKey] = useState(0);
+  const screenReaderInstructionsId = useMemo(() => uuid(), []);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputDropdownRef = useRef<HTMLDivElement>(null);
-  if (!shouldDisplayDropdown && screenReaderKey) {
+  if (dropdownHidden && screenReaderKey) {
     setScreenReaderKey(0);
   }
 
@@ -189,8 +189,11 @@ export default function InputDropdown({
   });
 
   function handleInputElementKeydown(evt: KeyboardEvent<HTMLInputElement>) {
+    if (['ArrowDown', 'ArrowUp'].includes(evt.key)) {
+      evt.preventDefault();
+    }
+
     if (evt.key === 'Enter' 
-      && evt.target === inputRef.current
       && focusedSectionIndex === undefined
       && !onlyAllowDropdownOptionSubmissions
     ) {

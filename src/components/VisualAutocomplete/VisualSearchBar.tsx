@@ -206,7 +206,6 @@ export default function VisualSearchBar({
         inputValue={query}
         placeholder={placeholder}
         screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
-        screenReaderInstructionsId={screenReaderInstructionsId}
         screenReaderText={getScreenReaderText(autocompleteResults)}
         onSubmit={executeQuery}
         onInputChange={value => {
