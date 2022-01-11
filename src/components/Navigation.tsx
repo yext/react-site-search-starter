@@ -9,6 +9,8 @@ interface NavigationCssClasses {
   nav?: string,
   linksWrapper?: string,
   menuWrapper?: string,
+  navLinkContainer?: string,
+  navLinkContainer___active?: string,
   navLink?: string,
   navLink___active?: string,
   menuButton?: string,
@@ -17,20 +19,23 @@ interface NavigationCssClasses {
   menuButton___hasActiveLink?: string,
   menuContainer?: string,
   menuNavLink?: string,
-  menuNavLink___active?: string
+  menuNavLinkContainer?: string,
+  menuNavLinkContainer___active?: string
 }
 
 const builtInCssClasses: NavigationCssClasses = {
   nav: 'border-b border-gray-200 text-gray-600 flex space-x-6 font-medium mb-6',
-  navLink: 'whitespace-nowrap py-3 px-1 mt-1 font-medium text-md border-b-2 border-opacity-0 hover:border-gray-300',
-  navLink___active: 'text-blue-600 border-blue-600 border-b-2 border-opacity-100 hover:border-blue-600',
+  navLinkContainer: 'whitespace-nowrap py-3 mt-1 font-medium text-md border-b-2 border-opacity-0 hover:border-gray-300',
+  navLink: 'py-3 px-2',
+  navLinkContainer___active: 'text-blue-600 border-blue-600 border-opacity-100 hover:border-blue-600',
   menuButtonContainer: 'relative flex flex-grow justify-end mr-4',
-  menuButton: 'flex items-center text-gray-600 font-medium text-md my-1 p-3 border-opacity-0 rounded-md hover:bg-gray-200',
+  menuButton: 'flex items-center text-gray-600 font-medium text-md mt-0.5 p-3 border-opacity-0 rounded-md hover:bg-gray-200',
   menuButton___menuOpen: 'bg-gray-100 text-gray-800',
   menuButton___hasActiveLink: 'text-blue-600',
-  menuContainer: 'absolute flex flex-col bg-white border top-14 py-2 rounded-lg shadow-lg',
-  menuNavLink: 'text-gray-600 text-lg px-4 py-2 hover:bg-gray-100 hover:text-gray-800 focus:text-gray-800',
-  menuNavLink___active: 'text-blue-600 hover:text-blue-600 focus:text-blue-600'
+  menuContainer: 'absolute flex-col bg-white border top-14 py-2 rounded-lg shadow-lg',
+  menuNavLink: 'px-4 py-2 flex-grow',
+  menuNavLinkContainer: 'flex text-gray-600 hover:bg-gray-100 text-lg hover:text-gray-800 focus:text-gray-800',
+  menuNavLinkContainer___active: 'text-blue-600 hover:text-blue-600 focus:text-blue-600'
 }
 
 interface LinkData {
@@ -91,9 +96,10 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
   const { search } = useLocation();
   const visibleLinks = links.slice(0, links.length - numOverflowLinks);
   const overflowLinks = links.slice(-numOverflowLinks);
-  const menuContainsActiveLink = overflowLinks.some(({ to }) =>
-    to === currentVertical || (to === '/' && currentVertical === undefined)
-  );
+  const isActiveLink = ({ to }: LinkData) => to === currentVertical || (to === '/' && currentVertical === undefined)
+  const activeVisibleLinkIndex = visibleLinks.findIndex(isActiveLink);
+  const activeMenuLinkIndex = overflowLinks.findIndex(isActiveLink);
+  const menuContainsActiveLink = overflowLinks.some(isActiveLink);
   const menuButtonClassNames = classNames(cssClasses.menuButton, {
     [cssClasses.menuButton___menuOpen ?? '']: menuOpen,
     [cssClasses.menuButton___hasActiveLink ?? '']: menuContainsActiveLink
@@ -101,7 +107,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 
   return (
     <nav className={cssClasses.nav} ref={navigationRef}>
-      {visibleLinks.map(l => renderLink(l, search, cssClasses))}
+      {visibleLinks.map((l, index) => renderLink(l, index===activeVisibleLinkIndex, search, cssClasses))}
       {numOverflowLinks > 0 &&
         <div className={cssClasses.menuButtonContainer}>
           <button
@@ -113,9 +119,10 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
           </button>
           {menuOpen && 
             <div className={cssClasses.menuContainer}>
-              {menuOpen && overflowLinks.map(l => renderLink(l, search, {
+              {menuOpen && overflowLinks.map((l, index) => renderLink(l, index === activeMenuLinkIndex, search, {
                 navLink: cssClasses.menuNavLink,
-                navLink___active: cssClasses.menuNavLink___active
+                navLinkContainer: cssClasses.menuNavLinkContainer,
+                navLinkContainer___active: cssClasses.menuNavLinkContainer___active
               }))}
             </div>
           }
@@ -127,19 +134,24 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 
 function renderLink(
   linkData: LinkData,
+  isActiveLink: boolean,
   queryParams: string,
-  cssClasses: { navLink?: string, navLink___active?: string }) 
+  cssClasses: { navLinkContainer?: string, navLinkContainer___active?: string, navLink?: string, navLink___active?: string }) 
 {
   const { to, label } = linkData;
+  const navLinkContainerClasses = classNames(cssClasses.navLinkContainer, {
+    [cssClasses.navLinkContainer___active ?? '']: isActiveLink
+  })
   return (
-    <NavLink
-      key={to}
-      className={cssClasses.navLink}
-      activeClassName={cssClasses.navLink___active}
-      to={`${to}${queryParams}`}
-      exact={true}
-    >
-      {label}
-    </NavLink>
+    <div className={navLinkContainerClasses}>
+      <NavLink
+        key={to}
+        className={cssClasses.navLink}
+        to={`${to}${queryParams}`}
+        exact={true}
+      >
+        {label}
+      </NavLink>
+    </div>
   )
 }
