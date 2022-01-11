@@ -15,13 +15,12 @@ interface PageViewContextInterface {
   setPageView: (pageView: PageView) => void
 }
 
-const pageViewContext: PageViewContextInterface = {
+const pageViewContextDefault: PageViewContextInterface = {
   pageView: PageView.Desktop,
   setPageView: (pageView: PageView) => {}
 }
 
-export const PageViewContext = createContext<PageViewContextInterface>(pageViewContext);
-
+export const PageViewContext = createContext<PageViewContextInterface>(pageViewContextDefault);
 
 export function PageViewContextProvider(props: React.PropsWithChildren<{}>): JSX.Element {
   const [pageView, setPageView] = usePageView();
