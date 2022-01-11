@@ -1,4 +1,4 @@
-import { createContext, ReactChild, ReactChildren } from 'react';
+import { createContext } from 'react';
 import { usePageView } from '../hooks/usePageView';
 
 /**
@@ -22,11 +22,8 @@ const pageViewContext: PageViewContextInterface = {
 
 export const PageViewContext = createContext<PageViewContextInterface>(pageViewContext);
 
-type Props = {
-  children?: ReactChildren | ReactChild | (ReactChildren | ReactChild)[]
-}
 
-export function PageViewContextProvider(props: Props): JSX.Element {
+export function PageViewContextProvider(props: React.PropsWithChildren<{}>): JSX.Element {
   const [pageView, setPageView] = usePageView();
 
   return (
