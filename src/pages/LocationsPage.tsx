@@ -12,7 +12,8 @@ import Facets from '../components/Facets';
 import FilterSearch from '../components/FilterSearch';
 import { Divider } from '../components/StaticFilters';
 import ViewFiltersButton from '../components/ViewFiltersButton';
-import { PageView, usePageView } from '../hooks/usePageView';
+import { useContext } from 'react';
+import { PageView, PageViewContext } from '../context/PageViewContext';
 
 const filterSearchFields = [{
   fieldApiName: 'name',
@@ -28,15 +29,12 @@ const filterSearchFields = [{
 export default function LocationsPage({ verticalKey }: {
   verticalKey: string
 }) {
-  const [pageView, setPageView] = usePageView();
+  const { pageView } = useContext(PageViewContext);
   usePageSetupEffect(verticalKey);
 
   return (
     <div className='flex'> 
-      <FilterDisplayManager
-        pageView={pageView}
-        setPageView={setPageView}
-      >
+      <FilterDisplayManager>
         <FilterSearch
           label='Filter Search'
           sectioned={true}
@@ -56,7 +54,7 @@ export default function LocationsPage({ verticalKey }: {
           <div className='flex'>
             <ResultsCount />
             {pageView === PageView.FiltersHiddenMobile && 
-              <ViewFiltersButton onClick={() => setPageView(PageView.FiltersVisibleMobile)}/>}
+              <ViewFiltersButton />}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}

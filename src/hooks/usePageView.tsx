@@ -1,13 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-
-/**
- * Represents the possible views the page can display
- */
-export enum PageView {
-  Desktop,
-  FiltersHiddenMobile,
-  FiltersVisibleMobile
-} 
+import { PageView } from "../context/PageViewContext";
 
 /**
  * Provides an interface for accessing and setting the page view

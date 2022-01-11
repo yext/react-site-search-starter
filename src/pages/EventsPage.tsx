@@ -10,7 +10,8 @@ import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import StaticFilters from '../components/StaticFilters';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
-import { PageView, usePageView } from '../hooks/usePageView';
+import { useContext } from 'react';
+import { PageView, PageViewContext } from '../context/PageViewContext';
 
 const staticFiltersConfig = [{
   title: 'Venue',
@@ -31,15 +32,12 @@ const staticFiltersConfig = [{
 export default function EventsPage({ verticalKey }: {
   verticalKey: string
 }) {
-  const [pageView, setPageView] = usePageView();
+  const { pageView } = useContext(PageViewContext);
   usePageSetupEffect(verticalKey);
 
   return (
     <div className='flex'>
-      <FilterDisplayManager
-        pageView={pageView}
-        setPageView={setPageView}
-      >
+      <FilterDisplayManager>
         <StaticFilters
           filterConfig={staticFiltersConfig}
         />
@@ -51,7 +49,7 @@ export default function EventsPage({ verticalKey }: {
           <div className='flex'>
             <ResultsCount />
             {pageView === PageView.FiltersHiddenMobile && 
-              <ViewFiltersButton onClick={() => setPageView(PageView.FiltersVisibleMobile)}/>}
+              <ViewFiltersButton />}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}

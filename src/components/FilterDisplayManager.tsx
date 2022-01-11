@@ -1,6 +1,6 @@
-import { cloneElement, ReactElement } from "react";
+import { cloneElement, ReactElement, useContext } from "react";
+import { PageView, PageViewContext } from "../context/PageViewContext";
 import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
-import { PageView } from "../hooks/usePageView";
 import { ReactComponent as CloseXIcon } from '../icons/x.svg';
 import Facets from "./Facets";
 import StaticFilters, { Divider } from "./StaticFilters";
@@ -22,9 +22,7 @@ const builtInCssClasses: FilterDisplayManagerCssClasses = {
 
 interface Props {
   customCssClasses?: FilterDisplayManagerCssClasses,
-  cssCompositionMethod?: CompositionMethod,
-  pageView: PageView,
-  setPageView: (pageView: PageView) => void
+  cssCompositionMethod?: CompositionMethod
 };
 
 /**
@@ -32,11 +30,10 @@ interface Props {
  */
 export default function FilterDisplayManager({
   children,
-  pageView,
-  setPageView,
   customCssClasses,
   cssCompositionMethod
 }: React.PropsWithChildren<Props>) {
+  const { pageView, setPageView } = useContext(PageViewContext);
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   if (pageView === PageView.Desktop) {
     return <div className={cssClasses.container___desktop}>{children}</div>;
