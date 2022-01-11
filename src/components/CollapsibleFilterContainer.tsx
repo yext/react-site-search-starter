@@ -1,7 +1,7 @@
 import { cloneElement, ReactElement } from "react";
 import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
 import { PageView } from "../hooks/usePageView";
-import CollapseFiltersButton from "./CollapseFiltersButton";
+import { ReactComponent as CloseXIcon } from '../icons/x.svg';
 import Facets from "./Facets";
 import StaticFilters, { Divider } from "./StaticFilters";
 import recursivelyMapChildren from "./utils/recursivelyMapChildren";
@@ -9,13 +9,15 @@ import recursivelyMapChildren from "./utils/recursivelyMapChildren";
 interface CollapsibleFilterContainerCssClasses {
   container___desktop?: string,
   container___mobileFiltersExpanded?: string,
-  divider?: string
+  divider?: string,
+  collapseFiltersButton?: string
 }
 
 const builtInCssClasses: CollapsibleFilterContainerCssClasses = {
   container___desktop: 'mr-10',
   container___mobileFiltersExpanded: 'py-5 px-4 flex flex-col overflow-x-hidden fixed bg-white inset-0 z-10',
-  divider: 'w-screen relative right-4 border-t border-gray-200 my-4'
+  divider: 'w-screen relative right-4 border-t border-gray-200 my-4',
+  collapseFiltersButton: 'w-5 h-5 p-1 self-end my-2'
 }
 
 interface Props {
@@ -47,7 +49,7 @@ export default function CollapsibleFilterContainer({
     });
     return (
       <div className={cssClasses.container___mobileFiltersExpanded}>
-        <CollapseFiltersButton onClick={() => setPageView(PageView.MobileFiltersCollapsed)} />
+        <CollapseFiltersButton onClick={() => setPageView(PageView.MobileFiltersCollapsed)} buttonCssClasses={cssClasses.collapseFiltersButton} />
         <Divider customCssClasses={{ divider: cssClasses.divider }} cssCompositionMethod='assign'/>
         {childrenWithUpdatedDividers}
       </div>
@@ -68,4 +70,20 @@ function customizeComponentDivider(child: ReactElement, dividerCssClass?: string
     },
     cssCompositionMethod: 'assign'
   });
+}
+
+interface CollapseFiltersButtonProps {
+  onClick?: () => void,
+  buttonCssClasses?: string
+}
+
+function CollapseFiltersButton ({ onClick, buttonCssClasses }: CollapseFiltersButtonProps) {
+  return (
+    <button
+      className={buttonCssClasses}
+      onClick={onClick}
+    >
+      <CloseXIcon />
+    </button>
+  );
 }
