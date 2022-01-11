@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { ReactComponent as KebabIcon } from '../icons/kebab.svg';
 import { useComposedCssClasses, CompositionMethod } from '../hooks/useComposedCssClasses';
 import { useAnswersState } from '@yext/answers-headless-react';
