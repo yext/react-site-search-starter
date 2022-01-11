@@ -8,8 +8,8 @@ import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import StaticFilters from '../components/StaticFilters';
-import CollapsibleFilterContainer from '../components/CollapsibleFilterContainer';
-import ExpandFiltersButton from '../components/ExpandFiltersButton';
+import FilterDisplayManager from '../components/FilterDisplayManager';
+import ViewFiltersButton from '../components/ViewFiltersButton';
 import { PageView, usePageView } from '../hooks/usePageView';
 
 const staticFiltersConfig = [{
@@ -36,22 +36,22 @@ export default function EventsPage({ verticalKey }: {
 
   return (
     <div className='flex'>
-      <CollapsibleFilterContainer
+      <FilterDisplayManager
         pageView={pageView}
         setPageView={setPageView}
       >
         <StaticFilters
           filterConfig={staticFiltersConfig}
         />
-      </CollapsibleFilterContainer>
-      { (pageView === PageView.Desktop || pageView === PageView.MobileFiltersCollapsed) &&
+      </FilterDisplayManager>
+      { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {pageView === PageView.MobileFiltersCollapsed && 
-              <ExpandFiltersButton onClick={() => setPageView(PageView.MobileFiltersExpanded)}/>}
+            {pageView === PageView.FiltersHiddenMobile && 
+              <ViewFiltersButton onClick={() => setPageView(PageView.FiltersVisibleMobile)}/>}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}

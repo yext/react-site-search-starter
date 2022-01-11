@@ -7,11 +7,11 @@ import SpellCheck from '../components/SpellCheck';
 import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
-import CollapsibleFilterContainer from '../components/CollapsibleFilterContainer';
+import FilterDisplayManager from '../components/FilterDisplayManager';
 import Facets from '../components/Facets';
 import FilterSearch from '../components/FilterSearch';
 import { Divider } from '../components/StaticFilters';
-import ExpandFiltersButton from '../components/ExpandFiltersButton';
+import ViewFiltersButton from '../components/ViewFiltersButton';
 import { PageView, usePageView } from '../hooks/usePageView';
 
 const filterSearchFields = [{
@@ -33,7 +33,7 @@ export default function LocationsPage({ verticalKey }: {
 
   return (
     <div className='flex'> 
-      <CollapsibleFilterContainer
+      <FilterDisplayManager
         pageView={pageView}
         setPageView={setPageView}
       >
@@ -48,15 +48,15 @@ export default function LocationsPage({ verticalKey }: {
           searchable={true}
           collapsible={true}
           defaultExpanded={true}/>
-      </CollapsibleFilterContainer>
-      { (pageView === PageView.Desktop || pageView === PageView.MobileFiltersCollapsed) &&
+      </FilterDisplayManager>
+      { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {pageView === PageView.MobileFiltersCollapsed && 
-              <ExpandFiltersButton onClick={() => setPageView(PageView.MobileFiltersExpanded)}/>}
+            {pageView === PageView.FiltersHiddenMobile && 
+              <ViewFiltersButton onClick={() => setPageView(PageView.FiltersVisibleMobile)}/>}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}

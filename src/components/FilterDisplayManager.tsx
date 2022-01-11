@@ -6,14 +6,14 @@ import Facets from "./Facets";
 import StaticFilters, { Divider } from "./StaticFilters";
 import recursivelyMapChildren from "./utils/recursivelyMapChildren";
 
-interface CollapsibleFilterContainerCssClasses {
+interface FilterDisplayManagerCssClasses {
   container___desktop?: string,
   container___mobileFiltersExpanded?: string,
   divider?: string,
   collapseFiltersButton?: string
 }
 
-const builtInCssClasses: CollapsibleFilterContainerCssClasses = {
+const builtInCssClasses: FilterDisplayManagerCssClasses = {
   container___desktop: 'mr-10',
   container___mobileFiltersExpanded: 'py-5 px-4 flex flex-col overflow-x-hidden fixed bg-white inset-0 z-10',
   divider: 'w-screen relative right-4 border-t border-gray-200 my-4',
@@ -21,7 +21,7 @@ const builtInCssClasses: CollapsibleFilterContainerCssClasses = {
 }
 
 interface Props {
-  customCssClasses?: CollapsibleFilterContainerCssClasses,
+  customCssClasses?: FilterDisplayManagerCssClasses,
   cssCompositionMethod?: CompositionMethod,
   pageView: PageView,
   setPageView: (pageView: PageView) => void
@@ -30,7 +30,7 @@ interface Props {
 /**
  * Responsible for managing how filters are displayed based on the current PageView
  */
-export default function CollapsibleFilterContainer({
+export default function FilterDisplayManager({
   children,
   pageView,
   setPageView,
@@ -40,7 +40,7 @@ export default function CollapsibleFilterContainer({
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   if (pageView === PageView.Desktop) {
     return <div className={cssClasses.container___desktop}>{children}</div>;
-  } else if (pageView === PageView.MobileFiltersExpanded) {
+  } else if (pageView === PageView.FiltersVisibleMobile) {
     const childrenWithUpdatedDividers = recursivelyMapChildren(children, child => {
       if (child.type !== Facets && child.type !== StaticFilters && child.type !== Divider ) {
         return child;
@@ -51,7 +51,7 @@ export default function CollapsibleFilterContainer({
       <div className={cssClasses.container___mobileFiltersExpanded}>
         <button
           className={cssClasses.collapseFiltersButton}
-          onClick={() => setPageView(PageView.MobileFiltersCollapsed)}
+          onClick={() => setPageView(PageView.FiltersHiddenMobile)}
         >
           <CloseXIcon />
         </button>

@@ -1,18 +1,18 @@
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import { ReactComponent as FiltersIcon } from '../icons/filters.svg';
 
-interface ExpandFiltersButtonCssClasses {
+interface ViewFiltersButtonCssClasses {
   container?: string,
   button?: string
 }
 
-const builtInCssClasses: ExpandFiltersButtonCssClasses = { 
+const builtInCssClasses: ViewFiltersButtonCssClasses = { 
   container: 'flex-grow justify-end flex',
   button: 'p-1 mb-7'
 }
 
 interface Props {
-  customCssClasses?: ExpandFiltersButtonCssClasses,
+  customCssClasses?: ViewFiltersButtonCssClasses,
   cssCompositionMethod?: CompositionMethod,
   onClick?: () => void
 }
@@ -21,7 +21,7 @@ interface Props {
   onClick?: () => void
 }
 
-export default function ExpandFiltersButton ({ onClick, customCssClasses, cssCompositionMethod }: Props) {
+export default function ViewFiltersButton ({ onClick, customCssClasses, cssCompositionMethod }: Props) {
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   return (
     <div className={cssClasses.container}>

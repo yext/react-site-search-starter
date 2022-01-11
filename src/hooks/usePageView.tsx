@@ -5,8 +5,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
  */
 export enum PageView {
   Desktop,
-  MobileFiltersCollapsed,
-  MobileFiltersExpanded
+  FiltersHiddenMobile,
+  FiltersVisibleMobile
 } 
 
 /**
@@ -18,7 +18,7 @@ export enum PageView {
  */
 export function usePageView (): [PageView,  Dispatch<SetStateAction<PageView>>] {
   const [pageView, setPageView] = useState<PageView>(
-    isMobile() ? PageView.MobileFiltersCollapsed : PageView.Desktop);
+    isMobile() ? PageView.FiltersHiddenMobile : PageView.Desktop);
 
   function isMobile () {
     return window.innerWidth <= 768;
@@ -29,8 +29,8 @@ export function usePageView (): [PageView,  Dispatch<SetStateAction<PageView>>] 
       if (!isMobile()) {
         setPageView(PageView.Desktop);
       } else if (pageView === PageView.Desktop) {
-        // Collapse filters when transitioning from Desktop
-        setPageView(PageView.MobileFiltersCollapsed);
+        // Hide filters when transitioning from Desktop
+        setPageView(PageView.FiltersHiddenMobile);
       }
     }
 
