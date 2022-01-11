@@ -47,7 +47,6 @@ interface VerticalLink {
 interface Props {
   placeholder?: string,
   geolocationOptions?: PositionOptions,
-  screenReaderInstructionsId: string,
   headlessId: string,
   // The debouncing time, in milliseconds, for making API requests for entity previews
   entityPreviewsDebouncingTime: number,
@@ -65,7 +64,6 @@ interface Props {
  */
 export default function VisualSearchBar({
   placeholder,
-  screenReaderInstructionsId,
   headlessId,
   hideRecentSearches,
   renderEntityPreviews,
