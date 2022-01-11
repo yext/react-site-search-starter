@@ -35,7 +35,6 @@ export default function FAQsPage({ verticalKey }: {
       />
       <VerticalResults
         CardComponent={StandardCard}
-        displayAllResults={true}
       />
       <LocationBias />
     </div>

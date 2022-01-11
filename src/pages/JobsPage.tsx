@@ -35,7 +35,6 @@ export default function JobsPage({ verticalKey }: {
       />
       <VerticalResults
         CardComponent={StandardCard}
-        displayAllResults={true}
       />
       <LocationBias />
     </div>
