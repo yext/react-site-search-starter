@@ -30,7 +30,7 @@ const builtInCssClasses: NavigationCssClasses = {
   navLinkContainer___active: 'text-blue-600 border-blue-600 border-opacity-100 hover:border-blue-600',
   kebabIcon: 'pointer-events-none',
   menuButtonContainer: 'relative flex flex-grow justify-end mr-4',
-  menuButton: 'flex items-center text-gray-600 font-medium text-md h-12 mt-0.5 p-3 border-opacity-0 rounded-md hover:bg-gray-200',
+  menuButton: 'flex items-center text-gray-600 font-medium text-md h-12 mt-1 p-3 border-opacity-0 rounded-md hover:bg-gray-200',
   menuButton___menuOpen: 'bg-gray-100 text-gray-800',
   menuButton___hasActiveLink: 'text-blue-600',
   menuContainer: 'absolute flex-col bg-white border top-14 py-2 rounded-lg shadow-lg',
