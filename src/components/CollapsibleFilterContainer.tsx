@@ -28,7 +28,7 @@ interface Props {
 };
 
 /**
- * Responsible for managing the CollapsibleFilterContainer based on the current PageView
+ * Responsible for managing how filters are displayed based on the current PageView
  */
 export default function CollapsibleFilterContainer({
   children,
