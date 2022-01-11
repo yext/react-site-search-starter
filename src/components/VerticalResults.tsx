@@ -124,7 +124,6 @@ interface PaginationProps {
   limit: number,
   customCssClasses?: PaginationCssClasses,
   cssCompositionMethod?: CompositionMethod
-
 }
 
 /**
