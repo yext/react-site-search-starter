@@ -169,7 +169,7 @@ function Pagination(props: PaginationProps): JSX.Element {
 
   return (
     <div className={cssClasses.container}>
-      <nav className={cssClasses.labelContainer}>
+      <nav className={cssClasses.labelContainer} aria-label="Pagination">
         <button 
           className={cssClasses.iconContainer}
           onClick={() => executeSearchWithNewOffset(offset - limit)} disabled={pageNumber === 1}
