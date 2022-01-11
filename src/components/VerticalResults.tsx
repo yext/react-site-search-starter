@@ -74,15 +74,12 @@ export default function VerticalResults(props: VerticalResultsProps): JSX.Elemen
   const allResultsCountForVertical = useAnswersState(state => state.vertical?.noResults?.allResultsForVertical.resultsCount) || 0;
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
 
-  const results = verticalResults.length === 0 && displayAllOnNoResults
-    ? allResultsForVertical
-    : verticalResults
-  const resultsCount = verticalResults.length === 0 && displayAllOnNoResults
-    ? allResultsCountForVertical
-    : verticalResultsCount
-
-  const offset = useAnswersState(state => state.vertical.offset) || 0;
-  const limit = useAnswersState(state => state.vertical.limit) || 5;
+  let results = verticalResults;
+  let resultsCount = verticalResultsCount;
+  if (verticalResults.length === 0 && displayAllOnNoResults) {
+    results = allResultsForVertical;
+    resultsCount = allResultsCountForVertical;
+  }
 
   return (
     <>
@@ -90,8 +87,6 @@ export default function VerticalResults(props: VerticalResultsProps): JSX.Elemen
       {allowPagination 
         && <Pagination 
           numResults={resultsCount}
-          offset={offset}
-          limit={limit}
           customCssClasses={otherProps.customCssClasses}
           cssCompositionMethod={otherProps.cssCompositionMethod}
         />
@@ -122,8 +117,6 @@ const builtInPaginationCssClasses: PaginationCssClasses = {
 
 interface PaginationProps {
   numResults: number,
-  offset: number,
-  limit: number,
   customCssClasses?: PaginationCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
@@ -133,9 +126,11 @@ interface PaginationProps {
  * and enable user to navigate between those pages.
  */
 function Pagination(props: PaginationProps): JSX.Element {
-  const { numResults, offset, limit, customCssClasses = {}, cssCompositionMethod } = props;
+  const { numResults, customCssClasses = {}, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInPaginationCssClasses, customCssClasses, cssCompositionMethod);
   const answersAction = useAnswersActions();
+  const offset = useAnswersState(state => state.vertical.offset) || 0;
+  const limit = useAnswersState(state => state.vertical.limit) || 10;
 
   const executeSearchWithNewOffset = (newOffset: number) => {
     answersAction.setOffset(newOffset);
@@ -147,23 +142,8 @@ function Pagination(props: PaginationProps): JSX.Element {
   }
 
   const maxPageCount = Math.ceil(numResults / limit);
-  const paginationLabels: string[] = [];
   const pageNumber = (offset / limit) + 1;
-  const previousPageNumber = pageNumber - 1;
-  const nextPageNumber = pageNumber + 1;
-
-  if (previousPageNumber > 3) {
-    paginationLabels.push('1', '...', `${previousPageNumber}`);
-  } else if (previousPageNumber !== 0) {
-    [...Array(previousPageNumber)].forEach((_, index) => paginationLabels.push(`${index + 1}`));
-  }
-  paginationLabels.push(`${pageNumber}`);
-  if (maxPageCount - nextPageNumber > 2) {
-    paginationLabels.push(`${nextPageNumber}`, '...', `${maxPageCount}`);
-  } else if (nextPageNumber <= maxPageCount) {
-    [...Array(maxPageCount - nextPageNumber + 1)]
-      .forEach((_, index) => paginationLabels.push(`${nextPageNumber + index}`));
-  }
+  const paginationLabels: string[] = generatePaginationLabels(pageNumber, maxPageCount);
 
   return (
     <div className={cssClasses.container}>
@@ -195,4 +175,24 @@ function Pagination(props: PaginationProps): JSX.Element {
       </nav>
     </div>
   );
+}
+
+function generatePaginationLabels(pageNumber: number, maxPageCount: number): string[] {
+  const paginationLabels: string[] = [];
+  const previousPageNumber = pageNumber - 1;
+  const nextPageNumber = pageNumber + 1;
+
+  if (previousPageNumber > 3) {
+    paginationLabels.push('1', '...', `${previousPageNumber}`);
+  } else if (previousPageNumber !== 0) {
+    [...Array(previousPageNumber)].forEach((_, index) => paginationLabels.push(`${index + 1}`));
+  }
+  paginationLabels.push(`${pageNumber}`);
+  if (maxPageCount - nextPageNumber > 2) {
+    paginationLabels.push(`${nextPageNumber}`, '...', `${maxPageCount}`);
+  } else if (nextPageNumber <= maxPageCount) {
+    [...Array(maxPageCount - nextPageNumber + 1)]
+      .forEach((_, index) => paginationLabels.push(`${nextPageNumber + index}`));
+  }
+  return paginationLabels;
 }
