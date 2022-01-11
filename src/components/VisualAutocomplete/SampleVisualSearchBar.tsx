@@ -10,7 +10,6 @@ export default function SampleVisualSearchBar() {
   return (
     <VisualSearchBar
       placeholder='Search...'
-      screenReaderInstructionsId='SearchBar__srInstructions'
       headlessId='visual-autocomplete'
       entityPreviewsDebouncingTime={100}
       verticalKeyToLabel={verticalKey => universalResultsConfig[verticalKey]?.label ?? verticalKey}

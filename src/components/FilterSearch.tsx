@@ -29,7 +29,6 @@ export interface FilterSearchProps {
   label: string,
   sectioned: boolean,
   searchFields: Omit<SearchParameterField, 'fetchEntities'>[],
-  screenReaderInstructionsId: string,
   customCssClasses?: FilterSearchCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
@@ -38,7 +37,6 @@ export default function FilterSearch ({
   label,
   sectioned,
   searchFields,
-  screenReaderInstructionsId,
   customCssClasses,
   cssCompositionMethod
 }: FilterSearchProps): JSX.Element {

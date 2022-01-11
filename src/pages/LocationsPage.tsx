@@ -33,8 +33,7 @@ export default function LocationsPage({ verticalKey }: {
         <FilterSearch
           label='Filter Search'
           sectioned={true}
-          searchFields={filterSearchFields}
-          screenReaderInstructionsId='FilterSearchId'/>
+          searchFields={filterSearchFields}/>
         <Divider />
         <Facets
           searchOnChange={true}
