@@ -170,7 +170,8 @@ function Pagination(props: PaginationProps): JSX.Element {
   return (
     <div className={cssClasses.container}>
       <nav className={cssClasses.labelContainer} aria-label="Pagination">
-        <button 
+        <button
+          aria-label='Navigate to the previous results page'
           className={cssClasses.iconContainer}
           onClick={() => executeSearchWithNewOffset(offset - limit)} disabled={pageNumber === 1}
         >
@@ -186,7 +187,8 @@ function Pagination(props: PaginationProps): JSX.Element {
               return <button key={index} className={cssClasses.label} onClick={onSelectNewPage}>{label}</button>
           }
         })}
-        <button 
+        <button
+          aria-label='Navigate to the next results page'
           className={cssClasses.iconContainer}
           onClick={() => executeSearchWithNewOffset(offset + limit)} disabled={pageNumber === maxPageCount}
         >
