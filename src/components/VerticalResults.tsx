@@ -146,27 +146,23 @@ function Pagination(props: PaginationProps): JSX.Element {
     newPageNumber && executeSearchWithNewOffset(limit * (newPageNumber - 1));
   }
 
-  const maxPageCount = Math.trunc((numResults - 1) / limit) + 1;
+  const maxPageCount = Math.ceil(numResults / limit);
   const paginationLabels: string[] = [];
-  const pageNumber = (offset/limit) + 1;
+  const pageNumber = (offset / limit) + 1;
   const previousPageNumber = pageNumber - 1;
   const nextPageNumber = pageNumber + 1;
 
-  if (previousPageNumber !== 0) {
-    if (previousPageNumber <= 3) {
-      [...Array(previousPageNumber)].forEach((_, index) => paginationLabels.push(`${index + 1}`));
-    } else {
-      paginationLabels.push('1', '...', `${previousPageNumber}`);
-    }
+  if (previousPageNumber > 3) {
+    paginationLabels.push('1', '...', `${previousPageNumber}`);
+  } else if (previousPageNumber !== 0) {
+    [...Array(previousPageNumber)].forEach((_, index) => paginationLabels.push(`${index + 1}`));
   }
   paginationLabels.push(`${pageNumber}`);
-  if (nextPageNumber <= maxPageCount) {
-    if (maxPageCount - nextPageNumber <= 2 ) {
-      [...Array(maxPageCount - nextPageNumber + 1)]
-        .forEach((_, index) => paginationLabels.push(`${nextPageNumber + index}`));
-    } else {
-      paginationLabels.push(`${nextPageNumber}`, '...', `${maxPageCount}`);
-    }
+  if (maxPageCount - nextPageNumber > 2) {
+    paginationLabels.push(`${nextPageNumber}`, '...', `${maxPageCount}`);
+  } else if (nextPageNumber <= maxPageCount) {
+    [...Array(maxPageCount - nextPageNumber + 1)]
+      .forEach((_, index) => paginationLabels.push(`${nextPageNumber + index}`));
   }
 
   return (
