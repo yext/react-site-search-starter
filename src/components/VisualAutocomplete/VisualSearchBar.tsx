@@ -93,9 +93,6 @@ export default function VisualSearchBar({
   }, [clearRecentSearches, hideRecentSearches])
 
   const [filteredRecentSearches, setFilteredRecentSearches] = useState(recentSearches);
-  useEffect(() =>
-    setFilteredRecentSearches(recentSearches),
-  [recentSearches])
   const haveRecentSearches = !hideRecentSearches && filteredRecentSearches?.length !== 0;
 
   function executeQuery() {
