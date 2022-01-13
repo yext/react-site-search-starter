@@ -1,5 +1,5 @@
-import { useAnswersActions, useAnswersState, VerticalResults, AutocompleteResult } from '@yext/answers-headless-react';
-import { PropsWithChildren, useEffect } from 'react';
+import { useAnswersActions, useAnswersState, useAnswersUtilities, VerticalResults, AutocompleteResult } from '@yext/answers-headless-react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import InputDropdown from '../InputDropdown';
 import '../../sass/Autocomplete.scss';
 import DropdownSection, { Option } from '../DropdownSection';
@@ -78,9 +78,10 @@ export default function VisualSearchBar({
 
   const browserHistory = useHistory();
   const answersActions = useAnswersActions();
+  const answersUtilities = useAnswersUtilities();
   const query = useAnswersState(state => state.query.input) ?? '';
   const isLoading = useAnswersState(state => state.searchStatus.isLoading) ?? false;
-  const [executeQueryWithNearMeHandling, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions)
+  const [executeQueryWithNearMeHandling, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions);
   const [autocompleteResponse, executeAutocomplete] = useSynchronizedRequest(async () => {
     return answersActions.executeUniversalAutocomplete();
   });
@@ -90,8 +91,9 @@ export default function VisualSearchBar({
       clearRecentSearches();
     }
   }, [clearRecentSearches, hideRecentSearches])
-  const haveRecentSearches = !hideRecentSearches && recentSearches?.length !== 0;
-  
+
+  const [filteredRecentSearches, setFilteredRecentSearches] = useState(recentSearches);
+  const haveRecentSearches = !hideRecentSearches && filteredRecentSearches?.length !== 0;
 
   function executeQuery() {
     if (!hideRecentSearches) {
@@ -173,7 +175,7 @@ export default function VisualSearchBar({
       icon: cssClasses.recentSearchesIcon,
       option: cssClasses.recentSearchesOption
     }
-    const options: Option[] = recentSearches?.map(result => {
+    const options: Option[] = filteredRecentSearches?.map(result => {
       return {
         value: result.query,
         onSelect: () => {
@@ -193,6 +195,7 @@ export default function VisualSearchBar({
       optionIdPrefix='VisualSearchBar-RecentSearches'
       onFocusChange={value => {
         answersActions.setQuery(value);
+        updateEntityPreviews(value);
       }}
       cssClasses={recentSearchesCssClasses}
     />
@@ -211,6 +214,9 @@ export default function VisualSearchBar({
         }}
         onInputFocus={value => {
           updateEntityPreviews(value);
+          setFilteredRecentSearches(recentSearches?.filter(search => 
+            answersUtilities.isCloseMatch(search.query, value)
+          ));
           autocompletePromiseRef.current = executeAutocomplete();
         }}
         onDropdownLeave={value => {
