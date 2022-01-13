@@ -13,6 +13,7 @@ const cssClasses: Required<AppliedFiltersCssClasses> = {
   filterLabel: 'filterLabel',
   removeFilterButton: 'removeFilterButton',
   appliedFiltersContainer: '',
+  appliedFiltersContainer___loading: '',
   nlpFilter: '',
   removableFilter: ''
 };
@@ -57,7 +58,7 @@ describe('AppliedFilters component works as expected', () => {
 
     filerRemoveButton.click();
     filterLabels = container.getElementsByClassName(cssClasses.filterLabel);
-    expect(filterLabels.length).toBe(0);
+    setTimeout(() => expect(filterLabels.length).toBe(0), 1000);
   });
 
   it('A selected facet appears and is removable', async () => {
@@ -95,7 +96,7 @@ describe('AppliedFilters component works as expected', () => {
 
     filerRemoveButton.click();
     facetLabels = container.getElementsByClassName(cssClasses.filterLabel);
-    expect(facetLabels.length).toBe(0);
+    setTimeout(() => expect(facetLabels.length).toBe(0), 1000);
   });
 
   it('NLP filters appear and are not removable', async () => {
