@@ -22,7 +22,7 @@ const builtInCssClasses: SectionHeaderCssClasses = {
   viewMoreContainer: 'flex justify-end flex-grow ml-auto font-medium text-gray-800',
   viewMoreLink: 'text-blue-600 pr-1 pl-3',
   appliedFiltersContainer: 'ml-3 flex flex-wrap',
-  nlpFilter: 'border rounded-3xl px-3 py-1.5 text-sm font-medium text-gray-800 mr-2',
+  nlpFilter: 'border rounded-3xl px-3 py-1.5 text-sm font-medium italic text-gray-800 mr-2',
   removableFilter: 'flex items-center border rounded-3xl px-3 py-1.5 text-sm font-medium text-gray-900 mr-2',
   removeFilterButton: 'w-2 h-2 text-gray-500 m-1.5'
 }
