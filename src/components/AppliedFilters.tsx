@@ -31,8 +31,7 @@ interface AppliedFiltersDisplayProps {
   labelText?: string,
   delimiter?: string,
   displayableFilters: DisplayableFilter[],
-  customCssClasses?: AppliedFiltersCssClasses,
-  cssCompositionMethod?: CompositionMethod
+  cssClasses?: AppliedFiltersCssClasses
 }
 
 export interface AppliedFiltersProps {
@@ -57,20 +56,22 @@ export default function AppliedFilters (
     filterState.current = state.vertical.results ? state.filters : {};
   }
 
-  const { hiddenFields = [], staticFiltersGroupLabels = {}, ...otherProps } = props;
+  const { hiddenFields = [], staticFiltersGroupLabels = {}, customCssClasses = {}, cssCompositionMethod, ...otherProps } = props;
   const groupedFilters: Array<GroupedFilters> = getGroupedAppliedFilters(filterState.current, nlpFilters, hiddenFields, staticFiltersGroupLabels);
   const appliedFilters = groupedFilters.flatMap(groupedFilters => groupedFilters.filters);
-  return <AppliedFiltersDisplay displayableFilters={appliedFilters} {...otherProps}/>
+
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
+  cssClasses.appliedFiltersContainer = classNames(cssClasses.appliedFiltersContainer, {
+    [cssClasses.appliedFiltersContainer___loading ?? '']: state.searchStatus.isLoading
+  });
+  return <AppliedFiltersDisplay displayableFilters={appliedFilters} cssClasses={cssClasses} {...otherProps}/>
 };
 
 export function AppliedFiltersDisplay ({
   labelText,
   displayableFilters,
-  customCssClasses = {},
-  cssCompositionMethod
+  cssClasses = {}
 }: AppliedFiltersDisplayProps): JSX.Element {
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
-  const isLoading = useAnswersState(state => state.searchStatus.isLoading);
 
   function NlpFilter({ filter }: { filter: DisplayableFilter }): JSX.Element {
     return (
@@ -108,16 +109,10 @@ export function AppliedFiltersDisplay ({
     );
   }
 
-  const containerClassNames = cssClasses.appliedFiltersContainer___loading
-    ? classNames(cssClasses.appliedFiltersContainer, {
-      [ cssClasses.appliedFiltersContainer___loading ]: isLoading
-    })
-    : cssClasses.appliedFiltersContainer;
-
   return (
     <>
       { displayableFilters.length > 0 &&
-        <div className={containerClassNames} aria-label={labelText}>
+        <div className={cssClasses.appliedFiltersContainer} aria-label={labelText}>
           {displayableFilters.map((filter: DisplayableFilter) => {
             const key = `${filter.filterType}-${filter.label}`;
             if (filter.filterType === 'NLP_FILTER') {
