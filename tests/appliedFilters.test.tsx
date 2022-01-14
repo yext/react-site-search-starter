@@ -57,8 +57,9 @@ describe('AppliedFilters component works as expected', () => {
     expect(filerRemoveButton).toBeTruthy();
 
     filerRemoveButton.click();
+    await act( async () => { await answers.executeVerticalQuery() });
     filterLabels = container.getElementsByClassName(cssClasses.filterLabel);
-    setTimeout(() => expect(filterLabels.length).toBe(0), 1000);
+    expect(filterLabels.length).toBe(0);
   });
 
   it('A selected facet appears and is removable', async () => {
@@ -95,8 +96,9 @@ describe('AppliedFilters component works as expected', () => {
     expect(filerRemoveButton).toBeTruthy();
 
     filerRemoveButton.click();
+    await act( async () => { await answers.executeVerticalQuery() });
     facetLabels = container.getElementsByClassName(cssClasses.filterLabel);
-    setTimeout(() => expect(facetLabels.length).toBe(0), 1000);
+    expect(facetLabels.length).toBe(0);
   });
 
   it('NLP filters appear and are not removable', async () => {
