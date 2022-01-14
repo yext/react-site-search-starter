@@ -1,4 +1,4 @@
-import { useAnswersActions, useAnswersState, useAnswersUtilities, VerticalResults, AutocompleteResult } from '@yext/answers-headless-react';
+import { useAnswersActions, useAnswersState, useAnswersUtilities, VerticalResults } from '@yext/answers-headless-react';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import InputDropdown from '../InputDropdown';
 import '../../sass/Autocomplete.scss';
@@ -129,7 +129,12 @@ export default function VisualSearchBar({
           answersActions.setQuery(result.value);
           executeQuery();
         },
-        display: renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon)
+        display: renderAutocompleteResult(
+          result,
+          cssClasses,
+          MagnifyingGlassIcon,
+          `autocomplete option: ${result.value}`
+        )
       });
 
       if (hideVerticalLinks) {
@@ -183,7 +188,12 @@ export default function VisualSearchBar({
           answersActions.setQuery(result.query);
           executeQuery();
         },
-        display: renderAutocompleteResult({ value: result.query }, recentSearchesCssClasses, RecentSearchIcon)
+        display: renderAutocompleteResult(
+          { value: result.query },
+          recentSearchesCssClasses,
+          RecentSearchIcon,
+          `recent search option: ${result.query}`
+        )
       }
     }) ?? [];
     if (options.length === 0) {
@@ -207,7 +217,7 @@ export default function VisualSearchBar({
         inputValue={query}
         placeholder={placeholder}
         screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
-        screenReaderText={getScreenReaderText(autocompleteResults)}
+        screenReaderText={getScreenReaderText(autocompleteResults.length , filteredRecentSearches?.length || 0)}
         onSubmit={executeQuery}
         onInputChange={value => {
           answersActions.setQuery(value);
@@ -241,10 +251,18 @@ export default function VisualSearchBar({
   )
 }
 
-function getScreenReaderText(options: AutocompleteResult[]) {
-  return processTranslation({
-    phrase: `${options.length} autocomplete option found.`,
-    pluralForm: `${options.length} autocomplete options found.`,
-    count: options.length
+function getScreenReaderText(autocompleteOptions: number, recentSearchesOptions: number) {
+  const recentSearchesText = recentSearchesOptions > 0 
+    ? processTranslation({
+      phrase: `${recentSearchesOptions} recent search option found.`,
+      pluralForm: `${recentSearchesOptions} recent search options found.`,
+      count: recentSearchesOptions
+    })
+    : '';
+  const autocompleteText = processTranslation({
+    phrase: `${autocompleteOptions} autocomplete option found.`,
+    pluralForm: `${autocompleteOptions} autocomplete options found.`,
+    count: autocompleteOptions
   });
+  return recentSearchesText + ' ' + autocompleteText;
 }
