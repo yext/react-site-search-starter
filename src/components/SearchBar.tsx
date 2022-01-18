@@ -1,8 +1,8 @@
 import { SearchTypeEnum, useAnswersActions, useAnswersState } from '@yext/answers-headless-react';
-import InputDropdown, { InputDropdownCssClasses } from './InputDropdown';
+import { InputDropdownCssClasses } from './InputDropdown';
 import { ReactComponent as YextLogoIcon } from '../icons/yext_logo.svg';
 import '../sass/Autocomplete.scss';
-import DropdownSection, { DropdownSectionCssClasses, Option } from './DropdownSection';
+import { DropdownSectionCssClasses } from './DropdownSection';
 import { processTranslation } from './utils/processTranslation';
 import SearchButton from './SearchButton';
 import { useSynchronizedRequest } from '../hooks/useSynchronizedRequest';
@@ -18,9 +18,12 @@ import DropdownInput from './Dropdown/DropdownInput';
 import DropdownItem from './Dropdown/DropdownItem';
 import DropdownMenu from './Dropdown/DropdownMenu';
 import classNames from 'classnames';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useMemo, useState } from 'react';
+import ScreenReader from './ScreenReader';
+import { v4 as uuid } from 'uuid';
 
-const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
+// const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
+const SCREENREADER_INSTRUCTIONS = 'instruct.'
 
 export const builtInCssClasses: SearchBarCssClasses = {
   container: 'h-12 mb-3',
@@ -38,7 +41,6 @@ export const builtInCssClasses: SearchBarCssClasses = {
   focusedOption: 'bg-gray-100',
   ...AutocompleteResultBuiltInCssClasses
 }
-
 
 export interface SearchBarCssClasses
   extends InputDropdownCssClasses, DropdownSectionCssClasses, AutocompleteResultCssClasses {
@@ -64,6 +66,7 @@ export default function SearchBar({
   customCssClasses,
   cssCompositionMethod
 }: Props) {
+  console.log('render searchbar')
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const answersActions = useAnswersActions();
   const query = useAnswersState(state => state.query.input);
@@ -107,16 +110,18 @@ export default function SearchBar({
   }
 
   const numItems = autocompleteResponse?.results.length || 0;
-
   const screenReaderText = processTranslation({
     phrase: `${numItems} autocomplete option found.`,
     pluralForm: `${numItems} autocomplete options found.`,
     count: numItems
   });
+  const screenReaderUUID: string = useMemo(() => uuid(), []);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
 
   return (
     <div className={cssClasses.container}>
       <Dropdown
+        screenReaderUUID={screenReaderUUID}
         className={cssClasses.inputDropdownContainer}
         activeClassName={classNames(cssClasses.inputDropdownContainer, cssClasses.inputDropdownContainer___active)}
         numItems={numItems}
@@ -125,6 +130,7 @@ export default function SearchBar({
           autocompletePromiseRef.current = undefined;
           executeQuery();
         }}
+        onFocusChange={index => setFocusedIndex(index ?? -1)}
       >
         <div className={cssClasses?.inputContainer}>
           <div className={cssClasses.logoContainer}>
@@ -133,23 +139,27 @@ export default function SearchBar({
           {renderInput()}
           {renderSearchButton()}
         </div>
+        <ScreenReader
+          announcementKey={0}
+          announcementText={screenReaderText}
+          instructionsId={screenReaderUUID}
+          instructions={SCREENREADER_INSTRUCTIONS}
+        />
         <StyledDropdownMenu cssClasses={cssClasses}>
-          {autocompleteResponse?.results.map((result, i) => {
-            return (
-              <DropdownItem
-                key={result.value}
-                index={i}
-                className={cssClasses.optionContainer}
-                focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
-                value={result.value}
-              >
-                {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon)}
-              </DropdownItem>
-            )
-          })}
+          {autocompleteResponse?.results.map((result, i) => (
+            <DropdownItem
+              key={result.value}
+              index={i}
+              className={cssClasses.optionContainer}
+              focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
+              value={result.value}
+            >
+              {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon, `autocomplete option: ${result.value}`)}
+            </DropdownItem>
+          ))}
         </StyledDropdownMenu>
       </Dropdown>
-    </div >
+    </div>
   );
 }
 

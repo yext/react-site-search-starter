@@ -18,11 +18,10 @@ export const builtInCssClasses = {
  */
 export default function renderAutocompleteResult(
   result: AutocompleteResult,
-  cssClasses?: AutocompleteResultCssClasses,
+  cssClasses: AutocompleteResultCssClasses = {},
   Icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>,
   ariaLabel?: string
 ) {
-  cssClasses = cssClasses ?? {};
   return <>
     {Icon && <div className={cssClasses.icon}>
       <Icon />

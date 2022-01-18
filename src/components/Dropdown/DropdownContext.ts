@@ -5,6 +5,7 @@ import { createContext } from 'react';
  */
 export type DropdownContextType = {
   isOpen: boolean,
+  screenReaderUUID?: string,
   decoratedToggle: (visible: boolean) => void,
   onSelect?: (value?: string, index?: number) => void
 }

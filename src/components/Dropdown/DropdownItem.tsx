@@ -1,6 +1,7 @@
 import { PropsWithChildren, useCallback, useContext, useLayoutEffect, useMemo } from 'react'
 import DropdownContext from './DropdownContext'
 import FocusContext from './FocusContext';
+import generateDropdownId from './generateDropdownId';
 import InputContext from './InputContext';
 
 export default function DropdownItem(props: PropsWithChildren<{
@@ -17,7 +18,7 @@ export default function DropdownItem(props: PropsWithChildren<{
     focusedClassName,
   } = props;
 
-  const { decoratedToggle, onSelect } = useContext(DropdownContext) || {};
+  const { decoratedToggle, onSelect, screenReaderUUID } = useContext(DropdownContext) || {};
   const { focusedIndex, focusedValue, setFocusedValue } = useContext(FocusContext) || {};
   const { setValue } = useContext(InputContext) || {};
 
@@ -39,6 +40,7 @@ export default function DropdownItem(props: PropsWithChildren<{
   return useMemo(() => {
     return (
       <div
+        id={screenReaderUUID && generateDropdownId(screenReaderUUID, index)}
         tabIndex={0}
         className={computedClassName}
         onClick={handleClick}
@@ -46,5 +48,5 @@ export default function DropdownItem(props: PropsWithChildren<{
         {children}
       </div>
     )
-  }, [children, computedClassName, handleClick])
+  }, [children, computedClassName, handleClick, index, screenReaderUUID])
 }

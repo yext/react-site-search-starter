@@ -13,17 +13,22 @@ import FocusContext, { FocusContextType } from './FocusContext';
  */
 export default function Dropdown(props: PropsWithChildren<{
   numItems: number,
+  screenReaderUUID?: string,
   initialValue?: string,
   onSelect?: (value?: string, index?: number) => void,
   as?: ElementType,
   className?: string,
-  activeClassName?: string
+  activeClassName?: string,
+  onFocusChange?: (index?: number) => void
 }>) {
+  console.log('dropdown render')
   const {
     children,
     numItems,
+    screenReaderUUID,
     initialValue,
     onSelect,
+    onFocusChange,
     as: ContainerElementType = 'div',
     className,
     activeClassName
@@ -39,14 +44,18 @@ export default function Dropdown(props: PropsWithChildren<{
     setLastTypedOrSubmittedValue
   }), [value, lastTypedOrSubmittedValue]);
 
-  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [focusedIndex, _setFocusedIndex] = useState(-1);
+  const setFocusedIndex = useCallback((index: number) => {
+    _setFocusedIndex(index);
+    onFocusChange && onFocusChange(index);
+  }, [onFocusChange])
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const focusContext: FocusContextType = useMemo(() => ({
     focusedIndex,
     setFocusedIndex,
     focusedValue,
     setFocusedValue
-  }), [focusedIndex, focusedValue]);
+  }), [focusedIndex, focusedValue, setFocusedIndex]);
 
   const [_isOpen, _toggle] = useState(false);
   const isOpen = _isOpen && numItems > 0;
@@ -55,12 +64,13 @@ export default function Dropdown(props: PropsWithChildren<{
     if (!nextIsOpen) {
       setFocusedIndex(-1);
     }
-  }, []);
+  }, [setFocusedIndex]);
   const context: DropdownContextType = useMemo(() => ({
     isOpen,
     decoratedToggle,
-    onSelect
-  }), [isOpen, onSelect, decoratedToggle]);
+    onSelect,
+    screenReaderUUID
+  }), [isOpen, onSelect, decoratedToggle, screenReaderUUID]);
 
   useRootClose(containerRef, () => {
     decoratedToggle(false);

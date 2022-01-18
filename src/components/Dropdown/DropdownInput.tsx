@@ -1,6 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useCallback, useContext, useRef } from 'react'
 import DropdownContext from './DropdownContext'
 import FocusContext from './FocusContext';
+import generateDropdownId from './generateDropdownId';
 import InputContext from './InputContext';
 
 /**
@@ -13,11 +14,17 @@ export default function DropdownInput(props: {
   onFocus?: (value?: string) => void,
   onType?: (value?: string) => void
 }) {
-  const { className, placeholder, onSubmit, onFocus, onType } = props;
+  const {
+    className,
+    placeholder,
+    onSubmit,
+    onFocus,
+    onType
+  } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { decoratedToggle, onSelect } = useContext(DropdownContext) || {};
+  const { decoratedToggle, onSelect, screenReaderUUID } = useContext(DropdownContext) || {};
   const { value = '', setValue, setLastTypedOrSubmittedValue } = useContext(InputContext) || {};
   const { focusedIndex = -1, setFocusedIndex } = useContext(FocusContext) || {};
 
@@ -60,6 +67,8 @@ export default function DropdownInput(props: {
       onChange={handleChange}
       onKeyDown={handleKeyDown}
       onFocus={handleFocus}
+      aria-describedby={screenReaderUUID}
+      aria-activedescendant={screenReaderUUID && generateDropdownId(screenReaderUUID, focusedIndex)}
     />
   )
 }
