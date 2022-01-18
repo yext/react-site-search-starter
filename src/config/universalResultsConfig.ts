@@ -12,17 +12,17 @@ export const universalResultsConfig: UniversalResultsConfig = {
       showOrdinal: false
     }
   },
-  // events: {
-  //   label: 'Events',
-  //   cardConfig: {
-  //     CardComponent: StandardCard,
-  //     showOrdinal: false
-  //   }
-  // },
-  // jobs: {
-  //   label: 'Jobs',
-  // },
-  // locations: {
-  //   label: 'Locations',
-  // }
+  events: {
+    label: 'Events',
+    cardConfig: {
+      CardComponent: StandardCard,
+      showOrdinal: false
+    }
+  },
+  jobs: {
+    label: 'Jobs',
+  },
+  locations: {
+    label: 'Locations',
+  }
 }
