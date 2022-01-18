@@ -18,6 +18,7 @@ import DropdownInput from './Dropdown/DropdownInput';
 import DropdownItem from './Dropdown/DropdownItem';
 import DropdownMenu from './Dropdown/DropdownMenu';
 import classNames from 'classnames';
+import { PropsWithChildren } from 'react';
 
 const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
 
@@ -87,6 +88,24 @@ export default function SearchBar({
     );
   }
 
+  function renderInput() {
+    return (
+      <DropdownInput
+        className={cssClasses.inputElement}
+        placeholder={placeholder}
+        onSubmit={() => executeQuery()}
+        onFocus={value => {
+          answersActions.setQuery(value || '');
+          autocompletePromiseRef.current = executeAutocomplete()
+        }}
+        onType={value => {
+          answersActions.setQuery(value || '');
+          autocompletePromiseRef.current = executeAutocomplete();
+        }}
+      />
+    );
+  }
+
   const numItems = autocompleteResponse?.results.length || 0;
 
   const screenReaderText = processTranslation({
@@ -111,46 +130,47 @@ export default function SearchBar({
           <div className={cssClasses.logoContainer}>
             <YextLogoIcon />
           </div>
-          <DropdownInput
-            className={cssClasses.inputElement}
-            placeholder={placeholder}
-            onSubmit={() => executeQuery()}
-            onFocus={value => {
-              answersActions.setQuery(value || '');
-              autocompletePromiseRef.current = executeAutocomplete()
-            }}
-            onType={value => {
-              answersActions.setQuery(value || '');
-              autocompletePromiseRef.current = executeAutocomplete();
-            }}
-          />
+          {renderInput()}
           {renderSearchButton()}
         </div>
-        <DropdownMenu>
-          <div className={cssClasses.divider} />
-          <div className={cssClasses.dropdownContainer}>
-            <div className={cssClasses.sectionContainer}>
-              <div className={cssClasses.optionsContainer}>
-                {
-                  autocompleteResponse?.results.map((result, i) => {
-                    return (
-                      <DropdownItem
-                        key={result.value}
-                        index={i}
-                        className={cssClasses.optionContainer}
-                        focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
-                        value={result.value}
-                      >
-                        {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon)}
-                      </DropdownItem>
-                    )
-                  })
-                }
-              </div>
-            </div>
-          </div>
-        </DropdownMenu>
+        <StyledDropdownMenu cssClasses={cssClasses}>
+          {autocompleteResponse?.results.map((result, i) => {
+            return (
+              <DropdownItem
+                key={result.value}
+                index={i}
+                className={cssClasses.optionContainer}
+                focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
+                value={result.value}
+              >
+                {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon)}
+              </DropdownItem>
+            )
+          })}
+        </StyledDropdownMenu>
       </Dropdown>
-    </div>
+    </div >
   );
+}
+
+function StyledDropdownMenu({ cssClasses, children }: PropsWithChildren<{
+  cssClasses: {
+    divider?: string,
+    dropdownContainer?: string,
+    sectionContainer?: string,
+    optionsContainer?: string
+  }
+}>) {
+  return (
+    <DropdownMenu>
+      <div className={cssClasses.divider} />
+      <div className={cssClasses.dropdownContainer}>
+        <div className={cssClasses.sectionContainer}>
+          <div className={cssClasses.optionsContainer}>
+            {children}
+          </div>
+        </div>
+      </div>
+    </DropdownMenu>
+  )
 }

@@ -39,6 +39,7 @@ export default function DropdownItem(props: PropsWithChildren<{
   return useMemo(() => {
     return (
       <div
+        tabIndex={0}
         className={computedClassName}
         onClick={handleClick}
       >

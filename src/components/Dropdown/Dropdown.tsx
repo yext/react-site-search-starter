@@ -72,15 +72,25 @@ export default function Dropdown(props: PropsWithChildren<{
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
+      const updatedFocusedIndex = focusedIndex + 1;
       setFocusedValue(null);
-      setFocusedIndex((focusedIndex + 1) % numItems);
+      if (updatedFocusedIndex >= numItems) {
+        setFocusedIndex(-1);
+        setValue(lastTypedOrSubmittedValue);
+      } else {
+        setFocusedIndex((focusedIndex + 1) % numItems);
+      }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      const updatedFocusedIndex = Math.max(focusedIndex - 1, -1);
       setFocusedValue(null);
-      setFocusedIndex(updatedFocusedIndex);
+      const updatedFocusedIndex = focusedIndex - 1;
       if (updatedFocusedIndex === -1) {
+        setFocusedIndex(updatedFocusedIndex);
         setValue(lastTypedOrSubmittedValue);
+      } else if (updatedFocusedIndex < -1){
+        setFocusedIndex((numItems + updatedFocusedIndex + 1) % numItems);
+      } else {
+        setFocusedIndex(updatedFocusedIndex);
       }
     }
   });
