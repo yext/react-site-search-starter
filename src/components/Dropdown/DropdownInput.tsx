@@ -10,9 +10,9 @@ export default function DropdownInput(props: {
   className?: string,
   onSubmit?: (value?: string) => void,
   onFocus?: (value?: string) => void,
-  onChange?: (value?: string) => void
+  onType?: (value?: string) => void
 }) {
-  const { className, onSubmit, onFocus, onChange } = props;
+  const { className, onSubmit, onFocus, onType } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,8 +29,8 @@ export default function DropdownInput(props: {
     setFocusedValue && setFocusedValue(null);
     setFocusedIndex && setFocusedIndex(-1);
     setValue && setValue(e.target.value);
-    onChange && onChange(e.target.value);
-  }, [setValue, decoratedToggle, setFocusedIndex, setFocusedValue, onChange]);
+    onType && onType(e.target.value);
+  }, [setValue, decoratedToggle, setFocusedIndex, setFocusedValue, onType]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

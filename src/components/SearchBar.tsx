@@ -108,7 +108,7 @@ export default function SearchBar({
             console.log('onFocus')
             autocompletePromiseRef.current = executeAutocomplete()
           }}
-          onChange={value => {
+          onType={value => {
             answersActions.setQuery(value || '');
             autocompletePromiseRef.current = executeAutocomplete();
           }}
