@@ -14,7 +14,6 @@ import FocusContext, { FocusContextType } from './FocusContext';
 export default function Dropdown(props: PropsWithChildren<{
   numItems: number,
   onSelect?: (value?: string, index?: number) => void,
-  onInputValueChange?: (value?: string) => void,
   as?: ElementType,
   className?: string,
   activeClassName?: string
@@ -23,22 +22,20 @@ export default function Dropdown(props: PropsWithChildren<{
     children,
     numItems,
     onSelect,
-    onInputValueChange,
     as: ContainerElementType = 'div',
     className,
     activeClassName
   } = props;
   const containerRef = useRef<HTMLElement>(null);
 
-  const [value, _setValue] = useState<string>('');
-  const setValueWithCallback = useCallback((value: string) => {
-    _setValue(value);
-    onInputValueChange && onInputValueChange(value);
-  }, [onInputValueChange])
+  const [value, setValue] = useState('');
+  const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState('');
   const inputContext: InputContextType = useMemo(() => ({
     value,
-    setValue: setValueWithCallback
-  }), [value, setValueWithCallback]);
+    setValue,
+    lastTypedOrSubmittedValue,
+    setLastTypedOrSubmittedValue
+  }), [value, lastTypedOrSubmittedValue]);
 
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -54,7 +51,6 @@ export default function Dropdown(props: PropsWithChildren<{
     _toggle(nextIsOpen);
     if (!nextIsOpen) {
       setFocusedIndex(-1);
-      setFocusedValue(null);
     }
   }, []);
   const context: DropdownContextType = useMemo(() => ({
@@ -73,13 +69,16 @@ export default function Dropdown(props: PropsWithChildren<{
     }
     if (e.key === 'ArrowDown') {
       e.preventDefault();
-      decoratedToggle(true);
       setFocusedValue(null);
       setFocusedIndex((focusedIndex + 1) % numItems);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
+      const updatedFocusedIndex = Math.max(focusedIndex - 1, -1);
       setFocusedValue(null);
-      setFocusedIndex(Math.max(focusedIndex - 1, -1));
+      setFocusedIndex(updatedFocusedIndex);
+      if (updatedFocusedIndex === -1) {
+        setValue(lastTypedOrSubmittedValue);
+      }
     }
   });
 

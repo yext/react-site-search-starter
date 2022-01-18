@@ -8,17 +8,18 @@ import InputContext from './InputContext';
  */
 export default function DropdownInput(props: {
   className?: string,
+  placeholder?: string,
   onSubmit?: (value?: string) => void,
   onFocus?: (value?: string) => void,
   onType?: (value?: string) => void
 }) {
-  const { className, onSubmit, onFocus, onType } = props;
+  const { className, placeholder, onSubmit, onFocus, onType } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { decoratedToggle, onSelect } = useContext(DropdownContext) || {};
-  const { value = '', setValue } = useContext(InputContext) || {};
-  const { focusedIndex = -1, setFocusedIndex, setFocusedValue } = useContext(FocusContext) || {};
+  const { value = '', setValue, setLastTypedOrSubmittedValue } = useContext(InputContext) || {};
+  const { focusedIndex = -1, setFocusedIndex } = useContext(FocusContext) || {};
 
   const handleClick = useCallback(() => {
     decoratedToggle && decoratedToggle(true);
@@ -26,22 +27,23 @@ export default function DropdownInput(props: {
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     decoratedToggle && decoratedToggle(true);
-    setFocusedValue && setFocusedValue(null);
     setFocusedIndex && setFocusedIndex(-1);
+    setLastTypedOrSubmittedValue && setLastTypedOrSubmittedValue(e.target.value);
     setValue && setValue(e.target.value);
     onType && onType(e.target.value);
-  }, [setValue, decoratedToggle, setFocusedIndex, setFocusedValue, onType]);
+  }, [setLastTypedOrSubmittedValue, setValue, decoratedToggle, setFocusedIndex, onType]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       decoratedToggle && decoratedToggle(false);
       onSubmit && onSubmit(value);
+      setLastTypedOrSubmittedValue && setLastTypedOrSubmittedValue(value);
       if (focusedIndex >= 0) {
         onSelect && onSelect(value, focusedIndex);
       }
       inputRef.current && inputRef.current.blur();
     }
-  }, [decoratedToggle, onSubmit, value, focusedIndex, onSelect]);
+  }, [decoratedToggle, onSubmit, value, setLastTypedOrSubmittedValue, focusedIndex, onSelect]);
 
   const handleFocus = useCallback(() => {
     decoratedToggle && decoratedToggle(true);
@@ -52,6 +54,7 @@ export default function DropdownInput(props: {
     <input
       ref={inputRef}
       className={className}
+      placeholder={placeholder}
       value={value}
       onClick={handleClick}
       onChange={handleChange}

@@ -87,51 +87,70 @@ export default function SearchBar({
     );
   }
 
+  const numItems = autocompleteResponse?.results.length || 0;
+  console.log(numItems)
+
+  const screenReaderText = processTranslation({
+    phrase: `${numItems} autocomplete option found.`,
+    pluralForm: `${numItems} autocomplete options found.`,
+    count: numItems
+  });
+
   return (
-    <Dropdown
-      className={cssClasses.inputDropdownContainer}
-      activeClassName={classNames(cssClasses.inputDropdownContainer, cssClasses.inputDropdownContainer___active )}
-      numItems={autocompleteResponse?.results.length || 0}
-      onSelect={() => {
-        autocompletePromiseRef.current = undefined;
-        executeQuery();
-      }}
-    >
-      <div className={cssClasses?.inputContainer}>
-        <div className={cssClasses.logoContainer}>
-          <YextLogoIcon />
+    <div className={cssClasses.container}>
+      <Dropdown
+        className={cssClasses.inputDropdownContainer}
+        activeClassName={classNames(cssClasses.inputDropdownContainer, cssClasses.inputDropdownContainer___active)}
+        numItems={numItems}
+        onSelect={() => {
+          autocompletePromiseRef.current = undefined;
+          executeQuery();
+        }}
+      >
+        <div className={cssClasses?.inputContainer}>
+          <div className={cssClasses.logoContainer}>
+            <YextLogoIcon />
+          </div>
+          <DropdownInput
+            className={cssClasses.inputElement}
+            placeholder={placeholder}
+            onSubmit={() => executeQuery()}
+            onFocus={value => {
+              answersActions.setQuery(value || '');
+              autocompletePromiseRef.current = executeAutocomplete()
+            }}
+            onType={value => {
+              answersActions.setQuery(value || '');
+              autocompletePromiseRef.current = executeAutocomplete();
+            }}
+          />
+          {renderSearchButton()}
         </div>
-        <DropdownInput
-          className={cssClasses.inputElement}
-          onSubmit={() => executeQuery()}
-          onFocus={() => {
-            console.log('onFocus')
-            autocompletePromiseRef.current = executeAutocomplete()
-          }}
-          onType={value => {
-            answersActions.setQuery(value || '');
-            autocompletePromiseRef.current = executeAutocomplete();
-          }}
-        />
-        {renderSearchButton()}
-      </div>
-      <div className={cssClasses.optionsContainer}>
-        <DropdownMenu>
-          {
-            autocompleteResponse?.results.map((result, i) => {
-              return (
-                <DropdownItem
-                  index={i}
-                  className={cssClasses.optionContainer}
-                  value={result.value}
-                >
-                  {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon)}
-                </DropdownItem>
-              )
-            })
-          }
+        <DropdownMenu disabled={numItems === 0}>
+          <div className={cssClasses.divider} />
+          <div className={cssClasses.dropdownContainer}>
+            <div className={cssClasses.sectionContainer}>
+              <div className={cssClasses.optionsContainer}>
+                {
+                  autocompleteResponse?.results.map((result, i) => {
+                    return (
+                      <DropdownItem
+                        key={result.value}
+                        index={i}
+                        className={cssClasses.optionContainer}
+                        focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
+                        value={result.value}
+                      >
+                        {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon)}
+                      </DropdownItem>
+                    )
+                  })
+                }
+              </div>
+            </div>
+          </div>
         </DropdownMenu>
-      </div>
-    </Dropdown>
+      </Dropdown>
+    </div>
   );
 }
