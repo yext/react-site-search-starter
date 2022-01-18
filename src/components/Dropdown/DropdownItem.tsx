@@ -38,12 +38,12 @@ export default function DropdownItem(props: PropsWithChildren<{
   const computedClassName = focusedIndex === index ? focusedClassName : className;
   return useMemo(() => {
     return (
-      <button
+      <div
         className={computedClassName}
         onClick={handleClick}
       >
         {children}
-      </button>
+      </div>
     )
   }, [children, computedClassName, handleClick])
 }
