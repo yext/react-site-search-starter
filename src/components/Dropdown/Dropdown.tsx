@@ -21,14 +21,12 @@ export default function Dropdown(props: PropsWithChildren<{
   activeClassName?: string,
   onFocusChange?: (index?: number) => void
 }>) {
-  console.log('dropdown render')
   const {
     children,
     numItems,
     screenReaderUUID,
     initialValue,
     onSelect,
-    onFocusChange,
     as: ContainerElementType = 'div',
     className,
     activeClassName
@@ -44,18 +42,14 @@ export default function Dropdown(props: PropsWithChildren<{
     setLastTypedOrSubmittedValue
   }), [value, lastTypedOrSubmittedValue]);
 
-  const [focusedIndex, _setFocusedIndex] = useState(-1);
-  const setFocusedIndex = useCallback((index: number) => {
-    _setFocusedIndex(index);
-    onFocusChange && onFocusChange(index);
-  }, [onFocusChange])
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const focusContext: FocusContextType = useMemo(() => ({
     focusedIndex,
     setFocusedIndex,
     focusedValue,
     setFocusedValue
-  }), [focusedIndex, focusedValue, setFocusedIndex]);
+  }), [focusedIndex, focusedValue]);
 
   const [_isOpen, _toggle] = useState(false);
   const isOpen = _isOpen && numItems > 0;

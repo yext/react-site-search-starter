@@ -18,12 +18,11 @@ import DropdownInput from './Dropdown/DropdownInput';
 import DropdownItem from './Dropdown/DropdownItem';
 import DropdownMenu from './Dropdown/DropdownMenu';
 import classNames from 'classnames';
-import { PropsWithChildren, useMemo, useState } from 'react';
+import { PropsWithChildren, useMemo } from 'react';
 import ScreenReader from './ScreenReader';
 import { v4 as uuid } from 'uuid';
 
-// const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
-const SCREENREADER_INSTRUCTIONS = 'instruct.'
+const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
 
 export const builtInCssClasses: SearchBarCssClasses = {
   container: 'h-12 mb-3',
@@ -66,7 +65,6 @@ export default function SearchBar({
   customCssClasses,
   cssCompositionMethod
 }: Props) {
-  console.log('render searchbar')
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const answersActions = useAnswersActions();
   const query = useAnswersState(state => state.query.input);
@@ -116,7 +114,6 @@ export default function SearchBar({
     count: numItems
   });
   const screenReaderUUID: string = useMemo(() => uuid(), []);
-  const [focusedIndex, setFocusedIndex] = useState(-1);
 
   return (
     <div className={cssClasses.container}>
@@ -130,7 +127,6 @@ export default function SearchBar({
           autocompletePromiseRef.current = undefined;
           executeQuery();
         }}
-        onFocusChange={index => setFocusedIndex(index ?? -1)}
       >
         <div className={cssClasses?.inputContainer}>
           <div className={cssClasses.logoContainer}>
@@ -140,7 +136,6 @@ export default function SearchBar({
           {renderSearchButton()}
         </div>
         <ScreenReader
-          announcementKey={0}
           announcementText={screenReaderText}
           instructionsId={screenReaderUUID}
           instructions={SCREENREADER_INSTRUCTIONS}
