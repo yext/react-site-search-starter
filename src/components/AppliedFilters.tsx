@@ -49,11 +49,14 @@ export interface AppliedFiltersProps {
 export default function AppliedFilters (
   props : AppliedFiltersProps
 ): JSX.Element {
-  const nlpFilters = useAnswersState(state => state.vertical?.appliedQueryFilters) || [];
-  const state = useAnswersState(state => state);
+  const nlpFilters = useAnswersState(state => state.vertical.appliedQueryFilters) || [];
+  const isLoading = useAnswersState(state => state.searchStatus.isLoading);
+  const verticalResults = useAnswersState(state => state.vertical.results);
+  const filters = useAnswersState(state => state.filters);
+
   const filterState = useRef<FiltersState>({});
-  if (!state.searchStatus.isLoading) {
-    filterState.current = state.vertical.results ? state.filters : {};
+  if (!isLoading) {
+    filterState.current = verticalResults ? filters : {};
   }
 
   const { hiddenFields = [], staticFiltersGroupLabels = {}, customCssClasses = {}, cssCompositionMethod, ...otherProps } = props;
@@ -62,7 +65,7 @@ export default function AppliedFilters (
 
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   cssClasses.appliedFiltersContainer = classNames(cssClasses.appliedFiltersContainer, {
-    [cssClasses.appliedFiltersContainer___loading ?? '']: state.searchStatus.isLoading
+    [cssClasses.appliedFiltersContainer___loading ?? '']: isLoading
   });
   return <AppliedFiltersDisplay displayableFilters={appliedFilters} cssClasses={cssClasses} {...otherProps}/>
 };
