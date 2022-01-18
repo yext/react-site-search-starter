@@ -13,6 +13,7 @@ import FocusContext, { FocusContextType } from './FocusContext';
  */
 export default function Dropdown(props: PropsWithChildren<{
   numItems: number,
+  initialValue?: string,
   onSelect?: (value?: string, index?: number) => void,
   as?: ElementType,
   className?: string,
@@ -21,6 +22,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const {
     children,
     numItems,
+    initialValue,
     onSelect,
     as: ContainerElementType = 'div',
     className,
@@ -28,8 +30,8 @@ export default function Dropdown(props: PropsWithChildren<{
   } = props;
   const containerRef = useRef<HTMLElement>(null);
 
-  const [value, setValue] = useState('');
-  const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState('');
+  const [value, setValue] = useState(initialValue ?? '');
+  const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState(initialValue ?? '');
   const inputContext: InputContextType = useMemo(() => ({
     value,
     setValue,
@@ -46,7 +48,8 @@ export default function Dropdown(props: PropsWithChildren<{
     setFocusedValue
   }), [focusedIndex, focusedValue]);
 
-  const [isOpen, _toggle] = useState(false);
+  const [_isOpen, _toggle] = useState(false);
+  const isOpen = _isOpen && numItems > 0;
   const decoratedToggle = useCallback((nextIsOpen: boolean) => {
     _toggle(nextIsOpen);
     if (!nextIsOpen) {

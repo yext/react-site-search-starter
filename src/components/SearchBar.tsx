@@ -88,7 +88,6 @@ export default function SearchBar({
   }
 
   const numItems = autocompleteResponse?.results.length || 0;
-  console.log(numItems)
 
   const screenReaderText = processTranslation({
     phrase: `${numItems} autocomplete option found.`,
@@ -102,6 +101,7 @@ export default function SearchBar({
         className={cssClasses.inputDropdownContainer}
         activeClassName={classNames(cssClasses.inputDropdownContainer, cssClasses.inputDropdownContainer___active)}
         numItems={numItems}
+        initialValue={query}
         onSelect={() => {
           autocompletePromiseRef.current = undefined;
           executeQuery();
@@ -126,7 +126,7 @@ export default function SearchBar({
           />
           {renderSearchButton()}
         </div>
-        <DropdownMenu disabled={numItems === 0}>
+        <DropdownMenu>
           <div className={cssClasses.divider} />
           <div className={cssClasses.dropdownContainer}>
             <div className={cssClasses.sectionContainer}>
