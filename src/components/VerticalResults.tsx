@@ -35,9 +35,9 @@ export function VerticalResultsDisplay(props: VerticalResultsDisplayProps): JSX.
     return null;
   }
 
-  const resultsClassNames = cssClasses.results___loading
-    ? classNames({ [cssClasses.results___loading]: isLoading })
-    : '';
+  const resultsClassNames = classNames({
+    [cssClasses.results___loading ?? '']: isLoading
+  });
 
   return (
     <div className={resultsClassNames}>

@@ -61,9 +61,9 @@ export function ResultsCountDisplay({
   const spanArray = messageArray.map((value, index) => {
     const isNumber = typeof value === 'number';
     
-    const classes = cssClasses.number
-      ? classNames(cssClasses.text, { [cssClasses.number]: isNumber })
-      : cssClasses.text ?? '';
+    const classes = classNames(cssClasses.text, {
+      [cssClasses.number ?? '']: isNumber
+    });
 
     return <span key={`${index}-${value}`} className={classes}>{value}</span>
   });
