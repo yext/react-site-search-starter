@@ -13,18 +13,18 @@ export const routeConfig = [
   },
   {
     path: '/faqs',
-    page: <FAQsPage verticalKey='faqs'/>
+    page: <FAQsPage verticalKey='people'/>
   },
-  {
-    path: '/events',
-    page: <EventsPage verticalKey='events'/>
-  },
-  {
-    path: '/locations',
-    page: <LocationsPage verticalKey='locations' />
-  },
-  {
-    path: '/jobs',
-    page: <JobsPage verticalKey='jobs' />
-  }
+  // {
+  //   path: '/events',
+  //   page: <EventsPage verticalKey='events'/>
+  // },
+  // {
+  //   path: '/locations',
+  //   page: <LocationsPage verticalKey='locations' />
+  // },
+  // {
+  //   path: '/jobs',
+  //   page: <JobsPage verticalKey='jobs' />
+  // }
 ];

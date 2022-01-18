@@ -91,7 +91,6 @@ export default function VisualSearchBar({
     }
   }, [clearRecentSearches, hideRecentSearches])
   const haveRecentSearches = !hideRecentSearches && recentSearches?.length !== 0;
-  
 
   function executeQuery() {
     if (!hideRecentSearches) {

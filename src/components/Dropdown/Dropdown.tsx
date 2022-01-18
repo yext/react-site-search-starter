@@ -12,25 +12,33 @@ import FocusContext, { FocusContextType } from './FocusContext';
  * and also registers some global event listeners.
  */
 export default function Dropdown(props: PropsWithChildren<{
+  numItems: number,
   onSelect?: (value?: string, index?: number) => void,
+  onInputValueChange?: (value?: string) => void,
   as?: ElementType,
   className?: string,
-  numItems: number
+  activeClassName?: string
 }>) {
   const {
     children,
+    numItems,
     onSelect,
+    onInputValueChange,
     as: ContainerElementType = 'div',
     className,
-    numItems
+    activeClassName
   } = props;
   const containerRef = useRef<HTMLElement>(null);
 
-  const [value, setValue] = useState<string>('');
+  const [value, _setValue] = useState<string>('');
+  const setValueWithCallback = useCallback((value: string) => {
+    _setValue(value);
+    onInputValueChange && onInputValueChange(value);
+  }, [onInputValueChange])
   const inputContext: InputContextType = useMemo(() => ({
     value,
-    setValue
-  }), [value]);
+    setValue: setValueWithCallback
+  }), [value, setValueWithCallback]);
 
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -71,12 +79,12 @@ export default function Dropdown(props: PropsWithChildren<{
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setFocusedValue(null);
-      setFocusedIndex((numItems + focusedIndex - 1) % numItems);
+      setFocusedIndex(Math.max(focusedIndex - 1, -1));
     }
   });
 
   return (
-    <ContainerElementType ref={containerRef} className={className}>
+    <ContainerElementType ref={containerRef} className={isOpen ? activeClassName : className}>
       <DropdownContext.Provider value={context}>
         <InputContext.Provider value={inputContext}>
           <FocusContext.Provider value={focusContext}>

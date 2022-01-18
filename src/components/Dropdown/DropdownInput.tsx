@@ -8,9 +8,11 @@ import InputContext from './InputContext';
  */
 export default function DropdownInput(props: {
   className?: string,
-  onSubmit?: (value: string) => void
+  onSubmit?: (value?: string) => void,
+  onFocus?: (value?: string) => void,
+  onChange?: (value?: string) => void
 }) {
-  const { className, onSubmit } = props;
+  const { className, onSubmit, onFocus, onChange } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -27,7 +29,8 @@ export default function DropdownInput(props: {
     setFocusedValue && setFocusedValue(null);
     setFocusedIndex && setFocusedIndex(-1);
     setValue && setValue(e.target.value);
-  }, [setValue, decoratedToggle, setFocusedIndex, setFocusedValue]);
+    onChange && onChange(e.target.value);
+  }, [setValue, decoratedToggle, setFocusedIndex, setFocusedValue, onChange]);
 
   const handleKeyDown = useCallback((e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -42,7 +45,8 @@ export default function DropdownInput(props: {
 
   const handleFocus = useCallback(() => {
     decoratedToggle && decoratedToggle(true);
-  }, [decoratedToggle]);
+    onFocus && onFocus(value);
+  }, [decoratedToggle, value, onFocus]);
 
   return (
     <input
