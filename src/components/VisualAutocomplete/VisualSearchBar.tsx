@@ -133,7 +133,7 @@ export default function VisualSearchBar({
           result,
           cssClasses,
           MagnifyingGlassIcon,
-          `autocomplete option: ${result.value}`
+          `autocomplete suggestion: ${result.value}`
         )
       });
 
@@ -192,7 +192,7 @@ export default function VisualSearchBar({
           { value: result.query },
           recentSearchesCssClasses,
           RecentSearchIcon,
-          `recent search option: ${result.query}`
+          `recent search: ${result.query}`
         )
       }
     }) ?? [];
@@ -260,8 +260,8 @@ function getScreenReaderText(autocompleteOptions: number, recentSearchesOptions:
     })
     : '';
   const autocompleteText = processTranslation({
-    phrase: `${autocompleteOptions} autocomplete option found.`,
-    pluralForm: `${autocompleteOptions} autocomplete options found.`,
+    phrase: `${autocompleteOptions} autocomplete suggestion found.`,
+    pluralForm: `${autocompleteOptions} autocomplete suggestions found.`,
     count: autocompleteOptions
   });
   return (recentSearchesText + ' ' + autocompleteText).trim();
