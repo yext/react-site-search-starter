@@ -254,8 +254,8 @@ export default function VisualSearchBar({
 function getScreenReaderText(autocompleteOptions: number, recentSearchesOptions: number) {
   const recentSearchesText = recentSearchesOptions > 0 
     ? processTranslation({
-      phrase: `${recentSearchesOptions} recent search option found.`,
-      pluralForm: `${recentSearchesOptions} recent search options found.`,
+      phrase: `${recentSearchesOptions} recent search found.`,
+      pluralForm: `${recentSearchesOptions} recent searches found.`,
       count: recentSearchesOptions
     })
     : '';
@@ -264,5 +264,5 @@ function getScreenReaderText(autocompleteOptions: number, recentSearchesOptions:
     pluralForm: `${autocompleteOptions} autocomplete options found.`,
     count: autocompleteOptions
   });
-  return recentSearchesText + ' ' + autocompleteText;
+  return (recentSearchesText + ' ' + autocompleteText).trim();
 }
