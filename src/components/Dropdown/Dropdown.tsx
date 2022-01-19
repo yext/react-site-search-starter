@@ -16,7 +16,6 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderUUID?: string,
   initialValue?: string,
   onSelect?: (value?: string, index?: number) => void,
-  as?: ElementType,
   className?: string,
   activeClassName?: string,
   onFocusChange?: (index?: number) => void
@@ -27,11 +26,10 @@ export default function Dropdown(props: PropsWithChildren<{
     screenReaderUUID,
     initialValue,
     onSelect,
-    as: ContainerElementType = 'div',
     className,
     activeClassName
   } = props;
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [value, setValue] = useState(initialValue ?? '');
   const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState(initialValue ?? '');
@@ -100,7 +98,7 @@ export default function Dropdown(props: PropsWithChildren<{
   });
 
   return (
-    <ContainerElementType ref={containerRef} className={isOpen ? activeClassName : className}>
+    <div ref={containerRef} className={isOpen ? activeClassName : className}>
       <DropdownContext.Provider value={context}>
         <InputContext.Provider value={inputContext}>
           <FocusContext.Provider value={focusContext}>
@@ -108,6 +106,6 @@ export default function Dropdown(props: PropsWithChildren<{
           </FocusContext.Provider>
         </InputContext.Provider>
       </DropdownContext.Provider>
-    </ContainerElementType>
+    </div>
   );
 }
