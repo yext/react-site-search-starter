@@ -1,9 +1,11 @@
-import { ElementType, PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react';
+import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react';
 import DropdownContext, { DropdownContextType } from './DropdownContext';
 import InputContext, { InputContextType } from './InputContext';
 import useGlobalListener from '@restart/hooks/useGlobalListener';
 import useRootClose from '@restart/ui/useRootClose';
 import FocusContext, { FocusContextType } from './FocusContext';
+import { v4 as uuid } from 'uuid';
+import ScreenReader from '../ScreenReader';
 
 /**
  * Dropdown is the parent component for a set of Dropdown-related components.
@@ -13,23 +15,25 @@ import FocusContext, { FocusContextType } from './FocusContext';
  */
 export default function Dropdown(props: PropsWithChildren<{
   numItems: number,
-  screenReaderUUID?: string,
+  screenReaderText: string,
+  screenReaderInstructions?: string,
   initialValue?: string,
   onSelect?: (value?: string, index?: number) => void,
   className?: string,
-  activeClassName?: string,
-  onFocusChange?: (index?: number) => void
+  activeClassName?: string
 }>) {
   const {
     children,
     numItems,
-    screenReaderUUID,
+    screenReaderText,
+    screenReaderInstructions = 'When autocomplete results are available, use up and down arrows to review and enter to select.',
     initialValue,
     onSelect,
     className,
     activeClassName
   } = props;
   const containerRef = useRef<HTMLDivElement>(null);
+  const screenReaderUUID: string = useMemo(() => uuid(), []);
 
   const [value, setValue] = useState(initialValue ?? '');
   const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState(initialValue ?? '');
@@ -106,6 +110,13 @@ export default function Dropdown(props: PropsWithChildren<{
           </FocusContext.Provider>
         </InputContext.Provider>
       </DropdownContext.Provider>
+
+      <ScreenReader
+        announcementKey={value}
+        announcementText={screenReaderText}
+        instructionsId={screenReaderUUID}
+        instructions={screenReaderInstructions}
+      />
     </div>
   );
 }
