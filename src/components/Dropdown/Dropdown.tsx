@@ -84,7 +84,7 @@ export default function Dropdown(props: PropsWithChildren<{
         setFocusedIndex(-1);
         setValue(lastTypedOrSubmittedValue);
       } else {
-        setFocusedIndex((focusedIndex + 1) % numItems);
+        setFocusedIndex(updatedFocusedIndex % numItems);
       }
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
