@@ -1,4 +1,4 @@
-import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react';
+import { PropsWithChildren, useMemo, useRef, useState } from 'react';
 import DropdownContext, { DropdownContextType } from './DropdownContext';
 import InputContext, { InputContextType } from './InputContext';
 import useGlobalListener from '@restart/hooks/useGlobalListener';
@@ -37,36 +37,36 @@ export default function Dropdown(props: PropsWithChildren<{
 
   const [value, setValue] = useState(initialValue ?? '');
   const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState(initialValue ?? '');
-  const inputContext: InputContextType = useMemo(() => ({
+  const inputContext: InputContextType = {
     value,
     setValue,
     lastTypedOrSubmittedValue,
     setLastTypedOrSubmittedValue
-  }), [value, lastTypedOrSubmittedValue]);
+  };
 
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
-  const focusContext: FocusContextType = useMemo(() => ({
+  const focusContext: FocusContextType = {
     focusedIndex,
     setFocusedIndex,
     focusedValue,
     setFocusedValue
-  }), [focusedIndex, focusedValue]);
+  };
 
   const [_isOpen, _toggle] = useState(false);
   const isOpen = _isOpen && numItems > 0;
-  const decoratedToggle = useCallback((nextIsOpen: boolean) => {
+  const decoratedToggle = (nextIsOpen: boolean) => {
     _toggle(nextIsOpen);
     if (!nextIsOpen) {
       setFocusedIndex(-1);
     }
-  }, [setFocusedIndex]);
-  const context: DropdownContextType = useMemo(() => ({
+  };
+  const context: DropdownContextType = {
     isOpen,
     decoratedToggle,
     onSelect,
     screenReaderUUID
-  }), [isOpen, onSelect, decoratedToggle, screenReaderUUID]);
+  };
 
   useRootClose(containerRef, () => {
     decoratedToggle(false);
