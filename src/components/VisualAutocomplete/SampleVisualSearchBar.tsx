@@ -31,7 +31,6 @@ export default function SampleVisualSearchBar() {
             {results => (
               <div className='flex flex-col'>
                 {results.map((r, index) => <FaqCard result={r} key={`${index}-${r.name}`} />)}
-                {results.map((r, index) => <FaqCard result={r} key={`${index}-${r.name}`} />)}
               </div>
             )}
           </EntityPreviews>
