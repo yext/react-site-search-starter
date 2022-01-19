@@ -3,7 +3,9 @@ import renderHighlightedValue from '../utils/renderHighlightedValue';
 
 export interface AutocompleteResultCssClasses {
   option?: string,
-  icon?: string
+  icon?: string,
+  highlighted?: string,
+  nonHighlighted?: string
 }
 
 export const builtInCssClasses = {
@@ -27,7 +29,7 @@ export default function renderAutocompleteResult(
       <Icon />
     </div>}
     <div className={cssClasses.option}>
-      {renderHighlightedValue(result)}
+      {renderHighlightedValue(result, cssClasses)}
     </div>
   </>
 }

@@ -1,11 +1,13 @@
 import { HighlightedValue } from "@yext/answers-headless-react";
 
 const defaultCssClasses: HighlightedValueCssClasses = {
-  highlighted: 'font-bold'
+  highlighted: 'font-normal',
+  nonHighlighted: 'font-semibold'
 }
 
 interface HighlightedValueCssClasses {
-  highlighted?: string
+  highlighted?: string,
+  nonHighlighted?: string
 }
 
 /**
@@ -15,7 +17,7 @@ interface HighlightedValueCssClasses {
 export default function renderHighlightedValue ({ value = '', matchedSubstrings }: Partial<HighlightedValue>, customCssClasses?: HighlightedValueCssClasses): JSX.Element {
   const cssClasses = { ...defaultCssClasses, ...customCssClasses };
   if (!matchedSubstrings || matchedSubstrings.length === 0) {
-    return <span>{value}</span>;
+    return <span className={cssClasses.nonHighlighted} >{value}</span>;
   }
   const substrings = [...matchedSubstrings];
   substrings.sort((a, b) => a.offset - b.offset);
@@ -23,13 +25,13 @@ export default function renderHighlightedValue ({ value = '', matchedSubstrings 
   let curr = 0;
   for (let { offset, length } of substrings) {
     if (offset > curr) {
-      highlightedJSX.push(<span key={curr}>{value.substring(curr, offset)}</span>)
+      highlightedJSX.push(<span key={curr} className={cssClasses.nonHighlighted} >{value.substring(curr, offset)}</span>)
     }
     highlightedJSX.push(<span key={offset} className={cssClasses.highlighted}>{value.substring(offset, offset + length)}</span>)
     curr = offset + length;
   }
   if (curr < value.length) {
-    highlightedJSX.push(<span key={curr}>{value.substring(curr)}</span>)
+    highlightedJSX.push(<span key={curr} className={cssClasses.nonHighlighted} >{value.substring(curr)}</span>)
   }
   return <>{highlightedJSX}</>;
 }
