@@ -1,3 +1,4 @@
+import { QuerySource } from '@yext/answers-headless-react';
 import { ComponentType } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -8,6 +9,10 @@ interface RouteData {
 }
 
 export type LayoutComponent = ComponentType<{ page: JSX.Element }>
+
+export interface BrowserState {
+  originalQuerySource?: QuerySource
+}
 
 interface PageProps {
   Layout?: LayoutComponent,

@@ -1,6 +1,8 @@
 import { useLayoutEffect } from "react";
-import { useAnswersActions, SearchIntent } from "@yext/answers-headless-react";
+import { useAnswersActions, SearchIntent, QuerySource } from "@yext/answers-headless-react";
 import { executeSearch, getSearchIntents, updateLocationIfNeeded } from "../utils/search-operations";
+import { useLocation } from "react-router";
+import { BrowserState } from "../PageRouter";
 
 /**
  * Sets up the state for a page
@@ -8,6 +10,7 @@ import { executeSearch, getSearchIntents, updateLocationIfNeeded } from "../util
  */
 export default function usePageSetupEffect(verticalKey?: string) {
   const answersActions = useAnswersActions();
+  const browserLocation = useLocation<BrowserState>();
   useLayoutEffect(() => {
     const stateToClear = {
       filters: {},
@@ -28,7 +31,10 @@ export default function usePageSetupEffect(verticalKey?: string) {
         await updateLocationIfNeeded(answersActions, searchIntents);
       }
       executeSearch(answersActions, !!verticalKey);
+      if (browserLocation.state) {
+        answersActions.setQuerySource(browserLocation.state.originalQuerySource ?? QuerySource.Standard);
+      }
     };
     executeQuery();
-  }, [answersActions, verticalKey]);
+  }, [answersActions, verticalKey, browserLocation.state]);
 }
