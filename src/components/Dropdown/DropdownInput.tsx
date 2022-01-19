@@ -12,14 +12,14 @@ export default function DropdownInput(props: {
   placeholder?: string,
   onSubmit?: (value?: string) => void,
   onFocus?: (value?: string) => void,
-  onType?: (value?: string) => void
+  onChange?: (value?: string) => void
 }) {
   const {
     className,
     placeholder,
     onSubmit,
     onFocus,
-    onType
+    onChange
   } = props;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -37,7 +37,7 @@ export default function DropdownInput(props: {
     setFocusedIndex && setFocusedIndex(-1);
     setLastTypedOrSubmittedValue && setLastTypedOrSubmittedValue(e.target.value);
     setValue && setValue(e.target.value);
-    onType && onType(e.target.value);
+    onChange && onChange(e.target.value);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
