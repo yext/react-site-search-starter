@@ -71,9 +71,9 @@ export default function AlternativeVerticals ({
   const isShowingAllResults = displayAllOnNoResults && allResultsForVertical.length > 0;
 
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
-  const containerClassNames = cssClasses.alternativeVerticals___loading
-    ? classNames(cssClasses.container, { [cssClasses.alternativeVerticals___loading]: isLoading })
-    : cssClasses.container;
+  const containerClassNames = classNames(cssClasses.container, {
+    [cssClasses.alternativeVerticals___loading ?? '']: isLoading
+  });
 
   function buildVerticalSuggestions(
     verticalsConfig: VerticalConfig[],

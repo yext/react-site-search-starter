@@ -212,10 +212,9 @@ export default function InputDropdown({
     }
   }
 
-  const inputDropdownContainerCssClasses = cssClasses.inputDropdownContainer___active
-    ? classNames(cssClasses.inputDropdownContainer, 
-      { [cssClasses.inputDropdownContainer___active]: shouldDisplayDropdown })
-    : cssClasses.inputDropdownContainer;
+  const inputDropdownContainerCssClasses = classNames(cssClasses.inputDropdownContainer, {
+    [cssClasses.inputDropdownContainer___active ?? '']: shouldDisplayDropdown
+  });
 
   return (
     <div className={inputDropdownContainerCssClasses} ref={inputDropdownRef} onBlur={handleBlur}>
