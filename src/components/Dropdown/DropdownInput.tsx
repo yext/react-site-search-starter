@@ -1,8 +1,8 @@
-import { ChangeEvent, KeyboardEvent, useContext, useRef } from 'react'
-import DropdownContext from './DropdownContext'
-import FocusContext from './FocusContext';
+import { ChangeEvent, KeyboardEvent, useRef } from 'react'
+import { useDropdownContext } from './DropdownContext'
+import { useFocusContext } from './FocusContext';
 import generateDropdownId from './generateDropdownId';
-import InputContext from './InputContext';
+import { useInputContext } from './InputContext';
 
 /**
  * An input component for use within a Dropdown.
@@ -24,27 +24,27 @@ export default function DropdownInput(props: {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { decoratedToggle, onSelect, screenReaderUUID } = useContext(DropdownContext) || {};
-  const { value = '', setValue, setLastTypedOrSubmittedValue } = useContext(InputContext) || {};
-  const { focusedIndex = -1, setFocusedIndex } = useContext(FocusContext) || {};
+  const { decoratedToggle, onSelect, screenReaderUUID } = useDropdownContext();
+  const { value = '', setValue, setLastTypedOrSubmittedValue } = useInputContext();
+  const { focusedIndex = -1, setFocusedIndex } = useFocusContext();
 
   const handleClick = () => {
     decoratedToggle && decoratedToggle(true);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    decoratedToggle && decoratedToggle(true);
-    setFocusedIndex && setFocusedIndex(-1);
-    setLastTypedOrSubmittedValue && setLastTypedOrSubmittedValue(e.target.value);
-    setValue && setValue(e.target.value);
+    decoratedToggle(true);
+    setFocusedIndex(-1);
+    setLastTypedOrSubmittedValue(e.target.value);
+    setValue(e.target.value);
     onChange && onChange(e.target.value);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      decoratedToggle && decoratedToggle(false);
+      decoratedToggle(false);
       onSubmit && onSubmit(value);
-      setLastTypedOrSubmittedValue && setLastTypedOrSubmittedValue(value);
+      setLastTypedOrSubmittedValue(value);
       if (focusedIndex >= 0) {
         onSelect && onSelect(value, focusedIndex);
       }
@@ -53,7 +53,7 @@ export default function DropdownInput(props: {
   };
 
   const handleFocus = () => {
-    decoratedToggle && decoratedToggle(true);
+    decoratedToggle(true);
     onFocus && onFocus(value);
   };
 

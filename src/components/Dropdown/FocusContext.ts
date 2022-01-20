@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 
 /**
  * The Context responsible for the currently focused item in a Dropdown.
@@ -10,4 +10,13 @@ export type FocusContextType = {
   setFocusedValue: (value: string) => void
 }
 
-export default createContext<FocusContextType | null>(null)
+const focusContext = createContext<FocusContextType | null>(null);
+export default focusContext;
+
+export function useFocusContext(): FocusContextType {
+  const focusContextInstance = useContext(focusContext);
+  if (focusContextInstance === null) {
+    throw new Error('Tried to use FocusContext when none exists.')
+  }
+  return focusContextInstance;
+}

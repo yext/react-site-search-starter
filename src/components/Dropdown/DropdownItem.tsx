@@ -1,8 +1,8 @@
-import { PropsWithChildren, useContext, useLayoutEffect } from 'react'
-import DropdownContext from './DropdownContext'
-import FocusContext from './FocusContext';
+import { PropsWithChildren, useLayoutEffect } from 'react'
+import { useDropdownContext } from './DropdownContext'
+import { useFocusContext } from './FocusContext';
 import generateDropdownId from './generateDropdownId';
-import InputContext from './InputContext';
+import { useInputContext } from './InputContext';
 
 export default function DropdownItem(props: PropsWithChildren<{
   value: string,
@@ -18,21 +18,21 @@ export default function DropdownItem(props: PropsWithChildren<{
     focusedClassName,
   } = props;
 
-  const { decoratedToggle, onSelect, screenReaderUUID } = useContext(DropdownContext) || {};
-  const { focusedIndex, focusedValue, setFocusedValue } = useContext(FocusContext) || {};
-  const { setValue } = useContext(InputContext) || {};
+  const { decoratedToggle, onSelect, screenReaderUUID } = useDropdownContext();
+  const { focusedIndex, focusedValue, setFocusedValue } = useFocusContext();
+  const { setValue } = useInputContext();
 
   const needsFocusedValueUpdate = focusedIndex === index && focusedValue !== value;
   useLayoutEffect(() => {
     if (needsFocusedValueUpdate) {
-      setFocusedValue && setFocusedValue(value);
-      setValue && setValue(value);
+      setFocusedValue(value);
+      setValue(value);
     }
   }, [needsFocusedValueUpdate, setFocusedValue, value, setValue])
 
   const handleClick = () => {
-    decoratedToggle && decoratedToggle(false);
-    setValue && setValue(value);
+    decoratedToggle(false);
+    setValue(value);
     onSelect && onSelect(value);
   };
 
