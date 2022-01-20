@@ -19,6 +19,7 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderInstructions?: string,
   initialValue?: string,
   onSelect?: (value?: string, index?: number) => void,
+  onToggle?: (isOpen?: boolean, value?: string) => void,
   className?: string,
   activeClassName?: string
 }>) {
@@ -29,6 +30,7 @@ export default function Dropdown(props: PropsWithChildren<{
     screenReaderInstructions = 'When autocomplete results are available, use up and down arrows to review and enter to select.',
     initialValue,
     onSelect,
+    onToggle,
     className,
     activeClassName
   } = props;
@@ -53,23 +55,21 @@ export default function Dropdown(props: PropsWithChildren<{
     setFocusedValue
   };
 
-  const [_isOpen, _toggle] = useState(false);
+  const [_isOpen, _toggleDropdown] = useState(false);
+  const toggleDropdown = (willBeOpen: boolean) => {
+    _toggleDropdown(willBeOpen);
+    onToggle && onToggle(willBeOpen, value);
+  }
   const isOpen = _isOpen && numItems > 0;
-  const decoratedToggle = (nextIsOpen: boolean) => {
-    _toggle(nextIsOpen);
-    if (!nextIsOpen) {
-      setFocusedIndex(-1);
-    }
-  };
   const context: DropdownContextType = {
     isOpen,
-    decoratedToggle,
+    toggleDropdown,
     onSelect,
     screenReaderUUID
   };
 
   useRootClose(containerRef, () => {
-    decoratedToggle(false);
+    toggleDropdown(false);
   }, { disabled: !isOpen });
 
   useGlobalListener('keydown', e => {

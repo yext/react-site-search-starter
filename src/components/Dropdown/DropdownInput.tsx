@@ -24,16 +24,16 @@ export default function DropdownInput(props: {
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { decoratedToggle, onSelect, screenReaderUUID } = useDropdownContext();
+  const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
   const { value = '', setValue, setLastTypedOrSubmittedValue } = useInputContext();
   const { focusedIndex = -1, setFocusedIndex } = useFocusContext();
 
   const handleClick = () => {
-    decoratedToggle && decoratedToggle(true);
+    toggleDropdown(true);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    decoratedToggle(true);
+    toggleDropdown(true);
     setFocusedIndex(-1);
     setLastTypedOrSubmittedValue(e.target.value);
     setValue(e.target.value);
@@ -42,7 +42,8 @@ export default function DropdownInput(props: {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      decoratedToggle(false);
+      toggleDropdown(false);
+      setFocusedIndex(-1);
       onSubmit && onSubmit(value);
       setLastTypedOrSubmittedValue(value);
       if (focusedIndex >= 0) {
@@ -53,7 +54,7 @@ export default function DropdownInput(props: {
   };
 
   const handleFocus = () => {
-    decoratedToggle(true);
+    toggleDropdown(true);
     onFocus && onFocus(value);
   };
 

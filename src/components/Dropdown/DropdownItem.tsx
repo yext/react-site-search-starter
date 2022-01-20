@@ -18,8 +18,8 @@ export default function DropdownItem(props: PropsWithChildren<{
     focusedClassName,
   } = props;
 
-  const { decoratedToggle, onSelect, screenReaderUUID } = useDropdownContext();
-  const { focusedIndex, focusedValue, setFocusedValue } = useFocusContext();
+  const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
+  const { focusedIndex, focusedValue, setFocusedValue, setFocusedIndex } = useFocusContext();
   const { setValue } = useInputContext();
 
   const needsFocusedValueUpdate = focusedIndex === index && focusedValue !== value;
@@ -31,7 +31,8 @@ export default function DropdownItem(props: PropsWithChildren<{
   }, [needsFocusedValueUpdate, setFocusedValue, value, setValue])
 
   const handleClick = () => {
-    decoratedToggle(false);
+    toggleDropdown(false);
+    setFocusedIndex(-1);
     setValue(value);
     onSelect && onSelect(value);
   };
