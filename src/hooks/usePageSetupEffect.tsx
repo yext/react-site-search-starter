@@ -30,9 +30,13 @@ export default function usePageSetupEffect(verticalKey?: string) {
         searchIntents = await getSearchIntents(answersActions, !!verticalKey) || [];
         await updateLocationIfNeeded(answersActions, searchIntents);
       }
-      executeSearch(answersActions, !!verticalKey);
-      if (browserLocation.state) {
-        answersActions.setQuerySource(browserLocation.state.originalQuerySource ?? QuerySource.Standard);
+      if (browserLocation.state?.querySource) {
+        const querySource = answersActions.state.query.querySource;
+        answersActions.setQuerySource(browserLocation.state.querySource);
+        executeSearch(answersActions, !!verticalKey);
+        answersActions.setQuerySource(querySource ?? QuerySource.Standard);
+      } else {
+        executeSearch(answersActions, !!verticalKey);
       }
     };
     executeQuery();

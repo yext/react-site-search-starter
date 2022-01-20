@@ -11,7 +11,7 @@ interface RouteData {
 export type LayoutComponent = ComponentType<{ page: JSX.Element }>
 
 export interface BrowserState {
-  originalQuerySource?: QuerySource
+  querySource?: QuerySource
 }
 
 interface PageProps {

@@ -81,7 +81,6 @@ export default function VisualSearchBar({
   const answersActions = useAnswersActions();
   const answersUtilities = useAnswersUtilities();
   const query = useAnswersState(state => state.query.input) ?? '';
-  const querySource = useAnswersState(state => state.query.querySource);
   const isLoading = useAnswersState(state => state.searchStatus.isLoading) ?? false;
   const [executeQueryWithNearMeHandling, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions);
   const [autocompleteResponse, executeAutocomplete] = useSynchronizedRequest(async () => {
@@ -156,9 +155,8 @@ export default function VisualSearchBar({
           onSelect: () => {
             autocompletePromiseRef.current = undefined;
             answersActions.setQuery(result.value);
-            answersActions.setQuerySource(QuerySource.Autocomplete);
             browserHistory.push(`/${link.verticalKey}`, {
-              originalQuerySource: querySource
+              querySource: QuerySource.Autocomplete
             });
           },
           display: renderAutocompleteResult({ value: `in ${link.label}` }, { ...cssClasses, option: cssClasses.verticalLink })
