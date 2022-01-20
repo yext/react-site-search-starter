@@ -35,7 +35,7 @@ export default function DropdownItem(props: PropsWithChildren<{
     setFocusedIndex(-1);
     setLastTypedOrSubmittedValue(value);
     setValue(value);
-    onSelect && onSelect(value);
+    onSelect?.(value);
   };
 
   const computedClassName = focusedIndex === index ? focusedClassName : className;

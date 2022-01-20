@@ -129,7 +129,7 @@ function useDropdownContextInstance(
   const [isActive, _toggleDropdown] = useState(false);
   const toggleDropdown = (willBeOpen: boolean) => {
     _toggleDropdown(willBeOpen);
-    onToggle && onToggle(willBeOpen, value);
+    onToggle?.(willBeOpen, value);
   };
   return {
     isActive,
