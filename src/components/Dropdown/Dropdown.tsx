@@ -73,13 +73,14 @@ export default function Dropdown(props: PropsWithChildren<{
   }, { disabled: !isOpen });
 
   useGlobalListener('keydown', e => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+    }
     if (!isOpen) {
       return;
     }
     if (e.key === 'ArrowDown') {
-      e.preventDefault();
       const updatedFocusedIndex = focusedIndex + 1;
-      setFocusedValue(null);
       if (updatedFocusedIndex >= numItems) {
         setFocusedIndex(-1);
         setValue(lastTypedOrSubmittedValue);
@@ -87,8 +88,6 @@ export default function Dropdown(props: PropsWithChildren<{
         setFocusedIndex(updatedFocusedIndex % numItems);
       }
     } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setFocusedValue(null);
       const updatedFocusedIndex = focusedIndex - 1;
       if (updatedFocusedIndex === -1) {
         setFocusedIndex(updatedFocusedIndex);
@@ -111,12 +110,12 @@ export default function Dropdown(props: PropsWithChildren<{
         </InputContext.Provider>
       </DropdownContext.Provider>
 
-      <ScreenReader
+      {isOpen && <ScreenReader
         announcementKey={value}
         announcementText={screenReaderText}
         instructionsId={screenReaderUUID}
         instructions={screenReaderInstructions}
-      />
+      />}
     </div>
   );
 }
