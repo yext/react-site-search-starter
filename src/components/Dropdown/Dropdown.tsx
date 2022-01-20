@@ -37,36 +37,12 @@ export default function Dropdown(props: PropsWithChildren<{
   const containerRef = useRef<HTMLDivElement>(null);
   const screenReaderUUID: string = useMemo(() => uuid(), []);
 
-  const [value, setValue] = useState(initialValue ?? '');
-  const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState(initialValue ?? '');
-  const inputContext: InputContextType = {
-    value,
-    setValue,
-    lastTypedOrSubmittedValue,
-    setLastTypedOrSubmittedValue
-  };
-
-  const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [focusedValue, setFocusedValue] = useState<string>('');
-  const focusContext: FocusContextType = {
-    focusedIndex,
-    setFocusedIndex,
-    focusedValue,
-    setFocusedValue
-  };
-
-  const [_isOpen, _toggleDropdown] = useState(false);
-  const isOpen = _isOpen && numItems > 0;
-  const toggleDropdown = (willBeOpen: boolean) => {
-    _toggleDropdown(willBeOpen);
-    onToggle && onToggle(willBeOpen, value);
-  };
-  const context: DropdownContextType = {
-    isOpen,
-    toggleDropdown,
-    onSelect,
-    screenReaderUUID
-  };
+  const inputContext = useInputContextInstance(initialValue);
+  const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
+  const focusContext = useFocusContextInstance();
+  const { focusedIndex, setFocusedIndex, setFocusedValue } = focusContext;
+  const dropdownContext = useDropdownContextInstance(numItems, value, screenReaderUUID, onToggle, onSelect);
+  const { toggleDropdown, isOpen } = dropdownContext;
 
   useRootClose(containerRef, () => {
     toggleDropdown(false);
@@ -104,7 +80,7 @@ export default function Dropdown(props: PropsWithChildren<{
 
   return (
     <div ref={containerRef} className={isOpen ? activeClassName : className}>
-      <DropdownContext.Provider value={context}>
+      <DropdownContext.Provider value={dropdownContext}>
         <InputContext.Provider value={inputContext}>
           <FocusContext.Provider value={focusContext}>
             {children}
@@ -120,4 +96,47 @@ export default function Dropdown(props: PropsWithChildren<{
       />}
     </div>
   );
+}
+
+function useInputContextInstance(initialValue = ''): InputContextType {
+  const [value, setValue] = useState(initialValue);
+  const [lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue] = useState(initialValue);
+  return {
+    value,
+    setValue,
+    lastTypedOrSubmittedValue,
+    setLastTypedOrSubmittedValue
+  };
+}
+
+function useFocusContextInstance(): FocusContextType {
+  const [focusedIndex, setFocusedIndex] = useState(-1);
+  const [focusedValue, setFocusedValue] = useState<string>('');
+  return {
+    focusedIndex,
+    setFocusedIndex,
+    focusedValue,
+    setFocusedValue
+  };
+}
+
+function useDropdownContextInstance(
+  numItems: number,
+  value: string,
+  screenReaderUUID: string,
+  onToggle?: (isOpen?: boolean, value?: string) => void,
+  onSelect?: (value?: string, index?: number) => void,
+): DropdownContextType {
+  const [_isOpen, _toggleDropdown] = useState(false);
+  const isOpen = _isOpen && numItems > 0;
+  const toggleDropdown = (willBeOpen: boolean) => {
+    _toggleDropdown(willBeOpen);
+    onToggle && onToggle(willBeOpen, value);
+  };
+  return {
+    isOpen,
+    toggleDropdown,
+    onSelect,
+    screenReaderUUID
+  };
 }
