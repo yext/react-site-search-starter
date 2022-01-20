@@ -20,7 +20,7 @@ export default function DropdownItem(props: PropsWithChildren<{
 
   const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
   const { focusedIndex, focusedValue, setFocusedValue, setFocusedIndex } = useFocusContext();
-  const { setValue } = useInputContext();
+  const { setValue, setLastTypedOrSubmittedValue } = useInputContext();
 
   const needsFocusedValueUpdate = focusedIndex === index && focusedValue !== value;
   useLayoutEffect(() => {
@@ -33,6 +33,7 @@ export default function DropdownItem(props: PropsWithChildren<{
   const handleClick = () => {
     toggleDropdown(false);
     setFocusedIndex(-1);
+    setLastTypedOrSubmittedValue(value);
     setValue(value);
     onSelect && onSelect(value);
   };

@@ -19,7 +19,7 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderInstructions?: string,
   initialValue?: string,
   onSelect?: (value?: string, index?: number) => void,
-  onToggle?: (isOpen?: boolean, value?: string) => void,
+  onToggle?: (isActive?: boolean, value?: string) => void,
   className?: string,
   activeClassName?: string
 }>) {
@@ -41,18 +41,18 @@ export default function Dropdown(props: PropsWithChildren<{
   const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
   const focusContext = useFocusContextInstance();
   const { focusedIndex, setFocusedIndex, setFocusedValue } = focusContext;
-  const dropdownContext = useDropdownContextInstance(numItems, value, screenReaderUUID, onToggle, onSelect);
-  const { toggleDropdown, isOpen } = dropdownContext;
+  const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
+  const { toggleDropdown, isActive } = dropdownContext;
 
   useRootClose(containerRef, () => {
     toggleDropdown(false);
-  }, { disabled: !isOpen });
+  }, { disabled: !isActive });
 
   useGlobalListener('keydown', e => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
     }
-    if (!isOpen) {
+    if (!isActive) {
       return;
     }
     if (e.key === 'ArrowDown') {
@@ -79,7 +79,7 @@ export default function Dropdown(props: PropsWithChildren<{
   });
 
   return (
-    <div ref={containerRef} className={isOpen ? activeClassName : className}>
+    <div ref={containerRef} className={isActive ? activeClassName : className}>
       <DropdownContext.Provider value={dropdownContext}>
         <InputContext.Provider value={inputContext}>
           <FocusContext.Provider value={focusContext}>
@@ -88,12 +88,12 @@ export default function Dropdown(props: PropsWithChildren<{
         </InputContext.Provider>
       </DropdownContext.Provider>
 
-      {isOpen && <ScreenReader
+      <ScreenReader
         announcementKey={value}
-        announcementText={screenReaderText}
+        announcementText={isActive ? screenReaderText : ''}
         instructionsId={screenReaderUUID}
         instructions={screenReaderInstructions}
-      />}
+      />
     </div>
   );
 }
@@ -121,20 +121,18 @@ function useFocusContextInstance(): FocusContextType {
 }
 
 function useDropdownContextInstance(
-  numItems: number,
   value: string,
   screenReaderUUID: string,
-  onToggle?: (isOpen?: boolean, value?: string) => void,
+  onToggle?: (isActive?: boolean, value?: string) => void,
   onSelect?: (value?: string, index?: number) => void,
 ): DropdownContextType {
-  const [_isOpen, _toggleDropdown] = useState(false);
-  const isOpen = _isOpen && numItems > 0;
+  const [isActive, _toggleDropdown] = useState(false);
   const toggleDropdown = (willBeOpen: boolean) => {
     _toggleDropdown(willBeOpen);
     onToggle && onToggle(willBeOpen, value);
   };
   return {
-    isOpen,
+    isActive,
     toggleDropdown,
     onSelect,
     screenReaderUUID

@@ -5,8 +5,8 @@ import { useDropdownContext } from './DropdownContext';
  * DropdownMenu is a container for the overlay portion of a Dropdown.
  */
 export default function DropdownMenu({ children }: PropsWithChildren<{}>) {
-  const { isOpen } = useDropdownContext();
-  if (!isOpen) {
+  const { isActive } = useDropdownContext();
+  if (!isActive) {
     return null;
   }
 
