@@ -48,7 +48,7 @@ export default function DropdownInput(props: {
       if (focusedIndex >= 0) {
         onSelect && onSelect(value, focusedIndex);
       }
-      inputRef.current && inputRef.current.blur();
+      inputRef.current?.blur();
     }
   };
 
