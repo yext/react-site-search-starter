@@ -45,7 +45,7 @@ export default function Dropdown(props: PropsWithChildren<{
   };
 
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [focusedValue, setFocusedValue] = useState<string | null>(null);
+  const [focusedValue, setFocusedValue] = useState<string>('');
   const focusContext: FocusContextType = {
     focusedIndex,
     setFocusedIndex,
@@ -83,6 +83,7 @@ export default function Dropdown(props: PropsWithChildren<{
       const updatedFocusedIndex = focusedIndex + 1;
       if (updatedFocusedIndex >= numItems) {
         setFocusedIndex(-1);
+        setFocusedValue(lastTypedOrSubmittedValue);
         setValue(lastTypedOrSubmittedValue);
       } else {
         setFocusedIndex(updatedFocusedIndex % numItems);
@@ -91,6 +92,7 @@ export default function Dropdown(props: PropsWithChildren<{
       const updatedFocusedIndex = focusedIndex - 1;
       if (updatedFocusedIndex === -1) {
         setFocusedIndex(updatedFocusedIndex);
+        setFocusedValue(lastTypedOrSubmittedValue);
         setValue(lastTypedOrSubmittedValue);
       } else if (updatedFocusedIndex < -1){
         setFocusedIndex((numItems + updatedFocusedIndex + 1) % numItems);
