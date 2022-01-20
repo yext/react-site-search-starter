@@ -7,7 +7,7 @@ export type FocusContextType = {
   focusedIndex: number,
   setFocusedIndex: (index: number) => void,
   focusedValue: string | null,
-  setFocusedValue: (value: string | null) => void
+  setFocusedValue: (value: string) => void
 }
 
 export default createContext<FocusContextType | null>(null)
