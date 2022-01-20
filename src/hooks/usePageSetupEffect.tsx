@@ -24,12 +24,23 @@ export default function usePageSetupEffect(verticalKey?: string) {
     verticalKey
       ? answersActions.setVertical(verticalKey)
       : answersActions.setUniversal();
+
     const executeQuery = async () => {
       let searchIntents: SearchIntent[] = [];
       if (!answersActions.state.location.userLocation) {
         searchIntents = await getSearchIntents(answersActions, !!verticalKey) || [];
         await updateLocationIfNeeded(answersActions, searchIntents);
       }
+
+      if (browserLocation.search) {
+        const queryParamTerm = 'query='
+        const queryIndex = browserLocation.search.indexOf(queryParamTerm);
+        if (queryIndex >= 0) {
+          const encodedQuery = browserLocation.search.slice(queryIndex + queryParamTerm.length);
+          answersActions.setQuery(decodeURI(encodedQuery));
+        }
+      }
+
       if (browserLocation.state?.querySource) {
         const querySource = answersActions.state.query.querySource;
         answersActions.setQuerySource(browserLocation.state.querySource);
@@ -39,6 +50,7 @@ export default function usePageSetupEffect(verticalKey?: string) {
         executeSearch(answersActions, !!verticalKey);
       }
     };
+
     executeQuery();
-  }, [answersActions, verticalKey, browserLocation.state]);
+  }, [answersActions, verticalKey, browserLocation]);
 }

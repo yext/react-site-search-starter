@@ -155,7 +155,7 @@ export default function VisualSearchBar({
           onSelect: () => {
             autocompletePromiseRef.current = undefined;
             answersActions.setQuery(result.value);
-            browserHistory.push(`/${link.verticalKey}`, {
+            browserHistory.push(`/${link.verticalKey}?query=${result.value}`, {
               querySource: QuerySource.Autocomplete
             });
           },
