@@ -56,11 +56,11 @@ export default function Dropdown(props: PropsWithChildren<{
   };
 
   const [_isOpen, _toggleDropdown] = useState(false);
+  const isOpen = _isOpen && numItems > 0;
   const toggleDropdown = (willBeOpen: boolean) => {
     _toggleDropdown(willBeOpen);
     onToggle && onToggle(willBeOpen, value);
-  }
-  const isOpen = _isOpen && numItems > 0;
+  };
   const context: DropdownContextType = {
     isOpen,
     toggleDropdown,
