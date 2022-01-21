@@ -2,10 +2,9 @@ import PageRouter, { RouteData } from './PageRouter';
 import StandardLayout from './templates/StandardLayout';
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
 import { PageViewContextProvider } from './context/PageViewContext';
-import UniversalSearchPage from './pages/UniversalSearchPage';
+import UniversalSearchPage, { UniversalResultsConfig } from './pages/UniversalSearchPage';
 import AnswersAppConfig from './config/AnswersAppConfig';
 import { CardNameToComponentMapping } from './models/cardComponent';
-import { UniversalResultsConfig } from './config/universalResultsConfig';
 import StandardPage from './templates/StandardPage';
 import { AnswersAppContextProvider } from './context/AnswersAppContext';
 
