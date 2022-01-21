@@ -11,23 +11,23 @@ const universalSearchTests = [
 const verticalSearchTests = [
   {
     name: 'vertical-search',
-    commands: [{ type: 'click', params: ['a[href="/events"]'] }]
+    commands: [{ type: 'click', params: ['a[href="/events?query="]'] }]
   },
   {
     name: 'vertical-search--no-results',
     commands: [
-      { type: 'click', params: ['a[href="/jobs"]'] },
+      { type: 'click', params: ['a[href="/jobs?query="]'] },
       { type: 'search', params: ['zelle', 'input'] }
     ]
   },
   {
     name: 'vertical-search--locations',
-    commands: [{ type: 'click', params: ['a[href="/locations"]'] }]
+    commands: [{ type: 'click', params: ['a[href="/locations?query="]'] }]
   },
   {
     name: 'vertical-search--faqs',
     commands: [
-      { type: 'click', params: ['a[href="/faqs"]'] }]
+      { type: 'click', params: ['a[href="/faqs?query="]'] }]
   }
 ];
 
