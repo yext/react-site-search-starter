@@ -1,7 +1,10 @@
 import VisualSearchBar from './VisualSearchBar';
-import { Result } from '@yext/answers-headless-react';
+import { HighlightedFields, HighlightedValue, Result } from '@yext/answers-headless-react';
 import EntityPreviews from './EntityPreviews';
 import { useAnswersAppContext } from '../../context/AnswersAppContext';
+import { ReactComponent as EventIcon } from '../../icons/event.svg';
+import { ReactComponent as FAQIcon } from '../../icons/faq.svg';
+import renderHighlightedValue from '../utils/renderHighlightedValue';
 
 /**
  * This is an example of how to use the VisualSearchBar component.
@@ -17,10 +20,12 @@ export default function SampleVisualSearchBar() {
       renderEntityPreviews={isLoading => (
         <div className={isLoading ? 'opacity-50' : ''}>
           <EntityPreviews verticalKey='events'>
-            {results => (
-              <div className='flex ml-4 mt-1'>
+            {results => (<>
+              {results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
+              <div className='grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 mx-3.5 mt-1'>
                 {results.map((r, index) => <EventCard result={r} key={`${index}-${r.name}`} />)}
               </div>
+            </>
             )}
           </EntityPreviews>
           <EntityPreviews verticalKey='faqs' limit={2}>
@@ -47,11 +52,24 @@ interface FaqData {
 
 function FaqCard({ result }: CardProps) {
   const faqData: FaqData = result.rawData;
+
+  function containsNameHighlightedValue(highlightedFields?: HighlightedFields): highlightedFields is { name: HighlightedValue } {
+    const anyHiglightedFields = highlightedFields as any;
+    return anyHiglightedFields.name?.value && anyHiglightedFields.name?.matchedSubstrings;
+  }
+
+  const matchedSubstrings = containsNameHighlightedValue(result.highlightedFields)
+    ? result.highlightedFields.name.matchedSubstrings
+    : [];
+
   return (<div key={faqData.question}>
-    <div className='h-px bg-gray-200 mt-1 mb-3 mx-2.5'></div>
-    <div tabIndex={0} className='flex flex-col mx-4 mb-3 rounded-md'>
-      <div className='text-gray-900 text-lg font-medium pb-1'>{faqData.question}</div>
-      <div>{faqData.answer}</div>
+    <div className='h-px bg-gray-200 mt-1 mb-4 mx-2.5'></div>
+    <div tabIndex={0} className='flex flex-row mx-4 mb-3 rounded-md'>
+      <FAQIcon className='w-6 mr-3 mt-1'/>
+      <div>
+        <div className='text-gray-800 text-lg font-semibold pb-1'>{renderHighlightedValue({ value: faqData.question, matchedSubstrings }, { highlighted: 'font-normal' })}</div>
+        <div className='font-normal text-base text-gray-500' >{faqData.answer}</div>
+      </div>
     </div>
   </div>)
 }
@@ -64,9 +82,12 @@ function EventCard({ result }: CardProps) {
   const eventData: EventData = result.rawData;
   const venueName = eventData.venueName;
   return (
-    <div tabIndex={0} className='flex flex-col mb-3 mr-4 border rounded-md p-3 text-lg'>
-      <div className='font-medium pb-1'>{result.name}</div>
-      <div className='text-base'>{venueName}</div>
+    <div tabIndex={0} className='flex flex-row border rounded-xl p-3 text-lg shadow-sm'>
+      <EventIcon className='mr-3.5 mt-1 ml-1'/>
+      <div>
+        <div className='text-gray-800 font-medium pb-1 w-full'>{result.name}</div>
+        <div className='text-base text-gray-500'>{venueName}</div>
+      </div>
     </div>
   )
 }

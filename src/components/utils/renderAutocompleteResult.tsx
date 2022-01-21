@@ -3,12 +3,14 @@ import renderHighlightedValue from '../utils/renderHighlightedValue';
 
 export interface AutocompleteResultCssClasses {
   option?: string,
-  icon?: string
+  icon?: string,
+  highlighted?: string,
+  nonHighlighted?: string
 }
 
 export const builtInCssClasses = {
   option: 'flex whitespace-pre-wrap h-6.5 pl-3',
-  icon: 'w-6 text-gray-400 opacity-50'
+  icon: 'w-6 text-gray-300'
 }
 
 /**
@@ -28,7 +30,7 @@ export default function renderAutocompleteResult(
       <Icon />
     </div>}
     <div aria-label={ariaLabel || ''} className={cssClasses.option}>
-      {renderHighlightedValue(result)}
+      {renderHighlightedValue(result, cssClasses)}
     </div>
   </>
 }

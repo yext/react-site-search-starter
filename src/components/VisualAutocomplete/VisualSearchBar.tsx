@@ -21,17 +21,19 @@ import { ReactComponent as MagnifyingGlassIcon } from '../../icons/magnifying_gl
 const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
 const builtInCssClasses: VisualSearchBarCssClasses = { 
   ...builtInSearchBarCssClasses, 
-  recentSearchesOptionContainer: 'flex items-center h-6.5 px-3.5 pb-3 cursor-pointer',
-  recentSearchesIcon: 'w-4 mx-1 text-gray-500',
+  recentSearchesOptionContainer: 'flex items-center h-6.5 px-3.5 py-1.5 cursor-pointer hover:bg-gray-100',
+  recentSearchesIcon: 'w-5 mr-1 text-gray-300',
   recentSearchesOption: 'pl-3',
-  verticalLink: '-mt-1 ml-14 text-gray-600'
+  recentSearchesNonHighlighted: 'font-normal', // Swap this to semibold once we apply highlighting to recent searches
+  verticalLink: 'ml-12 pl-1 text-gray-500 italic'
 };
 
 interface VisualSearchBarCssClasses extends SearchBarCssClasses {
   recentSearchesOptionContainer?: string,
   recentSearchesIcon?: string,
   recentSearchesOption?: string,
-  verticalLink: string
+  recentSearchesNonHighlighted?: string,
+  verticalLink?: string
 }
 
 type RenderEntityPreviews = (
@@ -178,7 +180,8 @@ export default function VisualSearchBar({
       ...cssClasses,
       optionContainer: cssClasses.recentSearchesOptionContainer,
       icon: cssClasses.recentSearchesIcon,
-      option: cssClasses.recentSearchesOption
+      option: cssClasses.recentSearchesOption,
+      nonHighlighted: cssClasses.recentSearchesNonHighlighted
     }
     const options: Option[] = filteredRecentSearches?.map(result => {
       return {
