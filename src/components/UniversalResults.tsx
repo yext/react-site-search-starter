@@ -1,7 +1,7 @@
 import { useAnswersState, VerticalResults } from "@yext/answers-headless-react";
-import StandardSection from "../sections/StandardSection";
+import StandardSection from "./sections/StandardSection";
 import { AppliedFiltersProps } from '../components/AppliedFilters';
-import SectionHeader from "../sections/SectionHeader";
+import SectionHeader from "./sections/SectionHeader";
 import { SectionComponent } from "../models/sectionComponent";
 import { CardConfig } from '../models/cardComponent';
 import { useComposedCssClasses, CompositionMethod } from "../hooks/useComposedCssClasses";
