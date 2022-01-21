@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { provideAnswersHeadless, useAnswersState, VerticalResults, AnswersHeadless, UniversalLimit, QuerySource } from '@yext/answers-headless-react';
+import { provideAnswersHeadless, VerticalResults, AnswersHeadless, UniversalLimit, QuerySource } from '@yext/answers-headless-react';
 import { answersHeadlessConfig } from '../config/answersHeadlessConfig';
 import useDebouncedFunction from './useDebouncedFunction';
 import useComponentMountStatus from "./useComponentMountStatus";
