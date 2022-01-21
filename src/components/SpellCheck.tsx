@@ -1,5 +1,6 @@
-import { useAnswersState, useAnswersActions, SearchTypeEnum } from '@yext/answers-headless-react'
+import { useAnswersState, useAnswersActions } from '@yext/answers-headless-react'
 import classNames from 'classnames';
+import { useHistory } from 'react-router-dom';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 
 interface SpellCheckCssClasses {
@@ -22,7 +23,7 @@ interface Props {
 }
 
 export default function SpellCheck ({ customCssClasses, cssCompositionMethod }: Props): JSX.Element | null {
-  const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
+  const verticalKey = useAnswersState(state => state.vertical.verticalKey) ?? '';
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const correctedQuery = useAnswersState(state => state.spellCheck.correctedQuery);
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
@@ -30,6 +31,7 @@ export default function SpellCheck ({ customCssClasses, cssCompositionMethod }: 
     ? classNames(cssClasses.container, { [cssClasses.spellCheck___loading]: isLoading })
     : cssClasses.container;
   const answersActions = useAnswersActions();
+  const browserHistory = useHistory();
   if (!correctedQuery) {
     return null;
   }
@@ -38,9 +40,7 @@ export default function SpellCheck ({ customCssClasses, cssCompositionMethod }: 
       <span className={cssClasses.helpText}>Did you mean </span>
       <button className={cssClasses.link} onClick={() => {
         answersActions.setQuery(correctedQuery);
-        isVertical
-          ? answersActions.executeVerticalQuery()
-          : answersActions.executeUniversalQuery();
+        browserHistory.push(`/${verticalKey}?query=${correctedQuery}`);
       }}>{correctedQuery}</button>
     </div>
   );

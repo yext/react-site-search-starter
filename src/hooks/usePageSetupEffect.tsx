@@ -35,7 +35,7 @@ export default function usePageSetupEffect(verticalKey?: string) {
       if (browserLocation.search) {
         const params = new URLSearchParams(browserLocation.search);
         const queryParam = params.get('query');
-        queryParam && answersActions.setQuery(queryParam);
+        queryParam !== null && answersActions.setQuery(queryParam);
       }
 
       if (browserLocation.state?.querySource) {
