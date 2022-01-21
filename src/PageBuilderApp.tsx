@@ -2,11 +2,12 @@ import PageRouter, { RouteData } from './PageRouter';
 import StandardLayout from './templates/StandardLayout';
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
 import { PageViewContextProvider } from './context/PageViewContext';
-import UniversalSearchPage, { UniversalResultsConfig } from './pages/UniversalSearchPage';
+import UniversalSearchPage from './pages/UniversalSearchPage';
 import AnswersAppConfig from './config/AnswersAppConfig';
 import { CardNameToComponentMapping } from './models/cardComponent';
 import StandardPage from './templates/StandardPage';
 import { AnswersAppContextProvider } from './context/AnswersAppContext';
+import { UniversalResultsConfig } from './components/UniversalResults';
 
 export default function PageBuilderApp({ config }: { config: AnswersAppConfig }) {
   const verticalRoutesConfig: RouteData[] = [];

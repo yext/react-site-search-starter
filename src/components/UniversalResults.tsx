@@ -24,6 +24,8 @@ export interface VerticalConfig {
   viewAllButton?: boolean
 }
 
+export type UniversalResultsConfig = Record<string, VerticalConfig>;
+
 interface AppliedFiltersConfig extends Omit<AppliedFiltersProps, 'appliedQueryFilters'> {
   show: boolean
 }
