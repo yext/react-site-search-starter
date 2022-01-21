@@ -1,8 +1,8 @@
 import { HighlightedValue } from "@yext/answers-headless-react";
 
 const defaultCssClasses: HighlightedValueCssClasses = {
-  highlighted: 'font-normal',
-  nonHighlighted: 'font-semibold'
+  highlighted: 'font-semibold',
+  nonHighlighted: 'font-normal'
 }
 
 interface HighlightedValueCssClasses {
