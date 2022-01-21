@@ -33,12 +33,9 @@ export default function usePageSetupEffect(verticalKey?: string) {
       }
 
       if (browserLocation.search) {
-        const queryParamTerm = 'query='
-        const queryIndex = browserLocation.search.indexOf(queryParamTerm);
-        if (queryIndex >= 0) {
-          const encodedQuery = browserLocation.search.slice(queryIndex + queryParamTerm.length);
-          answersActions.setQuery(decodeURI(encodedQuery));
-        }
+        const params = new URLSearchParams(browserLocation.search);
+        const queryParam = params.get('query');
+        queryParam && answersActions.setQuery(queryParam);
       }
 
       if (browserLocation.state?.querySource) {
