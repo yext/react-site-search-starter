@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { provideAnswersHeadless, VerticalResults, AnswersHeadless, UniversalLimit } from '@yext/answers-headless-react';
+import { provideAnswersHeadless, VerticalResults, AnswersHeadless, UniversalLimit, QuerySource } from '@yext/answers-headless-react';
 import { answersHeadlessConfig } from '../config/answersHeadlessConfig';
 import useDebouncedFunction from './useDebouncedFunction';
 import useComponentMountStatus from "./useComponentMountStatus";
@@ -25,6 +25,7 @@ export function useEntityPreviews(headlessId: string, debounceTime: number):[ En
       ...answersHeadlessConfig,
       headlessId
     });
+    headlessRef.current.setQuerySource(QuerySource.Autocomplete);
   }
   const isMountedRef = useComponentMountStatus();
   const [verticalResultsArray, setVerticalResultsArray] = useState<VerticalResults[]>([]);
@@ -43,7 +44,7 @@ export function useEntityPreviews(headlessId: string, debounceTime: number):[ En
     const results = headlessRef.current.state.universal.verticals || [];
     setVerticalResultsArray(results);
     setLoadingState(false);
-  }, debounceTime)
+  }, debounceTime);
   const [isLoading, setLoadingState] = useState<boolean>(false);
 
   function executeEntityPreviewsQuery(query: string, universalLimit: UniversalLimit, restrictVerticals: string[]) {
