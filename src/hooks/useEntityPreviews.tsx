@@ -25,15 +25,14 @@ export function useEntityPreviews(headlessId: string, debounceTime: number):[ En
       ...answersHeadlessConfig,
       headlessId
     });
+    headlessRef.current.setQuerySource(QuerySource.Autocomplete);
   }
   const isMountedRef = useComponentMountStatus();
   const [verticalResultsArray, setVerticalResultsArray] = useState<VerticalResults[]>([]);
-  const querySource = useAnswersState(state => state.query.querySource);
   const debouncedUniversalSearch = useDebouncedFunction(async () => {
     if (!headlessRef.current) {
       return;
     }
-    headlessRef.current.setQuerySource(QuerySource.Autocomplete);
     await headlessRef.current.executeUniversalQuery();
     /**
      * Avoid performing a React state update on an unmounted component
@@ -45,7 +44,6 @@ export function useEntityPreviews(headlessId: string, debounceTime: number):[ En
     const results = headlessRef.current.state.universal.verticals || [];
     setVerticalResultsArray(results);
     setLoadingState(false);
-    headlessRef.current.setQuerySource(querySource ?? QuerySource.Standard);
   }, debounceTime);
   const [isLoading, setLoadingState] = useState<boolean>(false);
 
