@@ -29,7 +29,7 @@ const StandardLayout: LayoutComponent = ({ page }) => {
         />
         : <SampleVisualSearchBar />
       }
-      {navLinks && <Navigation links={navLinks} />}
+      <Navigation links={navLinks} />
       {page}
     </>
   )

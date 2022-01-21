@@ -1,5 +1,5 @@
 import PageRouter from './PageRouter';
-import StandardLayout from './pages/StandardLayout';
+import StandardLayout from './templates/StandardLayout';
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
 import { PageViewContextProvider } from './context/PageViewContext';
 import { routeConfig } from './config/routeConfig';
