@@ -44,7 +44,7 @@ export default function UniversalResults({
   customCssClasses,
   cssCompositionMethod
 }: UniversalResultsProps): JSX.Element | null {
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod)
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const resultsFromAllVerticals = useAnswersState(state => state?.universal?.verticals) || [];
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
 
@@ -52,9 +52,9 @@ export default function UniversalResults({
     return null;
   }
 
-  const resultsClassNames = cssClasses.results___loading
-    ? classNames(cssClasses.container, { [cssClasses.results___loading]: isLoading })
-    : cssClasses.container;
+  const resultsClassNames = classNames(cssClasses.container, {
+    [cssClasses.results___loading ?? '']: isLoading
+  });
 
   return (
     <div className={resultsClassNames}>

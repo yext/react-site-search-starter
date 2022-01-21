@@ -26,9 +26,9 @@ export default function SpellCheck ({ customCssClasses, cssCompositionMethod }: 
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const correctedQuery = useAnswersState(state => state.spellCheck.correctedQuery);
   const isLoading = useAnswersState(state => state.searchStatus.isLoading);
-  const containerClassNames = cssClasses.spellCheck___loading
-    ? classNames(cssClasses.container, { [cssClasses.spellCheck___loading]: isLoading })
-    : cssClasses.container;
+  const containerClassNames = classNames(cssClasses.container, {
+    [cssClasses.spellCheck___loading ?? '']: isLoading
+  });
   const answersActions = useAnswersActions();
   if (!correctedQuery) {
     return null;

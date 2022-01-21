@@ -5,14 +5,14 @@ import { useComposedCssClasses, CompositionMethod } from "../../hooks/useCompose
 import { ReactComponent as CollectionIcon } from '../../icons/collection.svg';
 import { useAnswersState } from '@yext/answers-headless-react';
 import { DisplayableFilter } from "../../models/displayableFilter";
+import classNames from "classnames";
 
 interface SectionHeaderCssClasses extends AppliedFiltersCssClasses {
   sectionHeaderContainer?: string,
   sectionHeaderIconContainer?: string,
   sectionHeaderLabel?: string,
   viewMoreContainer?: string,
-  viewMoreLink?: string,
-  appliedFiltersContainer?: string
+  viewMoreLink?: string
 }
 
 const builtInCssClasses: SectionHeaderCssClasses = {
@@ -39,7 +39,7 @@ interface SectionHeaderConfig {
 
 export default function SectionHeader(props: SectionHeaderConfig): JSX.Element {
   const { label, verticalKey, viewAllButton = false, appliedFiltersConfig, customCssClasses, cssCompositionMethod } = props;
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod)
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const latestQuery = useAnswersState(state => state.query.mostRecentSearch); 
   const displayableFilters = appliedFiltersConfig?.appliedQueryFilters?.map((appliedQueryFilter): DisplayableFilter => {
     return {
@@ -49,6 +49,11 @@ export default function SectionHeader(props: SectionHeaderConfig): JSX.Element {
       label: appliedQueryFilter.displayValue
     }
   }) ?? [];
+
+  const isLoading = useAnswersState(state => state.searchStatus.isLoading);
+  cssClasses.appliedFiltersContainer = classNames(cssClasses.appliedFiltersContainer, {
+    [cssClasses.appliedFiltersContainer___loading ?? '']: isLoading
+  });
 
   return (
     <div className={cssClasses.sectionHeaderContainer}>
@@ -60,7 +65,7 @@ export default function SectionHeader(props: SectionHeaderConfig): JSX.Element {
         {resultsCountConfig &&
            <ResultsCountDisplay resultsLength={resultsCountConfig.resultsLength} resultsCount={resultsCountConfig.resultsCount} />} */}
       {appliedFiltersConfig &&
-        <AppliedFiltersDisplay displayableFilters={displayableFilters} customCssClasses={cssClasses} cssCompositionMethod='replace'/>
+        <AppliedFiltersDisplay displayableFilters={displayableFilters} cssClasses={cssClasses}/>
       }
       {viewAllButton && 
         <div className={cssClasses.viewMoreContainer}>

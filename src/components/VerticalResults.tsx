@@ -35,9 +35,9 @@ export function VerticalResultsDisplay(props: VerticalResultsDisplayProps): JSX.
     return null;
   }
 
-  const resultsClassNames = cssClasses.results___loading
-    ? classNames({ [cssClasses.results___loading]: isLoading })
-    : '';
+  const resultsClassNames = classNames({
+    [cssClasses.results___loading ?? '']: isLoading
+  });
 
   return (
     <div className={resultsClassNames}>
@@ -125,7 +125,7 @@ interface PaginationProps {
  * Renders a component that divide a series of results into chunks across multiple pages
  * and enable user to navigate between those pages.
  */
-function Pagination(props: PaginationProps): JSX.Element {
+function Pagination(props: PaginationProps): JSX.Element | null {
   const { numResults, customCssClasses = {}, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInPaginationCssClasses, customCssClasses, cssCompositionMethod);
   const answersAction = useAnswersActions();
@@ -142,6 +142,9 @@ function Pagination(props: PaginationProps): JSX.Element {
   }
 
   const maxPageCount = Math.ceil(numResults / limit);
+  if (maxPageCount <= 1) {
+    return null;
+  }
   const pageNumber = (offset / limit) + 1;
   const paginationLabels: string[] = generatePaginationLabels(pageNumber, maxPageCount);
 

@@ -138,9 +138,9 @@ function renderLink(
   cssClasses: { navLinkContainer?: string, navLinkContainer___active?: string, navLink?: string }) 
 {
   const { to, label } = linkData;
-  const navLinkContainerClasses = cssClasses.navLinkContainer___active 
-    ? classNames(cssClasses.navLinkContainer, { [cssClasses.navLinkContainer___active]: isActiveLink }) 
-    : cssClasses.navLinkContainer;
+  const navLinkContainerClasses = classNames(cssClasses.navLinkContainer, {
+    [cssClasses.navLinkContainer___active ?? '']: isActiveLink
+  });
   return (
     <div className={navLinkContainerClasses} key={to}>
       <NavLink

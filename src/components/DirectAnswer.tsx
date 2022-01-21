@@ -68,9 +68,9 @@ export default function DirectAnswer(props: DirectAnswerProps): JSX.Element | nu
     </>
   }
 
-  const containerCssClasses = cssClasses.container___loading
-    ? classNames(cssClasses.container, { [cssClasses.container___loading ]: isLoading })
-    : cssClasses.container;
+  const containerCssClasses = classNames(cssClasses.container, {
+    [cssClasses.container___loading ?? '']: isLoading
+  });
 
   return (
     <div className={containerCssClasses}>
