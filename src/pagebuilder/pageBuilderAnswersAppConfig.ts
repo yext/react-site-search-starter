@@ -1,4 +1,4 @@
-import AnswersAppConfig from "./AnswersAppConfig";
+import AnswersAppConfig from "../models/AnswersAppConfig";
 
 const pageBuilderAnswersAppConfig: AnswersAppConfig = {
   providerConfig: {

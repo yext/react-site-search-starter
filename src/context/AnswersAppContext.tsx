@@ -1,6 +1,6 @@
 
 import { createContext, useContext } from 'react';
-import AnswersAppConfig from '../config/AnswersAppConfig';
+import AnswersAppConfig from '../models/AnswersAppConfig';
 
 export const AnswersAppContext = createContext<AnswersAppConfig | undefined>(undefined);
 
