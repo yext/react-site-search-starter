@@ -1,5 +1,5 @@
-import { useAnswersActions, useAnswersState, VerticalResults, AutocompleteResult } from '@yext/answers-headless-react';
-import { PropsWithChildren, useEffect } from 'react';
+import { useAnswersActions, useAnswersState, useAnswersUtilities, VerticalResults } from '@yext/answers-headless-react';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import InputDropdown from '../InputDropdown';
 import '../../sass/Autocomplete.scss';
 import DropdownSection, { Option } from '../DropdownSection';
@@ -80,9 +80,10 @@ export default function VisualSearchBar({
 
   const browserHistory = useHistory();
   const answersActions = useAnswersActions();
+  const answersUtilities = useAnswersUtilities();
   const query = useAnswersState(state => state.query.input) ?? '';
   const isLoading = useAnswersState(state => state.searchStatus.isLoading) ?? false;
-  const [executeQueryWithNearMeHandling, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions)
+  const [executeQueryWithNearMeHandling, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions);
   const [autocompleteResponse, executeAutocomplete] = useSynchronizedRequest(async () => {
     return answersActions.executeUniversalAutocomplete();
   });
@@ -92,8 +93,9 @@ export default function VisualSearchBar({
       clearRecentSearches();
     }
   }, [clearRecentSearches, hideRecentSearches])
-  const haveRecentSearches = !hideRecentSearches && recentSearches?.length !== 0;
-  
+
+  const [filteredRecentSearches, setFilteredRecentSearches] = useState(recentSearches);
+  const haveRecentSearches = !hideRecentSearches && filteredRecentSearches?.length !== 0;
 
   function executeQuery() {
     if (!hideRecentSearches) {
@@ -129,7 +131,12 @@ export default function VisualSearchBar({
           answersActions.setQuery(result.value);
           executeQuery();
         },
-        display: renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon)
+        display: renderAutocompleteResult(
+          result,
+          cssClasses,
+          MagnifyingGlassIcon,
+          `autocomplete suggestion: ${result.value}`
+        )
       });
 
       if (hideVerticalLinks) {
@@ -176,7 +183,7 @@ export default function VisualSearchBar({
       option: cssClasses.recentSearchesOption,
       nonHighlighted: cssClasses.recentSearchesNonHighlighted
     }
-    const options: Option[] = recentSearches?.map(result => {
+    const options: Option[] = filteredRecentSearches?.map(result => {
       return {
         value: result.query,
         onSelect: () => {
@@ -184,7 +191,12 @@ export default function VisualSearchBar({
           answersActions.setQuery(result.query);
           executeQuery();
         },
-        display: renderAutocompleteResult({ value: result.query }, recentSearchesCssClasses, RecentSearchIcon)
+        display: renderAutocompleteResult(
+          { value: result.query },
+          recentSearchesCssClasses,
+          RecentSearchIcon,
+          `recent search: ${result.query}`
+        )
       }
     }) ?? [];
     if (options.length === 0) {
@@ -196,6 +208,7 @@ export default function VisualSearchBar({
       optionIdPrefix='VisualSearchBar-RecentSearches'
       onFocusChange={value => {
         answersActions.setQuery(value);
+        updateEntityPreviews(value);
       }}
       cssClasses={recentSearchesCssClasses}
     />
@@ -207,13 +220,16 @@ export default function VisualSearchBar({
         inputValue={query}
         placeholder={placeholder}
         screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
-        screenReaderText={getScreenReaderText(autocompleteResults)}
+        screenReaderText={getScreenReaderText(autocompleteResults.length , filteredRecentSearches?.length || 0)}
         onSubmit={executeQuery}
         onInputChange={value => {
           answersActions.setQuery(value);
         }}
         onInputFocus={value => {
           updateEntityPreviews(value);
+          setFilteredRecentSearches(recentSearches?.filter(search => 
+            answersUtilities.isCloseMatch(search.query, value)
+          ));
           autocompletePromiseRef.current = executeAutocomplete();
         }}
         onDropdownLeave={value => {
@@ -238,10 +254,18 @@ export default function VisualSearchBar({
   )
 }
 
-function getScreenReaderText(options: AutocompleteResult[]) {
-  return processTranslation({
-    phrase: `${options.length} autocomplete option found.`,
-    pluralForm: `${options.length} autocomplete options found.`,
-    count: options.length
+function getScreenReaderText(autocompleteOptions: number, recentSearchesOptions: number) {
+  const recentSearchesText = recentSearchesOptions > 0 
+    ? processTranslation({
+      phrase: `${recentSearchesOptions} recent search found.`,
+      pluralForm: `${recentSearchesOptions} recent searches found.`,
+      count: recentSearchesOptions
+    })
+    : '';
+  const autocompleteText = processTranslation({
+    phrase: `${autocompleteOptions} autocomplete suggestion found.`,
+    pluralForm: `${autocompleteOptions} autocomplete suggestions found.`,
+    count: autocompleteOptions
   });
+  return (recentSearchesText + ' ' + autocompleteText).trim();
 }
