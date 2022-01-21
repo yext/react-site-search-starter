@@ -17,7 +17,7 @@ interface HighlightedValueCssClasses {
 export default function renderHighlightedValue ({ value = '', matchedSubstrings }: Partial<HighlightedValue>, customCssClasses?: HighlightedValueCssClasses): JSX.Element {
   const cssClasses = { ...defaultCssClasses, ...customCssClasses };
   if (!matchedSubstrings || matchedSubstrings.length === 0) {
-    return <span className={cssClasses.nonHighlighted} >{value}</span>;
+    return <span>{value}</span>;
   }
   const substrings = [...matchedSubstrings];
   substrings.sort((a, b) => a.offset - b.offset);

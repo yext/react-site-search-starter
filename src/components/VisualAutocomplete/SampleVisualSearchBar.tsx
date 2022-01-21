@@ -64,9 +64,7 @@ function FaqCard({ result }: CardProps) {
   return (<div key={faqData.question}>
     <div className='h-px bg-gray-200 mt-1 mb-4 mx-2.5'></div>
     <div tabIndex={0} className='flex flex-row mx-4 mb-3 rounded-md'>
-      <div className='w-6 mr-3 mt-1'>
-        <FAQIcon />
-      </div>
+      <FAQIcon className='w-6 mr-3 mt-1'/>
       <div>
         <div className='text-gray-800 text-lg font-semibold pb-1'>{renderHighlightedValue({ value: faqData.question, matchedSubstrings }, { highlighted: 'font-normal' })}</div>
         <div className='font-normal text-base text-gray-500' >{faqData.answer}</div>
@@ -84,9 +82,7 @@ function EventCard({ result }: CardProps) {
   const venueName = eventData.venueName;
   return (
     <div tabIndex={0} className='flex flex-row border rounded-xl p-3 text-lg shadow-sm'>
-      <div className='mr-3.5 mt-1 ml-1'>
-        <EventIcon />
-      </div>
+      <EventIcon className='mr-3.5 mt-1 ml-1'/>
       <div>
         <div className='text-gray-800 font-medium pb-1 w-full'>{result.name}</div>
         <div className='text-base text-gray-500'>{venueName}</div>
