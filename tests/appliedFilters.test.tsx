@@ -13,6 +13,7 @@ const cssClasses: Required<AppliedFiltersCssClasses> = {
   filterLabel: 'filterLabel',
   removeFilterButton: 'removeFilterButton',
   appliedFiltersContainer: '',
+  appliedFiltersContainer___loading: '',
   nlpFilter: '',
   removableFilter: ''
 };
@@ -56,6 +57,7 @@ describe('AppliedFilters component works as expected', () => {
     expect(filerRemoveButton).toBeTruthy();
 
     filerRemoveButton.click();
+    await act( async () => { await answers.executeVerticalQuery() });
     filterLabels = container.getElementsByClassName(cssClasses.filterLabel);
     expect(filterLabels.length).toBe(0);
   });
@@ -94,6 +96,7 @@ describe('AppliedFilters component works as expected', () => {
     expect(filerRemoveButton).toBeTruthy();
 
     filerRemoveButton.click();
+    await act( async () => { await answers.executeVerticalQuery() });
     facetLabels = container.getElementsByClassName(cssClasses.filterLabel);
     expect(facetLabels.length).toBe(0);
   });
