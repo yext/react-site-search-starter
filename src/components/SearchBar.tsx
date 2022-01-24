@@ -243,7 +243,6 @@ export default function SearchBar({
         screenReaderText={screenReaderText}
         initialValue={query}
         onSelect={(value, _index, metadata) => {
-          console.log(metadata)
           answersActions.setQuery(value || '');
           if (metadata && typeof metadata.verticalLink === 'string') {
             browserHistory.push(metadata.verticalLink, {

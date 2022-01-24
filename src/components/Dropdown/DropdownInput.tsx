@@ -43,7 +43,6 @@ export default function DropdownInput(props: {
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      console.log('enter', focusedMetadata)
       toggleDropdown(false);
       setFocusedIndex(-1);
       setFocusedMetadata(undefined);
