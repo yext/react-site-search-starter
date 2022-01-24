@@ -12,19 +12,19 @@ export const routeConfig = [
     page: <UniversalSearchPage universalResultsConfig={universalResultsConfig} />
   },
   {
-    path: '/people',
-    page: <FAQsPage verticalKey='people'/>
+    path: '/faqs',
+    page: <FAQsPage verticalKey='faqs'/>
   },
-  // {
-  //   path: '/events',
-  //   page: <EventsPage verticalKey='events'/>
-  // },
-  // {
-  //   path: '/locations',
-  //   page: <LocationsPage verticalKey='locations' />
-  // },
-  // {
-  //   path: '/jobs',
-  //   page: <JobsPage verticalKey='jobs' />
-  // }
+  {
+    path: '/events',
+    page: <EventsPage verticalKey='events'/>
+  },
+  {
+    path: '/locations',
+    page: <LocationsPage verticalKey='locations' />
+  },
+  {
+    path: '/jobs',
+    page: <JobsPage verticalKey='jobs' />
+  }
 ];
