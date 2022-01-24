@@ -211,11 +211,11 @@ export default function SearchBar({
         >
           {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon, `autocomplete option: ${result.value}`)}
         </DropdownItem>
-        {!hideVerticalLinks && result.verticalKeys?.map((verticalKey, j) => (
+        {!hideVerticalLinks && !isVertical && result.verticalKeys?.map((verticalKey, j) => (
           <DropdownItem
             key={j}
             className={cssClasses.optionContainer}
-            focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
+            focusedClassName={classNames(cssClasses.optionContainer, cssClasses.focusedOption)}
             value={result.value}
             metadata={{ verticalLink: `/${verticalKey}?query=${result.value}` }}
           >
