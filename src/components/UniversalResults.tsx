@@ -32,7 +32,7 @@ interface AppliedFiltersConfig extends Omit<AppliedFiltersProps, 'appliedQueryFi
 
 interface UniversalResultsProps {
   appliedFiltersConfig?: AppliedFiltersConfig,
-  verticalConfigs: Record<string, VerticalConfig>,
+  verticalConfigs: UniversalResultsConfig,
   customCssClasses?: UniversalResultsCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
