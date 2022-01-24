@@ -115,12 +115,15 @@ export default function SearchBar({
   });
   const [executeQueryWithNearMeHandling, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions, geolocationOptions);
   const [recentSearches, setRecentSearch, clearRecentSearches] = useRecentSearches(recentSearchesLimit);
+  const filteredRecentSearches = recentSearches?.filter(search =>
+    answersUtilities.isCloseMatch(search.query, query)
+  );
+
   useEffect(() => {
     if (hideRecentSearches) {
       clearRecentSearches();
     }
   }, [clearRecentSearches, hideRecentSearches])
-  const [filteredRecentSearches, setFilteredRecentSearches] = useState(recentSearches);
 
   function executeQuery() {
     if (!hideRecentSearches) {
@@ -163,9 +166,6 @@ export default function SearchBar({
         onFocus={(value = '') => {
           answersActions.setQuery(value);
           updateEntityPreviews(value);
-          setFilteredRecentSearches(recentSearches?.filter(search =>
-            answersUtilities.isCloseMatch(search.query, value)
-          ));
           autocompletePromiseRef.current = executeAutocomplete()
         }}
         onChange={(value = '') => {
@@ -178,6 +178,10 @@ export default function SearchBar({
   }
 
   function renderRecentSearches() {
+    if (isVertical) {
+      return null;
+    }
+
     const recentSearchesCssClasses = {
       icon: cssClasses.recentSearchesIcon,
       option: cssClasses.recentSearchesOption,
@@ -229,7 +233,7 @@ export default function SearchBar({
     ))
   }
 
-  const hasItems = !!(autocompleteResponse?.results.length  || filteredRecentSearches?.length);
+  const hasItems = !!(autocompleteResponse?.results.length  || (!isVertical && filteredRecentSearches?.length));
   const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length)
   const activeClassName = classNames(cssClasses.inputDropdownContainer, {
     [cssClasses.inputDropdownContainer___active ?? '']: hasItems
