@@ -1,33 +1,43 @@
 import PageRouter, { RouteData } from '../PageRouter';
-import StandardLayout from '../templates/StandardLayout';
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
 import { PageViewContextProvider } from '../context/PageViewContext';
-import UniversalSearchPage from '../pages/UniversalSearchPage';
-import AnswersAppConfig from '../models/AnswersAppConfig';
-import { CardNameToComponentMapping } from '../models/cardComponent';
-import StandardPage from '../templates/StandardPage';
-import { AnswersAppContextProvider } from '../context/AnswersAppContext';
+import AnswersAppConfig from './AnswersAppConfig';
+import VerticalStandardPage from './templates/VerticalStandardPage';
+import { AnswersAppContextProvider } from './AnswersAppContext';
 import { UniversalResultsConfig } from '../components/UniversalResults';
+import UniversalStandardPage from './templates/UniversalStandardPage';
+import { CardNameToComponentMap } from './templates/componentMapping';
 
 export default function PageBuilderApp({ config }: { config: AnswersAppConfig }) {
   const verticalRoutesConfig: RouteData[] = [];
   const universalResultsConfig : UniversalResultsConfig = {};
 
+  const navLinks = [
+    {
+      to: '/',
+      label: config.universal.label || 'All'
+    },
+    ...Object.entries(config.verticals).map(([verticalKey, config]) => ({
+      to: config.path || `/${verticalKey}`,
+      label: config.label || verticalKey
+    }))
+  ];
+
   Object.entries(config.verticals).forEach(([key, config]) => {
-    const CardComponent = CardNameToComponentMapping[config.cardConfig?.cardName || 'STANDARD'];
+    const CardComponent = CardNameToComponentMap[config.cardConfig?.cardName || 'STANDARD'];
     universalResultsConfig[key] = { 
       label: config.label,
       cardConfig: { CardComponent }
     };
     verticalRoutesConfig.push({
       path: config.path || `/${key}`,
-      page: <StandardPage verticalKey={key} cardComponent={CardComponent}/>
+      page: <VerticalStandardPage verticalKey={key} cardComponent={CardComponent} navLinks={navLinks}/>
     });
   });
   verticalRoutesConfig.push({
     path: '/',
     exact: true,
-    page: <UniversalSearchPage universalResultsConfig={universalResultsConfig} />
+    page: <UniversalStandardPage universalResultsConfig={universalResultsConfig} navLinks={navLinks}/>
   });
 
   return <AnswersAppContextProvider answersAppConfig={config}>
@@ -36,7 +46,6 @@ export default function PageBuilderApp({ config }: { config: AnswersAppConfig })
         <div className='flex justify-center px-4 py-6'>
           <div className='w-full max-w-5xl'>
             <PageRouter
-              Layout={StandardLayout}
               routes={verticalRoutesConfig}
             />
           </div>

@@ -1,17 +1,10 @@
 import { Result } from '@yext/answers-headless-react';
-import { StandardCard, StandardCardConfig } from '../components/cards/StandardCard';
+import { StandardCardConfig } from '../components/cards/StandardCard';
 
 /**
  * The config types for each supported card.
  */
 export type CardConfigTypes = StandardCardConfig;
-
-/**
- * Map card name to the corresponding React component.
- */
-export const CardNameToComponentMapping: Record<string, CardComponent> = {
-  'STANDARD': StandardCard
-}
 
 /**
  * CardComponent and the corresponding config options

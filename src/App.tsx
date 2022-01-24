@@ -1,26 +1,23 @@
 import PageRouter from './PageRouter';
-import StandardLayout from './templates/StandardLayout';
+import StandardLayout from './pages/StandardLayout';
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
 import { PageViewContextProvider } from './context/PageViewContext';
 import { routeConfig } from './config/routeConfig';
-import { AnswersAppContextProvider } from './context/AnswersAppContext';
-import starterAnswersAppConfig from './config/starterAnswersAppConfig';
+import { answersHeadlessConfig } from './config/answersHeadlessConfig';
 
 export default function App() {
   return (
-    <AnswersAppContextProvider answersAppConfig={starterAnswersAppConfig}>
-      <AnswersHeadlessProvider {...starterAnswersAppConfig.providerConfig}>
-        <PageViewContextProvider >
-          <div className='flex justify-center px-4 py-6'>
-            <div className='w-full max-w-5xl'>
-              <PageRouter
-                Layout={StandardLayout}
-                routes={routeConfig}
-              />
-            </div>
+    <AnswersHeadlessProvider {...answersHeadlessConfig}>
+      <PageViewContextProvider >
+        <div className='flex justify-center px-4 py-6'>
+          <div className='w-full max-w-5xl'>
+            <PageRouter
+              Layout={StandardLayout}
+              routes={routeConfig}
+            />
           </div>
-        </PageViewContextProvider>
-      </AnswersHeadlessProvider>
-    </AnswersAppContextProvider>
+        </div>
+      </PageViewContextProvider>
+    </AnswersHeadlessProvider>
   );
 }

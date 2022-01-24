@@ -1,8 +1,7 @@
-import { useRef, useState } from "react";
-import { provideAnswersHeadless, VerticalResults, AnswersHeadless, UniversalLimit } from '@yext/answers-headless-react';
+import { useEffect, useRef, useState } from "react";
+import { provideAnswersHeadless, VerticalResults, AnswersHeadless, UniversalLimit, HeadlessConfig } from '@yext/answers-headless-react';
 import useDebouncedFunction from './useDebouncedFunction';
 import useComponentMountStatus from "./useComponentMountStatus";
-import { useAnswersAppContext } from "../context/AnswersAppContext";
 
 interface EntityPreviewsState {
   verticalResultsArray: VerticalResults[],
@@ -15,18 +14,16 @@ type ExecuteEntityPreviewsQuery = (query: string, universalLimit: UniversalLimit
  * useEntityPreviews provides state surrounding the visual entities portion of visual autocomplete,
  * which performs debounced universal searches.
  * 
- * @param headlessId a unique id for the new headless instance that will be created by the hook
+ * @param headlessConfig config for the new headless instance that will be created by the hook
  * @param debounceTime the time in milliseconds to debounce the universal search request
  */
-export function useEntityPreviews(headlessId: string, debounceTime: number):[ EntityPreviewsState, ExecuteEntityPreviewsQuery ] {
-  const answersAppContext = useAnswersAppContext();
+export function useEntityPreviews(headlessConfig: HeadlessConfig, debounceTime: number):[ EntityPreviewsState, ExecuteEntityPreviewsQuery ] {
   const headlessRef = useRef<AnswersHeadless>();
-  if (!headlessRef.current) {
-    headlessRef.current = provideAnswersHeadless({
-      ...answersAppContext?.providerConfig,
-      headlessId
-    });
-  }
+  useEffect(() => {
+    if (!headlessRef.current) {
+      headlessRef.current = provideAnswersHeadless(headlessConfig);
+    }
+  }, [headlessConfig]);
   const isMountedRef = useComponentMountStatus();
   const [verticalResultsArray, setVerticalResultsArray] = useState<VerticalResults[]>([]);
   const debouncedUniversalSearch = useDebouncedFunction(async () => {

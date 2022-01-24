@@ -1,5 +1,6 @@
 import { SortType, Direction } from "@yext/answers-headless-react";
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
+
 export type HeadlessProviderConfig = Parameters<typeof AnswersHeadlessProvider>[0];
 
 interface SortingConfig {
