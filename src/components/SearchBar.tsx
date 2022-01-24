@@ -1,6 +1,6 @@
 import { QuerySource, SearchTypeEnum, useAnswersActions, useAnswersState, useAnswersUtilities, VerticalResults } from '@yext/answers-headless-react';
 import classNames from 'classnames';
-import { Fragment, PropsWithChildren, useEffect, useState } from 'react';
+import { Fragment, PropsWithChildren, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import { useEntityPreviews } from '../hooks/useEntityPreviews';
