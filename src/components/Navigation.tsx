@@ -53,6 +53,7 @@ interface NavigationProps {
 export default function Navigation({ links, customCssClasses, cssCompositionMethod }: NavigationProps) {
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const currentVertical = useAnswersState(state => state.vertical.verticalKey);
+  const query = useAnswersState(state => state.query.input) ?? '';
 
   // Close the menu when clicking the document
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -107,7 +108,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 
   return (
     <nav className={cssClasses.nav} ref={navigationRef}>
-      {visibleLinks.map((l, index) => renderLink(l, index === activeVisibleLinkIndex, cssClasses))}
+      {visibleLinks.map((l, index) => renderLink(l, query, index === activeVisibleLinkIndex, cssClasses))}
       {numOverflowLinks > 0 &&
         <div className={cssClasses.menuButtonContainer}>
           <button
@@ -119,7 +120,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
           </button>
           {menuOpen && 
             <div className={cssClasses.menuContainer}>
-              {menuOpen && overflowLinks.map((l, index) => renderLink(l, index === activeMenuLinkIndex, {
+              {menuOpen && overflowLinks.map((l, index) => renderLink(l, query, index === activeMenuLinkIndex, {
                 navLink: cssClasses.menuNavLink,
                 navLinkContainer: cssClasses.menuNavLinkContainer,
                 navLinkContainer___active: cssClasses.menuNavLinkContainer___active
@@ -134,6 +135,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 
 function renderLink(
   linkData: LinkData,
+  query: string,
   isActiveLink: boolean,
   cssClasses: { navLinkContainer?: string, navLinkContainer___active?: string, navLink?: string }) 
 {
@@ -145,7 +147,7 @@ function renderLink(
     <div className={navLinkContainerClasses} key={to}>
       <NavLink
         className={cssClasses.navLink}
-        to={`${to}`}
+        to={`${to}?query=${query}`}
         exact={true}
       >
         {label}
