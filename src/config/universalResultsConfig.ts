@@ -4,8 +4,8 @@ import { VerticalConfig } from '../components/UniversalResults';
 export type UniversalResultsConfig = Record<string, VerticalConfig>;
 
 export const universalResultsConfig: UniversalResultsConfig = {
-  faqs: {
-    label: 'FAQs',
+  people: {
+    label: 'PEOPLE',
     viewAllButton: true,
     cardConfig: {
       CardComponent: StandardCard,

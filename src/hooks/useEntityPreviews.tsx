@@ -1,8 +1,9 @@
-import { useRef, useState } from "react";
-import { provideAnswersHeadless, VerticalResults, AnswersHeadless, UniversalLimit, QuerySource } from '@yext/answers-headless-react';
+import { AnswersHeadless, provideAnswersHeadless, QuerySource, UniversalLimit, VerticalResults } from '@yext/answers-headless-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import { answersHeadlessConfig } from '../config/answersHeadlessConfig';
+import useComponentMountStatus from './useComponentMountStatus';
 import useDebouncedFunction from './useDebouncedFunction';
-import useComponentMountStatus from "./useComponentMountStatus";
 
 interface EntityPreviewsState {
   verticalResultsArray: VerticalResults[],
@@ -15,18 +16,20 @@ type ExecuteEntityPreviewsQuery = (query: string, universalLimit: UniversalLimit
  * useEntityPreviews provides state surrounding the visual entities portion of visual autocomplete,
  * which performs debounced universal searches.
  * 
- * @param headlessId a unique id for the new headless instance that will be created by the hook
  * @param debounceTime the time in milliseconds to debounce the universal search request
  */
-export function useEntityPreviews(headlessId: string, debounceTime: number):[ EntityPreviewsState, ExecuteEntityPreviewsQuery ] {
+export function useEntityPreviews(debounceTime: number):[ EntityPreviewsState, ExecuteEntityPreviewsQuery ] {
+  const headlessId: string = useMemo(() => uuid(), []);
   const headlessRef = useRef<AnswersHeadless>();
-  if (!headlessRef.current) {
-    headlessRef.current = provideAnswersHeadless({
-      ...answersHeadlessConfig,
-      headlessId
-    });
-    headlessRef.current.setQuerySource(QuerySource.Autocomplete);
-  }
+  useEffect(() => {
+    if (!headlessRef.current) {
+      headlessRef.current = provideAnswersHeadless({
+        ...answersHeadlessConfig,
+        headlessId
+      });
+      headlessRef.current.setQuerySource(QuerySource.Autocomplete);
+    }
+  }, [headlessId]);
   const isMountedRef = useComponentMountStatus();
   const [verticalResultsArray, setVerticalResultsArray] = useState<VerticalResults[]>([]);
   const debouncedUniversalSearch = useDebouncedFunction(async () => {

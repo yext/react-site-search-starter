@@ -1,4 +1,4 @@
-import { PropsWithChildren, useMemo, useRef, useState } from 'react';
+import { createElement, isValidElement, PropsWithChildren, useMemo, useRef, useState } from 'react';
 import DropdownContext, { DropdownContextType } from './DropdownContext';
 import InputContext, { InputContextType } from './InputContext';
 import useGlobalListener from '@restart/hooks/useGlobalListener';
@@ -6,6 +6,8 @@ import useRootClose from '@restart/ui/useRootClose';
 import FocusContext, { FocusContextType } from './FocusContext';
 import { v4 as uuid } from 'uuid';
 import ScreenReader from '../ScreenReader';
+import recursivelyMapChildren from '../utils/recursivelyMapChildren';
+import DropdownItem, { DropdownItemWithIndex } from './DropdownItem';
 
 /**
  * Dropdown is the parent component for a set of Dropdown-related components.
@@ -14,18 +16,16 @@ import ScreenReader from '../ScreenReader';
  * and also registers some global event listeners.
  */
 export default function Dropdown(props: PropsWithChildren<{
-  numItems: number,
   screenReaderText: string,
   screenReaderInstructions?: string,
   initialValue?: string,
-  onSelect?: (value?: string, index?: number) => void,
+  onSelect?: (value?: string, index?: number, focusedMetadata?: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive?: boolean, value?: string) => void,
   className?: string,
   activeClassName?: string
 }>) {
   const {
     children,
-    numItems,
     screenReaderText,
     screenReaderInstructions = 'When autocomplete results are available, use up and down arrows to review and enter to select.',
     initialValue,
@@ -40,7 +40,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const inputContext = useInputContextInstance(initialValue);
   const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
   const focusContext = useFocusContextInstance();
-  const { focusedIndex, setFocusedIndex, setFocusedValue } = focusContext;
+  const { focusedIndex, setFocusedIndex, setFocusedValue, setFocusedMetadata } = focusContext;
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
   const { toggleDropdown, isActive } = dropdownContext;
 
@@ -60,6 +60,7 @@ export default function Dropdown(props: PropsWithChildren<{
       if (updatedFocusedIndex >= numItems) {
         setFocusedIndex(-1);
         setFocusedValue(lastTypedOrSubmittedValue);
+        setFocusedMetadata(undefined);
         setValue(lastTypedOrSubmittedValue);
       } else {
         setFocusedIndex(updatedFocusedIndex);
@@ -69,6 +70,7 @@ export default function Dropdown(props: PropsWithChildren<{
       if (updatedFocusedIndex === -1) {
         setFocusedIndex(updatedFocusedIndex);
         setFocusedValue(lastTypedOrSubmittedValue);
+        setFocusedMetadata(undefined);
         setValue(lastTypedOrSubmittedValue);
       } else if (updatedFocusedIndex < -1){
         setFocusedIndex((numItems + updatedFocusedIndex + 1) % numItems);
@@ -78,12 +80,22 @@ export default function Dropdown(props: PropsWithChildren<{
     }
   });
 
+  let numItems = 0;
+  const childrenWithDropdownItemsTransformed = recursivelyMapChildren(children, (child => {
+    if (!(isValidElement(child) && child.type === DropdownItem)) {
+      return child;
+    }
+    const transformedItem = createElement(DropdownItemWithIndex, { ...child.props, index: numItems })
+    numItems++;
+    return transformedItem;
+  }));
+
   return (
     <div ref={containerRef} className={isActive ? activeClassName : className}>
       <DropdownContext.Provider value={dropdownContext}>
         <InputContext.Provider value={inputContext}>
           <FocusContext.Provider value={focusContext}>
-            {children}
+            {childrenWithDropdownItemsTransformed}
           </FocusContext.Provider>
         </InputContext.Provider>
       </DropdownContext.Provider>
@@ -112,11 +124,14 @@ function useInputContextInstance(initialValue = ''): InputContextType {
 function useFocusContextInstance(): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string>('');
+  const [focusedMetadata, setFocusedMetadata] = useState<Record<string, unknown> | undefined>(undefined);
   return {
     focusedIndex,
     setFocusedIndex,
     focusedValue,
-    setFocusedValue
+    setFocusedValue,
+    focusedMetadata,
+    setFocusedMetadata
   };
 }
 
@@ -124,7 +139,7 @@ function useDropdownContextInstance(
   value: string,
   screenReaderUUID: string,
   onToggle?: (isActive?: boolean, value?: string) => void,
-  onSelect?: (value?: string, index?: number) => void,
+  onSelect?: (value?: string, index?: number, focusedMetadata?: Record<string, unknown> | undefined) => void,
 ): DropdownContextType {
   const [isActive, _toggleDropdown] = useState(false);
   const toggleDropdown = (willBeOpen: boolean) => {

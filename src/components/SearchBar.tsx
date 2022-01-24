@@ -1,28 +1,32 @@
-import { SearchTypeEnum, useAnswersActions, useAnswersState } from '@yext/answers-headless-react';
-import { InputDropdownCssClasses } from './InputDropdown';
-import { ReactComponent as YextLogoIcon } from '../icons/yext_logo.svg';
-import '../sass/Autocomplete.scss';
-import { DropdownSectionCssClasses } from './DropdownSection';
-import { processTranslation } from './utils/processTranslation';
-import SearchButton from './SearchButton';
-import { useSynchronizedRequest } from '../hooks/useSynchronizedRequest';
-import useSearchWithNearMeHandling from '../hooks/useSearchWithNearMeHandling';
+import { QuerySource, SearchTypeEnum, useAnswersActions, useAnswersState, useAnswersUtilities, VerticalResults } from '@yext/answers-headless-react';
+import classNames from 'classnames';
+import { Fragment, PropsWithChildren, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
-import renderAutocompleteResult, {
-  AutocompleteResultCssClasses,
-  builtInCssClasses as AutocompleteResultBuiltInCssClasses
-} from './utils/renderAutocompleteResult';
+import { useEntityPreviews } from '../hooks/useEntityPreviews';
+import useRecentSearches from '../hooks/useRecentSearches';
+import useSearchWithNearMeHandling from '../hooks/useSearchWithNearMeHandling';
+import { useSynchronizedRequest } from '../hooks/useSynchronizedRequest';
+import { ReactComponent as RecentSearchIcon } from '../icons/history.svg';
 import { ReactComponent as MagnifyingGlassIcon } from '../icons/magnifying_glass.svg';
+import { ReactComponent as YextLogoIcon } from '../icons/yext_logo.svg';
+import { BrowserState } from '../PageRouter';
+import '../sass/Autocomplete.scss';
 import Dropdown from './Dropdown/Dropdown';
 import DropdownInput from './Dropdown/DropdownInput';
 import DropdownItem from './Dropdown/DropdownItem';
 import DropdownMenu from './Dropdown/DropdownMenu';
-import classNames from 'classnames';
-import { PropsWithChildren, useContext, useMemo, useState } from 'react';
-import ScreenReader from './ScreenReader';
-import DropdownContext from './Dropdown/DropdownContext';
+import { DropdownSectionCssClasses } from './DropdownSection';
+import { calculateRestrictVerticals, calculateUniversalLimit, transformEntityPreviews } from './EntityPreviews';
+import { InputDropdownCssClasses } from './InputDropdown';
+import SearchButton from './SearchButton';
+import { processTranslation } from './utils/processTranslation';
+import renderAutocompleteResult, {
+  AutocompleteResultCssClasses,
+  builtInCssClasses as AutocompleteResultBuiltInCssClasses
+} from './utils/renderAutocompleteResult';
 
-export const builtInCssClasses: SearchBarCssClasses = {
+const builtInCssClasses: SearchBarCssClasses = {
   container: 'h-12 mb-3',
   divider: 'border-t border-gray-200 mx-2.5',
   dropdownContainer: 'relative bg-white pt-4 pb-3 z-10',
@@ -36,22 +40,48 @@ export const builtInCssClasses: SearchBarCssClasses = {
   searchButtonContainer: ' w-8 h-full mx-2 flex flex-col justify-center items-center',
   submitButton: 'h-7 w-7',
   focusedOption: 'bg-gray-100',
+
+  recentSearchesOptionContainer: 'flex items-center h-6.5 px-3.5 py-1.5 cursor-pointer hover:bg-gray-100',
+  recentSearchesIcon: 'w-5 mr-1 text-gray-300',
+  recentSearchesOption: 'pl-3',
+  recentSearchesNonHighlighted: 'font-normal', // Swap this to semibold once we apply highlighting to recent searches
+  verticalLink: 'ml-12 pl-1 text-gray-500 italic',
+
   ...AutocompleteResultBuiltInCssClasses
-}
+};
 
 export interface SearchBarCssClasses
   extends InputDropdownCssClasses, DropdownSectionCssClasses, AutocompleteResultCssClasses {
   container?: string,
   inputDropdownContainer?: string,
   resultIconContainer?: string,
-  submitButton?: string
+  submitButton?: string,
+
+  recentSearchesOptionContainer?: string,
+  recentSearchesIcon?: string,
+  recentSearchesOption?: string,
+  recentSearchesNonHighlighted?: string,
+  verticalLink?: string
 }
+
+type RenderEntityPreviews = (
+  autocompleteLoading: boolean,
+  verticalResultsArray: VerticalResults[]
+) => JSX.Element;
 
 interface Props {
   placeholder?: string,
   geolocationOptions?: PositionOptions,
   customCssClasses?: SearchBarCssClasses,
-  cssCompositionMethod?: CompositionMethod
+  cssCompositionMethod?: CompositionMethod,
+
+  // The debouncing time, in milliseconds, for making API requests for entity previews
+  entityPreviewsDebouncingTime?: number,
+  renderEntityPreviews?: RenderEntityPreviews,
+  hideVerticalLinks?: boolean,
+  verticalKeyToLabel?: (verticalKey: string) => string,
+  hideRecentSearches?: boolean,
+  recentSearchesLimit?: number
 }
 
 /**
@@ -60,32 +90,57 @@ interface Props {
 export default function SearchBar({
   placeholder,
   geolocationOptions,
+  hideRecentSearches,
+  renderEntityPreviews,
+  hideVerticalLinks,
+  verticalKeyToLabel,
+  recentSearchesLimit = 5,
   customCssClasses,
-  cssCompositionMethod
+  cssCompositionMethod,
+  entityPreviewsDebouncingTime = 500
 }: Props) {
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
+  const browserHistory = useHistory<BrowserState>();
   const answersActions = useAnswersActions();
-  const query = useAnswersState(state => state.query.input);
-  const isLoading = useAnswersState(state => state.searchStatus.isLoading);
+  const answersUtilities = useAnswersUtilities();
+
+  const query = useAnswersState(state => state.query.input) ?? '';
+  const isLoading = useAnswersState(state => state.searchStatus.isLoading) ?? false;
   const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
+
   const [autocompleteResponse, executeAutocomplete] = useSynchronizedRequest(() => {
     return isVertical
       ? answersActions.executeVerticalAutocomplete()
       : answersActions.executeUniversalAutocomplete();
   });
-  const [executeQuery, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions, geolocationOptions);
-  if (autocompleteResponse) {
-    // autocompleteResponse.results = [
-    //   {
-    //     value: 'a',
-    //   }, {
-    //     value: 'a'
-    //   }, {
-    //     value: 'b'
-    //   }
-    // ]
+  const [executeQueryWithNearMeHandling, autocompletePromiseRef] = useSearchWithNearMeHandling(answersActions, geolocationOptions);
+  const [recentSearches, setRecentSearch, clearRecentSearches] = useRecentSearches(recentSearchesLimit);
+  useEffect(() => {
+    if (hideRecentSearches) {
+      clearRecentSearches();
+    }
+  }, [clearRecentSearches, hideRecentSearches])
+  const [filteredRecentSearches, setFilteredRecentSearches] = useState(recentSearches);
+
+  function executeQuery() {
+    if (!hideRecentSearches) {
+      const input = answersActions.state.query.input;
+      input && setRecentSearch(input);
+    }
+    executeQueryWithNearMeHandling();
   }
-  // console.log(autocompleteResponse?.results)
+
+  const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(entityPreviewsDebouncingTime);
+  const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
+  const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray);
+  function updateEntityPreviews(query: string) {
+    if (!renderEntityPreviews) {
+      return;
+    }
+    const restrictVerticals = calculateRestrictVerticals(entityPreviews);
+    const universalLimit = calculateUniversalLimit(entityPreviews);
+    executeEntityPreviewsQuery(query, universalLimit, restrictVerticals);
+  }
 
   function renderSearchButton() {
     return (
@@ -93,7 +148,7 @@ export default function SearchBar({
         <SearchButton
           className={cssClasses.submitButton}
           handleClick={executeQuery}
-          isLoading={isLoading || false}
+          isLoading={isLoading}
         />
       </div>
     );
@@ -105,69 +160,124 @@ export default function SearchBar({
         className={cssClasses.inputElement}
         placeholder={placeholder}
         onSubmit={() => executeQuery()}
-        onFocus={value => {
-          answersActions.setQuery(value || '');
+        onFocus={(value = '') => {
+          answersActions.setQuery(value);
+          updateEntityPreviews(value);
+          setFilteredRecentSearches(recentSearches?.filter(search =>
+            answersUtilities.isCloseMatch(search.query, value)
+          ));
           autocompletePromiseRef.current = executeAutocomplete()
         }}
-        onChange={value => {
-          answersActions.setQuery(value || '');
+        onChange={(value = '') => {
+          answersActions.setQuery(value);
+          updateEntityPreviews(value);
           autocompletePromiseRef.current = executeAutocomplete();
         }}
       />
     );
   }
 
-  const numItems = autocompleteResponse?.results.length || 0;
-  const screenReaderText = processTranslation({
-    phrase: `${numItems} autocomplete option found.`,
-    pluralForm: `${numItems} autocomplete options found.`,
-    count: numItems
-  });
+  function renderRecentSearches() {
+    const recentSearchesCssClasses = {
+      icon: cssClasses.recentSearchesIcon,
+      option: cssClasses.recentSearchesOption,
+      nonHighlighted: cssClasses.recentSearchesNonHighlighted
+    };
 
+    return filteredRecentSearches?.map((result, i) => (
+      <DropdownItem
+        className={cssClasses.recentSearchesOptionContainer}
+        focusedClassName={classNames(cssClasses.recentSearchesOptionContainer, cssClasses.focusedOption)}
+        key={i}
+        value={result.query}
+      >
+        {renderAutocompleteResult(
+          { value: result.query },
+          recentSearchesCssClasses,
+          RecentSearchIcon,
+          `recent search: ${result.query}`
+        )}
+      </DropdownItem>
+    ))
+  }
+
+  function renderQuerySuggestions() {
+    return autocompleteResponse?.results.map((result, i) => (
+      <Fragment key={i}>
+        <DropdownItem
+          className={cssClasses.optionContainer}
+          focusedClassName={classNames(cssClasses.optionContainer, cssClasses.focusedOption)}
+          value={result.value}
+        >
+          {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon, `autocomplete option: ${result.value}`)}
+        </DropdownItem>
+        {!hideVerticalLinks && result.verticalKeys?.map((verticalKey, j) => (
+          <DropdownItem
+            key={j}
+            className={cssClasses.optionContainer}
+            focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
+            value={result.value}
+            metadata={{ verticalLink: `/${verticalKey}?query=${result.value}` }}
+          >
+            {renderAutocompleteResult(
+              { value: `in ${verticalKeyToLabel ? verticalKeyToLabel(verticalKey) : verticalKey}` },
+              { ...cssClasses, option: cssClasses.verticalLink }
+            )}
+          </DropdownItem>
+        ))}
+      </Fragment>
+    ))
+  }
+
+  const hasItems = !!(autocompleteResponse?.results.length  || filteredRecentSearches?.length);
+  const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length)
   const activeClassName = classNames(cssClasses.inputDropdownContainer, {
-    [cssClasses.inputDropdownContainer___active ?? '']: numItems > 0
+    [cssClasses.inputDropdownContainer___active ?? '']: hasItems
   });
 
   return (
-    <>
-      <div className={cssClasses.container}>
-        <Dropdown
-          className={cssClasses.inputDropdownContainer}
-          activeClassName={activeClassName}
-          screenReaderText={screenReaderText}
-          numItems={numItems}
-          initialValue={query}
-          onSelect={value => {
-            answersActions.setQuery(value || '');
+    <div className={cssClasses.container}>
+      <Dropdown
+        className={cssClasses.inputDropdownContainer}
+        activeClassName={activeClassName}
+        screenReaderText={screenReaderText}
+        initialValue={query}
+        onSelect={(value, _index, metadata) => {
+          console.log(metadata)
+          answersActions.setQuery(value || '');
+          if (metadata && typeof metadata.verticalLink === 'string') {
+            browserHistory.push(metadata.verticalLink, {
+              querySource: QuerySource.Autocomplete
+            });
+          } else {
             autocompletePromiseRef.current = executeAutocomplete()
             executeQuery();
-          }}
-        >
-          <div className={cssClasses?.inputContainer}>
-            <div className={cssClasses.logoContainer}>
-              <YextLogoIcon />
-            </div>
-            {renderInput()}
-            {renderSearchButton()}
-          </div>
-          {numItems > 0 &&
-            <StyledDropdownMenu cssClasses={cssClasses}>
-              {autocompleteResponse?.results.map((result, i) => (
-                <DropdownItem
-                  key={i}
-                  index={i}
-                  className={cssClasses.optionContainer}
-                  focusedClassName={cssClasses.optionContainer + ' ' + cssClasses.focusedOption}
-                  value={result.value}
-                >
-                  {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon, `autocomplete option: ${result.value}`)}
-                </DropdownItem>
-              ))}
-            </StyledDropdownMenu>
           }
-        </Dropdown>
-      </div>
-    </>
+        }}
+        onToggle={(isActive, value = '') => {
+          if (!isActive) {
+            updateEntityPreviews(value);
+            answersActions.setQuery(value);
+            autocompletePromiseRef.current = executeAutocomplete()
+          }
+        }}
+      >
+        <div className={cssClasses?.inputContainer}>
+          <div className={cssClasses.logoContainer}>
+            <YextLogoIcon />
+          </div>
+          {renderInput()}
+          {renderSearchButton()}
+        </div>
+        {hasItems &&
+          <StyledDropdownMenu cssClasses={cssClasses}>
+            {renderRecentSearches()}
+            {renderQuerySuggestions()}
+            {entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray)}
+          </StyledDropdownMenu>
+        }
+      </Dropdown>
+    </div>
   );
 }
 
@@ -191,4 +301,20 @@ function StyledDropdownMenu({ cssClasses, children }: PropsWithChildren<{
       </div>
     </DropdownMenu>
   )
+}
+
+function getScreenReaderText(autocompleteOptions = 0, recentSearchesOptions = 0) {
+  const recentSearchesText = recentSearchesOptions > 0
+    ? processTranslation({
+      phrase: `${recentSearchesOptions} recent search found.`,
+      pluralForm: `${recentSearchesOptions} recent searches found.`,
+      count: recentSearchesOptions
+    })
+    : '';
+  const autocompleteText = processTranslation({
+    phrase: `${autocompleteOptions} autocomplete suggestion found.`,
+    pluralForm: `${autocompleteOptions} autocomplete suggestions found.`,
+    count: autocompleteOptions
+  });
+  return (recentSearchesText + ' ' + autocompleteText).trim();
 }
