@@ -1,9 +1,9 @@
 import PageRouter from './PageRouter';
 import StandardLayout from './pages/StandardLayout';
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
-import { PageViewContextProvider } from './context/PageViewContext';
-import { routeConfig } from './config/routeConfig';
 import { answersHeadlessConfig } from './config/answersHeadlessConfig';
+import { routeConfig } from './config/routeConfig';
+import { PageViewContextProvider } from './context/PageViewContext';
 
 export default function App() {
   return (

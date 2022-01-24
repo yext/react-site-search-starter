@@ -16,7 +16,10 @@ export default function UniversalStandardPage(props: { universalResultsConfig: U
   const entityPreviewHeadlessConfig = { ...answersAppContext.providerConfig, headlessId: 'visual-autocomplete' }
   return (
     <div>
-      <SampleVisualSearchBar verticalKeyToLabelMap={verticalKeyToLabelMap} entityPreviewHeadlessConfig={entityPreviewHeadlessConfig}/>
+      <SampleVisualSearchBar
+        verticalKeyToLabelMap={verticalKeyToLabelMap}
+        entityPreviewHeadlessConfig={entityPreviewHeadlessConfig}
+      />
       <Navigation links={navLinks || []} />
       <SpellCheck />
       <DirectAnswer />

@@ -37,7 +37,10 @@ const StandardLayout: LayoutComponent = ({ page }) => {
         ? <SearchBar
           placeholder='Search...'
         />
-        : <SampleVisualSearchBar verticalKeyToLabelMap={verticalKeyToLabelMap} entityPreviewHeadlessConfig={entityPreviewHeadlessConfig}/>
+        : <SampleVisualSearchBar
+          verticalKeyToLabelMap={verticalKeyToLabelMap}
+          entityPreviewHeadlessConfig={entityPreviewHeadlessConfig}
+        />
       }
       <Navigation links={navLinks} />
       {page}

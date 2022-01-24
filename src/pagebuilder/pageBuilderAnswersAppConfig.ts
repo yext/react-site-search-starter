@@ -20,28 +20,28 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
       label: 'FAQS',
       path: '/faqs',
       cardConfig: {
-        cardName: "STANDARD"
+        cardName: 'STANDARD'
       }
     },
     events: {
       label: 'Event',
       path: '/events',
       cardConfig: {
-        cardName: "STANDARD"
+        cardName: 'STANDARD'
       }
     },
     locations: {
       label: 'Locations',
       path: '/locations',
       cardConfig: {
-        cardName: "STANDARD"
+        cardName: 'STANDARD'
       }
     },
     jobs: {
       label: 'Jobs',
       path: '/jobs',
       cardConfig: {
-        cardName: "STANDARD"
+        cardName: 'STANDARD'
       }
     },
   }
