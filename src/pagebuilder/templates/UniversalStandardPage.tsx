@@ -16,9 +16,11 @@ export default function UniversalStandardPage(props: UniversalStandardPageProps)
   const { universalResultsConfig, navLinks } = props;
   usePageSetupEffect();
   const answersAppContext = useAnswersAppContext();
-  const verticalKeyToLabelMap: Record<string, string> = {};
-  Object.entries(answersAppContext.verticals)
-    .forEach(([key, config]) => { verticalKeyToLabelMap[key] = config.label ?? key })
+  const verticalKeyToLabelMap: Record<string, string> = Object.entries(answersAppContext.verticals)
+    .reduce((map, [key, config]) => {
+      map[key] = config.label ?? key
+      return map;
+    }, {} as Record<string, string>);
   const entityPreviewSearcher = useEntityPreviewSearcher(
     { ...answersAppContext.providerConfig, headlessId: 'visual-autocomplete' }
   );

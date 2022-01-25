@@ -18,9 +18,11 @@ const navLinks = [
   }))
 ]
 
-const verticalKeyToLabelMap: Record<string, string> = {};
-Object.entries(universalResultsConfig)
-  .forEach(([key, config]) => { verticalKeyToLabelMap[key] = config.label ?? key })
+const verticalKeyToLabelMap: Record<string, string> = Object.entries(universalResultsConfig)
+  .reduce((map, [key, config]) => {
+    map[key] = config.label ?? key
+    return map;
+  }, {} as Record<string, string>);
 
 
 /**
