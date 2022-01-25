@@ -225,7 +225,7 @@ export default function SearchBar({
             className={cssClasses.optionContainer}
             focusedClassName={classNames(cssClasses.optionContainer, cssClasses.focusedOption)}
             value={result.value}
-            metadata={{ verticalLink: `/${verticalKey}?query=${result.value}` }}
+            itemData={{ verticalLink: `/${verticalKey}?query=${result.value}` }}
           >
             {renderAutocompleteResult(
               { value: `in ${verticalKeyToLabel ? verticalKeyToLabel(verticalKey) : verticalKey}` },
@@ -250,10 +250,10 @@ export default function SearchBar({
         activeClassName={activeClassName}
         screenReaderText={screenReaderText}
         initialValue={query}
-        onSelect={(value, _index, metadata) => {
+        onSelect={(value, _index, itemData) => {
           answersActions.setQuery(value || '');
-          if (metadata && typeof metadata.verticalLink === 'string') {
-            browserHistory.push(metadata.verticalLink, {
+          if (itemData && typeof itemData.verticalLink === 'string') {
+            browserHistory.push(itemData.verticalLink, {
               querySource: QuerySource.Autocomplete
             });
           } else {

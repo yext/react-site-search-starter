@@ -8,8 +8,8 @@ export type FocusContextType = {
   setFocusedIndex: (index: number) => void,
   focusedValue: string | null,
   setFocusedValue: (value: string) => void,
-  focusedMetadata: Record<string, unknown> | undefined,
-  setFocusedMetadata: (metadata: Record<string, unknown> | undefined) => void
+  focusedItemData: Record<string, unknown> | undefined,
+  setFocusedItemData: (itemData: Record<string, unknown> | undefined) => void
 }
 
 const focusContext = createContext<FocusContextType | null>(null);

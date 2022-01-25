@@ -19,7 +19,7 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderText: string,
   screenReaderInstructions?: string,
   initialValue?: string,
-  onSelect?: (value: string, index: number, focusedMetadata: Record<string, unknown> | undefined) => void,
+  onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive: boolean, value: string) => void,
   className?: string,
   activeClassName?: string
@@ -40,7 +40,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const inputContext = useInputContextInstance(initialValue);
   const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
   const focusContext = useFocusContextInstance();
-  const { focusedIndex, setFocusedIndex, setFocusedValue, setFocusedMetadata } = focusContext;
+  const { focusedIndex, setFocusedIndex, setFocusedValue, setFocusedItemData } = focusContext;
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
   const { toggleDropdown, isActive } = dropdownContext;
 
@@ -60,7 +60,7 @@ export default function Dropdown(props: PropsWithChildren<{
       if (updatedFocusedIndex >= numItems) {
         setFocusedIndex(-1);
         setFocusedValue(lastTypedOrSubmittedValue);
-        setFocusedMetadata(undefined);
+        setFocusedItemData(undefined);
         setValue(lastTypedOrSubmittedValue);
       } else {
         setFocusedIndex(updatedFocusedIndex);
@@ -70,7 +70,7 @@ export default function Dropdown(props: PropsWithChildren<{
       if (updatedFocusedIndex === -1) {
         setFocusedIndex(updatedFocusedIndex);
         setFocusedValue(lastTypedOrSubmittedValue);
-        setFocusedMetadata(undefined);
+        setFocusedItemData(undefined);
         setValue(lastTypedOrSubmittedValue);
       } else if (updatedFocusedIndex < -1){
         setFocusedIndex((numItems + updatedFocusedIndex + 1) % numItems);
@@ -124,14 +124,14 @@ function useInputContextInstance(initialValue = ''): InputContextType {
 function useFocusContextInstance(): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string>('');
-  const [focusedMetadata, setFocusedMetadata] = useState<Record<string, unknown> | undefined>(undefined);
+  const [focusedItemData, setFocusedItemData] = useState<Record<string, unknown> | undefined>(undefined);
   return {
     focusedIndex,
     setFocusedIndex,
     focusedValue,
     setFocusedValue,
-    focusedMetadata,
-    setFocusedMetadata
+    focusedItemData,
+    setFocusedItemData
   };
 }
 
@@ -139,7 +139,7 @@ function useDropdownContextInstance(
   value: string,
   screenReaderUUID: string,
   onToggle?: (isActive: boolean, value: string) => void,
-  onSelect?: (value: string, index: number, focusedMetadata: Record<string, unknown> | undefined) => void,
+  onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
 ): DropdownContextType {
   const [isActive, _toggleDropdown] = useState(false);
   const toggleDropdown = (willBeOpen: boolean) => {
