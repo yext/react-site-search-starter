@@ -5,6 +5,7 @@ import usePageSetupEffect from '../../hooks/usePageSetupEffect';
 import Navigation, { LinkData } from '../../components/Navigation';
 import { useAnswersAppContext } from '../AnswersAppContext';
 import SampleVisualSearchBar from '../../components/VisualAutocomplete/SampleVisualSearchBar';
+import useEntityPreviewSearcher from '../../hooks/useEntityPreviewSearcher';
 
 interface UniversalStandardPageProps {
   universalResultsConfig: UniversalResultsConfig,
@@ -18,12 +19,14 @@ export default function UniversalStandardPage(props: UniversalStandardPageProps)
   const verticalKeyToLabelMap: Record<string, string> = {};
   Object.entries(answersAppContext.verticals)
     .forEach(([key, config]) => { verticalKeyToLabelMap[key] = config.label ?? key })
-  const entityPreviewHeadlessConfig = { ...answersAppContext.providerConfig, headlessId: 'visual-autocomplete' }
+  const entityPreviewSearcher = useEntityPreviewSearcher(
+    { ...answersAppContext.providerConfig, headlessId: 'visual-autocomplete' }
+  );
   return (
     <div>
       <SampleVisualSearchBar
         verticalKeyToLabelMap={verticalKeyToLabelMap}
-        entityPreviewHeadlessConfig={entityPreviewHeadlessConfig}
+        entityPreviewSearcher={entityPreviewSearcher}
       />
       <Navigation links={navLinks || []} />
       <SpellCheck />

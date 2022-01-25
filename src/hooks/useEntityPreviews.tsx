@@ -1,11 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { 
-  provideAnswersHeadless,
   VerticalResults,
   AnswersHeadless,
   UniversalLimit,
-  HeadlessConfig,
-  QuerySource
 } from '@yext/answers-headless-react';
 import useDebouncedFunction from './useDebouncedFunction';
 import useComponentMountStatus from "./useComponentMountStatus";
@@ -21,24 +18,17 @@ type ExecuteEntityPreviewsQuery = (query: string, universalLimit: UniversalLimit
  * useEntityPreviews provides state surrounding the visual entities portion of visual autocomplete,
  * which performs debounced universal searches.
  * 
- * @param headlessConfig config for the new headless instance that will be created by the hook
+ * @param entityPreviewSearcher the headless instance use as searcher for entity preview related queries
  * @param debounceTime the time in milliseconds to debounce the universal search request
  */
-export function useEntityPreviews(headlessConfig: HeadlessConfig, debounceTime: number):[ EntityPreviewsState, ExecuteEntityPreviewsQuery ] {
-  const headlessRef = useRef<AnswersHeadless>();
-  useEffect(() => {
-    if (!headlessRef.current) {
-      headlessRef.current = provideAnswersHeadless(headlessConfig);
-      headlessRef.current.setQuerySource(QuerySource.Autocomplete);
-    }
-  }, [headlessConfig]);
+export function useEntityPreviews(entityPreviewSearcher: AnswersHeadless | undefined, debounceTime: number):[ EntityPreviewsState, ExecuteEntityPreviewsQuery ] {
   const isMountedRef = useComponentMountStatus();
   const [verticalResultsArray, setVerticalResultsArray] = useState<VerticalResults[]>([]);
   const debouncedUniversalSearch = useDebouncedFunction(async () => {
-    if (!headlessRef.current) {
+    if (!entityPreviewSearcher) {
       return;
     }
-    await headlessRef.current.executeUniversalQuery();
+    await entityPreviewSearcher.executeUniversalQuery();
     /**
      * Avoid performing a React state update on an unmounted component
      * (e.g unmounted during async await)
@@ -46,23 +36,23 @@ export function useEntityPreviews(headlessConfig: HeadlessConfig, debounceTime: 
     if (!isMountedRef.current) {
       return;
     }
-    const results = headlessRef.current.state.universal.verticals || [];
+    const results = entityPreviewSearcher.state.universal.verticals || [];
     setVerticalResultsArray(results);
     setLoadingState(false);
   }, debounceTime);
   const [isLoading, setLoadingState] = useState<boolean>(false);
 
   function executeEntityPreviewsQuery(query: string, universalLimit: UniversalLimit, restrictVerticals: string[]) {
-    if (!headlessRef.current) {
+    if (!entityPreviewSearcher) {
       return;
     }
-    if (query === headlessRef.current.state.query.input) {
+    if (query === entityPreviewSearcher.state.query.input) {
       return;
     }
     setLoadingState(true);
-    headlessRef.current.setQuery(query);
-    headlessRef.current.setRestrictVerticals(restrictVerticals);
-    headlessRef.current.setUniversalLimit(universalLimit);
+    entityPreviewSearcher.setQuery(query);
+    entityPreviewSearcher.setRestrictVerticals(restrictVerticals);
+    entityPreviewSearcher.setUniversalLimit(universalLimit);
     debouncedUniversalSearch();
   }
   return [{ verticalResultsArray, isLoading }, executeEntityPreviewsQuery];

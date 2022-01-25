@@ -5,6 +5,7 @@ import { LayoutComponent } from '../PageRouter';
 import SearchBar from '../components/SearchBar';
 import SampleVisualSearchBar from '../components/VisualAutocomplete/SampleVisualSearchBar';
 import { answersHeadlessConfig } from '../config/answersHeadlessConfig';
+import useEntityPreviewSearcher from '../hooks/useEntityPreviewSearcher';
 
 const navLinks = [
   {
@@ -21,16 +22,16 @@ const verticalKeyToLabelMap: Record<string, string> = {};
 Object.entries(universalResultsConfig)
   .forEach(([key, config]) => { verticalKeyToLabelMap[key] = config.label ?? key })
 
-const entityPreviewHeadlessConfig = {
-  ...answersHeadlessConfig,
-  headlessId: 'visual-autocomplete'
-};
 
 /**
  * A LayoutComponent that provides a SearchBar and Navigation tabs to a given page.
  */
 const StandardLayout: LayoutComponent = ({ page }) => {
   const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
+  const entityPreviewSearcher = useEntityPreviewSearcher({
+    ...answersHeadlessConfig,
+    headlessId: 'visual-autocomplete'
+  });
   return (
     <>
       {isVertical
@@ -39,7 +40,7 @@ const StandardLayout: LayoutComponent = ({ page }) => {
         />
         : <SampleVisualSearchBar
           verticalKeyToLabelMap={verticalKeyToLabelMap}
-          entityPreviewHeadlessConfig={entityPreviewHeadlessConfig}
+          entityPreviewSearcher={entityPreviewSearcher}
         />
       }
       <Navigation links={navLinks} />
