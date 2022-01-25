@@ -10,11 +10,14 @@ import usePageSetupEffect from '../../hooks/usePageSetupEffect';
 import { CardComponent } from '../../models/cardComponent';
 import { useAnswersAppContext } from '../AnswersAppContext';
 
-export default function VerticalStandardPage({ verticalKey, cardComponent, navLinks }: {
+interface VerticalStandardPageProps {
   verticalKey?: string,
   navLinks?: LinkData[],
   cardComponent: CardComponent
-}) {
+}
+
+export default function VerticalStandardPage(props: VerticalStandardPageProps) {
+  const { verticalKey, cardComponent, navLinks } = props;
   usePageSetupEffect(verticalKey);
 
   const answersAppContext = useAnswersAppContext();

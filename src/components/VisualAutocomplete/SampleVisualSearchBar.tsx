@@ -5,13 +5,16 @@ import { ReactComponent as EventIcon } from '../../icons/event.svg';
 import { ReactComponent as FAQIcon } from '../../icons/faq.svg';
 import renderHighlightedValue from '../utils/renderHighlightedValue';
 
+interface SampleVisualSearchBarProps { 
+  verticalKeyToLabelMap?: Record<string, string>, 
+  entityPreviewHeadlessConfig: HeadlessConfig
+}
+
 /**
  * This is an example of how to use the VisualSearchBar component.
  */
-export default function SampleVisualSearchBar({ verticalKeyToLabelMap, entityPreviewHeadlessConfig }: { 
-  verticalKeyToLabelMap?: Record<string, string>, 
-  entityPreviewHeadlessConfig: HeadlessConfig
-}) {
+export default function SampleVisualSearchBar(props: SampleVisualSearchBarProps) {
+  const { verticalKeyToLabelMap, entityPreviewHeadlessConfig } = props;
   return (
     <VisualSearchBar
       placeholder='Search...'

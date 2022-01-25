@@ -6,7 +6,12 @@ import Navigation, { LinkData } from '../../components/Navigation';
 import { useAnswersAppContext } from '../AnswersAppContext';
 import SampleVisualSearchBar from '../../components/VisualAutocomplete/SampleVisualSearchBar';
 
-export default function UniversalStandardPage(props: { universalResultsConfig: UniversalResultsConfig, navLinks: LinkData[] }) {
+interface UniversalStandardPageProps {
+  universalResultsConfig: UniversalResultsConfig,
+  navLinks: LinkData[]
+}
+
+export default function UniversalStandardPage(props: UniversalStandardPageProps) {
   const { universalResultsConfig, navLinks } = props;
   usePageSetupEffect();
   const answersAppContext = useAnswersAppContext();
