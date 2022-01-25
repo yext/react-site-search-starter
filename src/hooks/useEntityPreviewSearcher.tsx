@@ -7,12 +7,12 @@ import {
 import { useEffect, useState } from "react";
 
 /**
- * Create a new AnswersHeadless searcher for Entity Previews
+ * Create a new AnswersHeadless searcher for Entity Previews.
  *
  * @param searcherConfig - config for the new AnswersHeadless instance
  */
 export default function useEntityPreviewSearcher(searcherConfig: HeadlessConfig): AnswersHeadless | undefined {
-  const [searcher, setSearcher ] = useState<AnswersHeadless>();
+  const [ searcher, setSearcher ] = useState<AnswersHeadless>();
   useEffect(() => {
     if (searcher) {
       return;
