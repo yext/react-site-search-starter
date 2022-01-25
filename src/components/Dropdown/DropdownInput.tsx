@@ -10,9 +10,9 @@ import { useInputContext } from './InputContext';
 export default function DropdownInput(props: {
   className?: string,
   placeholder?: string,
-  onSubmit?: (value?: string) => void,
-  onFocus?: (value?: string) => void,
-  onChange?: (value?: string) => void
+  onSubmit?: (value: string, index: number) => void,
+  onFocus?: (value: string) => void,
+  onChange?: (value: string) => void
 }) {
   const {
     className,
@@ -46,7 +46,7 @@ export default function DropdownInput(props: {
       toggleDropdown(false);
       setFocusedIndex(-1);
       setFocusedMetadata(undefined);
-      onSubmit?.(value);
+      onSubmit?.(value, focusedIndex);
       setLastTypedOrSubmittedValue(value);
       if (focusedIndex >= 0) {
         onSelect?.(value, focusedIndex, focusedMetadata);

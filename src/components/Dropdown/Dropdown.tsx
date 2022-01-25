@@ -19,8 +19,8 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderText: string,
   screenReaderInstructions?: string,
   initialValue?: string,
-  onSelect?: (value?: string, index?: number, focusedMetadata?: Record<string, unknown> | undefined) => void,
-  onToggle?: (isActive?: boolean, value?: string) => void,
+  onSelect?: (value: string, index: number, focusedMetadata: Record<string, unknown> | undefined) => void,
+  onToggle?: (isActive: boolean, value: string) => void,
   className?: string,
   activeClassName?: string
 }>) {
@@ -138,8 +138,8 @@ function useFocusContextInstance(): FocusContextType {
 function useDropdownContextInstance(
   value: string,
   screenReaderUUID: string,
-  onToggle?: (isActive?: boolean, value?: string) => void,
-  onSelect?: (value?: string, index?: number, focusedMetadata?: Record<string, unknown> | undefined) => void,
+  onToggle?: (isActive: boolean, value: string) => void,
+  onSelect?: (value: string, index: number, focusedMetadata: Record<string, unknown> | undefined) => void,
 ): DropdownContextType {
   const [isActive, _toggleDropdown] = useState(false);
   const toggleDropdown = (willBeOpen: boolean) => {

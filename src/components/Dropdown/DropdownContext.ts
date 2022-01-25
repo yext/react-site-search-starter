@@ -7,7 +7,7 @@ export type DropdownContextType = {
   isActive: boolean,
   screenReaderUUID?: string,
   toggleDropdown: (visible: boolean) => void,
-  onSelect?: (value?: string, index?: number, focusedMetadata?: Record<string, unknown> | undefined) => void
+  onSelect?: (value: string, index: number, focusedMetadata: Record<string, unknown> | undefined) => void
 }
 
 const dropdownContext = createContext<DropdownContextType | null>(null);

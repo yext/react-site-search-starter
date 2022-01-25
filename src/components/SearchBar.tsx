@@ -162,7 +162,11 @@ export default function SearchBar({
       <DropdownInput
         className={cssClasses.inputElement}
         placeholder={placeholder}
-        onSubmit={() => executeQuery()}
+        onSubmit={(_value, index) => {
+          if (index < 0) {
+            executeQuery()
+          }
+        }}
         onFocus={(value = '') => {
           answersActions.setQuery(value);
           updateEntityPreviews(value);
