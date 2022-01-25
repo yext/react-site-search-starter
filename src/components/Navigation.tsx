@@ -39,7 +39,7 @@ const builtInCssClasses: NavigationCssClasses = {
   menuNavLinkContainer___active: 'text-blue-600 hover:text-blue-600 focus:text-blue-600'
 }
 
-interface LinkData {
+export interface LinkData {
   to: string,
   label: string
 }

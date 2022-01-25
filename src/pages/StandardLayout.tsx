@@ -4,6 +4,8 @@ import { universalResultsConfig } from '../config/universalResultsConfig';
 import { LayoutComponent } from '../PageRouter';
 import SearchBar from '../components/SearchBar';
 import SampleVisualSearchBar from '../components/VisualAutocomplete/SampleVisualSearchBar';
+import { answersHeadlessConfig } from '../config/answersHeadlessConfig';
+import useEntityPreviewSearcher from '../hooks/useEntityPreviewSearcher';
 
 const navLinks = [
   {
@@ -16,18 +18,32 @@ const navLinks = [
   }))
 ]
 
+const verticalKeyToLabelMap: Record<string, string> = Object.entries(universalResultsConfig)
+  .reduce((map, [key, config]) => {
+    map[key] = config.label ?? key
+    return map;
+  }, {} as Record<string, string>);
+
+
 /**
  * A LayoutComponent that provides a SearchBar and Navigation tabs to a given page.
  */
 const StandardLayout: LayoutComponent = ({ page }) => {
   const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
+  const entityPreviewSearcher = useEntityPreviewSearcher({
+    ...answersHeadlessConfig,
+    headlessId: 'visual-autocomplete'
+  });
   return (
     <>
       {isVertical
         ? <SearchBar
           placeholder='Search...'
         />
-        : <SampleVisualSearchBar />
+        : <SampleVisualSearchBar
+          verticalKeyToLabelMap={verticalKeyToLabelMap}
+          entityPreviewSearcher={entityPreviewSearcher}
+        />
       }
       <Navigation links={navLinks} />
       {page}

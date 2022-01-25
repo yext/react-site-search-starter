@@ -2,7 +2,7 @@ import { QuerySource } from '@yext/answers-headless-react';
 import { ComponentType } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
-interface RouteData {
+export interface RouteData {
   path: string,
   page: JSX.Element,
   exact?: boolean

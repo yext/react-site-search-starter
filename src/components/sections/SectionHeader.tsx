@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { AppliedFiltersCssClasses, AppliedFiltersDisplay, AppliedFiltersProps } from "../components/AppliedFilters";
-import { ResultsCountConfig } from "../components/ResultsCount";
-import { useComposedCssClasses, CompositionMethod } from "../hooks/useComposedCssClasses";
-import { ReactComponent as CollectionIcon } from '../icons/collection.svg';
+import { AppliedFiltersCssClasses, AppliedFiltersDisplay, AppliedFiltersProps } from "../AppliedFilters";
+import { ResultsCountConfig } from "../ResultsCount";
+import { useComposedCssClasses, CompositionMethod } from "../../hooks/useComposedCssClasses";
+import { ReactComponent as CollectionIcon } from '../../icons/collection.svg';
 import { useAnswersState } from '@yext/answers-headless-react';
-import { DisplayableFilter } from "../models/displayableFilter";
+import { DisplayableFilter } from "../../models/displayableFilter";
 import classNames from "classnames";
 
 interface SectionHeaderCssClasses extends AppliedFiltersCssClasses {

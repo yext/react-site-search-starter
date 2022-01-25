@@ -1,21 +1,26 @@
 import VisualSearchBar from './VisualSearchBar';
-import { HighlightedFields, HighlightedValue, Result } from '@yext/answers-headless-react';
+import { AnswersHeadless, HighlightedFields, HighlightedValue, Result } from '@yext/answers-headless-react';
 import EntityPreviews from './EntityPreviews';
-import { universalResultsConfig } from '../../config/universalResultsConfig';
 import { ReactComponent as EventIcon } from '../../icons/event.svg';
 import { ReactComponent as FAQIcon } from '../../icons/faq.svg';
 import renderHighlightedValue from '../utils/renderHighlightedValue';
 
+interface SampleVisualSearchBarProps { 
+  verticalKeyToLabelMap?: Record<string, string>, 
+  entityPreviewSearcher?: AnswersHeadless
+}
+
 /**
  * This is an example of how to use the VisualSearchBar component.
  */
-export default function SampleVisualSearchBar() {
+export default function SampleVisualSearchBar(props: SampleVisualSearchBarProps) {
+  const { verticalKeyToLabelMap, entityPreviewSearcher } = props;
   return (
     <VisualSearchBar
       placeholder='Search...'
-      headlessId='visual-autocomplete'
+      entityPreviewSearcher={entityPreviewSearcher}
       entityPreviewsDebouncingTime={100}
-      verticalKeyToLabel={verticalKey => universalResultsConfig[verticalKey]?.label ?? verticalKey}
+      verticalKeyToLabel={verticalKey => verticalKeyToLabelMap?.[verticalKey] ?? verticalKey }
       renderEntityPreviews={isLoading => (
         <div className={isLoading ? 'opacity-50' : ''}>
           <EntityPreviews verticalKey='events'>

@@ -1,7 +1,7 @@
-import { VerticalResultsDisplay } from "../components/VerticalResults";
-import { SectionComponent, SectionConfig } from "../models/sectionComponent";
-import { StandardCard } from "../components/cards/StandardCard";
-import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
+import { VerticalResultsDisplay } from "../VerticalResults";
+import { SectionComponent, SectionConfig } from "../../models/sectionComponent";
+import { StandardCard } from "../cards/StandardCard";
+import { CompositionMethod, useComposedCssClasses } from "../../hooks/useComposedCssClasses";
 
 interface StandardSectionCssClasses {
   section?: string

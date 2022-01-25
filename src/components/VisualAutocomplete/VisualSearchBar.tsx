@@ -1,4 +1,4 @@
-import { useAnswersActions, useAnswersState, useAnswersUtilities, QuerySource, VerticalResults } from '@yext/answers-headless-react';
+import { AnswersHeadless, useAnswersActions, useAnswersState, useAnswersUtilities, QuerySource, VerticalResults } from '@yext/answers-headless-react';
 import { PropsWithChildren, useEffect, useState } from 'react';
 import InputDropdown from '../InputDropdown';
 import '../../sass/Autocomplete.scss';
@@ -50,7 +50,7 @@ interface VerticalLink {
 interface Props {
   placeholder?: string,
   geolocationOptions?: PositionOptions,
-  headlessId: string,
+  entityPreviewSearcher?: AnswersHeadless,
   // The debouncing time, in milliseconds, for making API requests for entity previews
   entityPreviewsDebouncingTime: number,
   renderEntityPreviews?: RenderEntityPreviews,
@@ -67,7 +67,7 @@ interface Props {
  */
 export default function VisualSearchBar({
   placeholder,
-  headlessId,
+  entityPreviewSearcher,
   hideRecentSearches,
   renderEntityPreviews,
   hideVerticalLinks,
@@ -106,7 +106,7 @@ export default function VisualSearchBar({
     executeQueryWithNearMeHandling();
   }
 
-  const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(headlessId, entityPreviewsDebouncingTime);
+  const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(entityPreviewSearcher, entityPreviewsDebouncingTime);
   const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
   const autocompleteResults = autocompleteResponse?.results || [];
   const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray);
