@@ -1,6 +1,6 @@
 import { ChangeEvent, KeyboardEvent, useRef } from 'react'
 import { useDropdownContext } from './DropdownContext'
-import { useFocusContext } from './FocusContext';
+import { useFocusContext, FocusedItemData } from './FocusContext';
 import generateDropdownId from './generateDropdownId';
 import { useInputContext } from './InputContext';
 
@@ -10,9 +10,9 @@ import { useInputContext } from './InputContext';
 export default function DropdownInput(props: {
   className?: string,
   placeholder?: string,
-  onSubmit?: (value?: string) => void,
-  onFocus?: (value?: string) => void,
-  onChange?: (value?: string) => void
+  onSubmit?: (value: string, index: number, focusedItemData: FocusedItemData | undefined ) => void,
+  onFocus?: (value: string) => void,
+  onChange?: (value: string) => void
 }) {
   const {
     className,
@@ -25,8 +25,12 @@ export default function DropdownInput(props: {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
-  const { value = '', setValue, setLastTypedOrSubmittedValue } = useInputContext();
-  const { focusedIndex = -1, setFocusedIndex } = useFocusContext();
+  const { value = '', setLastTypedOrSubmittedValue } = useInputContext();
+  const {
+    focusedIndex = -1,
+    focusedItemData,
+    updateFocusedItem
+  } = useFocusContext();
 
   const handleClick = () => {
     toggleDropdown(true);
@@ -34,22 +38,20 @@ export default function DropdownInput(props: {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     toggleDropdown(true);
-    setFocusedIndex(-1);
+    updateFocusedItem(-1, e.target.value);
     setLastTypedOrSubmittedValue(e.target.value);
-    setValue(e.target.value);
     onChange?.(e.target.value);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       toggleDropdown(false);
-      setFocusedIndex(-1);
-      onSubmit?.(value);
-      setLastTypedOrSubmittedValue(value);
-      if (focusedIndex >= 0) {
-        onSelect?.(value, focusedIndex);
-      }
+      updateFocusedItem(-1, value);
       inputRef.current?.blur();
+      onSubmit?.(value, focusedIndex, focusedItemData);
+      if (focusedIndex >= 0) {
+        onSelect?.(value, focusedIndex, focusedItemData);
+      }
     }
   };
 

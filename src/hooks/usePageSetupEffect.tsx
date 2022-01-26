@@ -49,5 +49,5 @@ export default function usePageSetupEffect(verticalKey?: string) {
     };
 
     executeQuery();
-  }, [answersActions, verticalKey, browserLocation]);
+  }, [answersActions, verticalKey, browserLocation.search, browserLocation.state?.querySource]);
 }

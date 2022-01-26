@@ -1,13 +1,15 @@
 import { createContext, useContext } from 'react';
 
+export type FocusedItemData = Record<string, unknown>;
+
 /**
  * The Context responsible for the currently focused item in a Dropdown.
  */
 export type FocusContextType = {
   focusedIndex: number,
-  setFocusedIndex: (index: number) => void,
   focusedValue: string | null,
-  setFocusedValue: (value: string) => void
+  focusedItemData: FocusedItemData | undefined,
+  updateFocusedItem: (index: number, value?: string) => void
 }
 
 const focusContext = createContext<FocusContextType | null>(null);

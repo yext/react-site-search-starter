@@ -1,6 +1,6 @@
 import { Result, VerticalResults, UniversalLimit } from '@yext/answers-headless-react';
 import { isValidElement, ReactNode } from 'react';
-import recursivelyMapChildren from '../utils/recursivelyMapChildren';
+import recursivelyMapChildren from './utils/recursivelyMapChildren';
 
 interface EntityPreviewsProps {
   verticalKey: string,
