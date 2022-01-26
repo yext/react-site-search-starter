@@ -26,7 +26,13 @@ export default function DropdownInput(props: {
 
   const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
   const { value = '', setValue, setLastTypedOrSubmittedValue } = useInputContext();
-  const { focusedIndex = -1, setFocusedIndex, setFocusedItemData, focusedItemData } = useFocusContext();
+  const {
+    focusedIndex = -1,
+    setFocusedIndex,
+    setFocusedItemData,
+    focusedItemData,
+    setFocusedValue
+  } = useFocusContext();
 
   const handleClick = () => {
     toggleDropdown(true);
@@ -36,6 +42,7 @@ export default function DropdownInput(props: {
     toggleDropdown(true);
     setFocusedIndex(-1);
     setFocusedItemData(undefined);
+    setFocusedValue(null);
     setLastTypedOrSubmittedValue(e.target.value);
     setValue(e.target.value);
     onChange?.(e.target.value);
@@ -46,12 +53,13 @@ export default function DropdownInput(props: {
       toggleDropdown(false);
       setFocusedIndex(-1);
       setFocusedItemData(undefined);
-      onSubmit?.(value, focusedIndex);
+      setFocusedValue(null);
       setLastTypedOrSubmittedValue(value);
+      inputRef.current?.blur();
+      onSubmit?.(value, focusedIndex);
       if (focusedIndex >= 0) {
         onSelect?.(value, focusedIndex, focusedItemData);
       }
-      inputRef.current?.blur();
     }
   };
 

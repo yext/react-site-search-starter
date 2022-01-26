@@ -5,11 +5,7 @@ import { createContext, useContext } from 'react';
  */
 export type FocusContextType = {
   focusedIndex: number,
-  setFocusedIndex: (index: number) => void,
-  focusedValue: string | null,
-  setFocusedValue: (value: string) => void,
-  focusedItemData: Record<string, unknown> | undefined,
-  setFocusedItemData: (itemData: Record<string, unknown> | undefined) => void
+  updateFocusedIndex: (index: number) => void
 }
 
 const focusContext = createContext<FocusContextType | null>(null);

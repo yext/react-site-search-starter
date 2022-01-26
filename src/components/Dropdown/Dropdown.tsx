@@ -7,7 +7,12 @@ import FocusContext, { FocusContextType } from './FocusContext';
 import { v4 as uuid } from 'uuid';
 import ScreenReader from '../ScreenReader';
 import recursivelyMapChildren from '../utils/recursivelyMapChildren';
-import DropdownItem, { DropdownItemWithIndex } from './DropdownItem';
+import DropdownItem, { DropdownItemProps, DropdownItemWithIndex } from './DropdownItem';
+
+type DropdownItemData = {
+  value: string,
+  itemData?: Record<string, unknown>
+};
 
 /**
  * Dropdown is the parent component for a set of Dropdown-related components.
@@ -48,6 +53,7 @@ export default function Dropdown(props: PropsWithChildren<{
     toggleDropdown(false);
   }, { disabled: !isActive });
 
+
   useGlobalListener('keydown', e => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
@@ -56,36 +62,24 @@ export default function Dropdown(props: PropsWithChildren<{
       return;
     }
     if (e.key === 'ArrowDown') {
-      const updatedFocusedIndex = focusedIndex + 1;
-      if (updatedFocusedIndex >= numItems) {
-        setFocusedIndex(-1);
-        setFocusedValue(lastTypedOrSubmittedValue);
-        setFocusedItemData(undefined);
-        setValue(lastTypedOrSubmittedValue);
-      } else {
-        setFocusedIndex(updatedFocusedIndex);
-      }
+      updateFocusedIndex(focusedIndex + 1);
     } else if (e.key === 'ArrowUp') {
-      const updatedFocusedIndex = focusedIndex - 1;
-      if (updatedFocusedIndex === -1) {
-        setFocusedIndex(updatedFocusedIndex);
-        setFocusedValue(lastTypedOrSubmittedValue);
-        setFocusedItemData(undefined);
-        setValue(lastTypedOrSubmittedValue);
-      } else if (updatedFocusedIndex < -1){
-        setFocusedIndex((numItems + updatedFocusedIndex + 1) % numItems);
-      } else {
-        setFocusedIndex(updatedFocusedIndex);
-      }
+      updateFocusedIndex(focusedIndex - 1);
     }
   });
 
   let numItems = 0;
+  const items: [] = []
   const childrenWithDropdownItemsTransformed = recursivelyMapChildren(children, (child => {
     if (!(isValidElement(child) && child.type === DropdownItem)) {
       return child;
     }
-    const transformedItem = createElement(DropdownItemWithIndex, { ...child.props, index: numItems })
+    const props: DropdownItemProps = child.props;
+    items.push({
+      value: props.value,
+      itemData: props.itemData
+    });
+    const transformedItem = createElement(DropdownItemWithIndex, { ...props, index: numItems })
     numItems++;
     return transformedItem;
   }));
@@ -121,17 +115,34 @@ function useInputContextInstance(initialValue = ''): InputContextType {
   };
 }
 
-function useFocusContextInstance(): FocusContextType {
+function useFocusContextInstance(items:): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [focusedValue, setFocusedValue] = useState<string>('');
+  const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const [focusedItemData, setFocusedItemData] = useState<Record<string, unknown> | undefined>(undefined);
+
+  function updateFocusedIndex(updatedFocusedIndex: number) {
+    if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems) {
+      setFocusedIndex(-1);
+      setFocusedValue(lastTypedOrSubmittedValue);
+      setValue(lastTypedOrSubmittedValue);
+      setFocusedItemData(undefined);
+    } else if (updatedFocusedIndex < -1) {
+      const loopedAroundIndex = (numItems + updatedFocusedIndex + 1) % numItems;
+      setFocusedIndex(loopedAroundIndex);
+      setFocusedValue(items[loopedAroundIndex].value);
+      setValue(items[loopedAroundIndex].value);
+      setFocusedItemData(items[loopedAroundIndex].itemData);
+    } else {
+      setFocusedIndex(updatedFocusedIndex);
+      setFocusedValue(items[updatedFocusedIndex].value);
+      setValue(items[updatedFocusedIndex].value);
+      setFocusedItemData(items[updatedFocusedIndex].itemData);
+    }
+  }
+
   return {
     focusedIndex,
-    setFocusedIndex,
-    focusedValue,
-    setFocusedValue,
-    focusedItemData,
-    setFocusedItemData
+    updateFocusedIndex
   };
 }
 

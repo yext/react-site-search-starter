@@ -4,7 +4,7 @@ import { useFocusContext } from './FocusContext';
 import generateDropdownId from './generateDropdownId';
 import { useInputContext } from './InputContext';
 
-type DropdownItemProps = PropsWithChildren<{
+export type DropdownItemProps = PropsWithChildren<{
   value: string,
   className?: string,
   focusedClassName?: string,
@@ -30,30 +30,18 @@ export function DropdownItemWithIndex(props: DropdownItemProps & { index: number
   const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
   const {
     focusedIndex,
-    focusedValue,
-    setFocusedValue,
     setFocusedIndex,
     setFocusedItemData,
-    focusedItemData
+    setFocusedValue
   } = useFocusContext();
   const { setValue, setLastTypedOrSubmittedValue } = useInputContext();
 
   const isFocused = focusedIndex === index;
-  const needsFocusedValueUpdate = isFocused && focusedValue !== value;
-  const needsFocusedItemDataUpdate = isFocused && focusedItemData !== itemData;
-  useLayoutEffect(() => {
-    if (needsFocusedValueUpdate) {
-      setFocusedValue(value);
-      setValue(value);
-    }
-    if (needsFocusedItemDataUpdate) {
-      setFocusedItemData(itemData)
-    }
-  }, [itemData, needsFocusedItemDataUpdate, needsFocusedValueUpdate, setFocusedItemData, setFocusedValue, setValue, value])
 
   const handleClick = () => {
     toggleDropdown(false);
     setFocusedIndex(-1);
+    setFocusedValue(null);
     setFocusedItemData(undefined);
     setLastTypedOrSubmittedValue(value);
     setValue(value);
