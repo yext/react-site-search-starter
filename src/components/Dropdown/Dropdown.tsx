@@ -1,4 +1,4 @@
-import { createElement, isValidElement, PropsWithChildren, ReactNode, useMemo, useRef, useState } from 'react';
+import { createElement, isValidElement, PropsWithChildren, ReactNode, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import DropdownContext, { DropdownContextType } from './DropdownContext';
 import InputContext, { InputContextType } from './InputContext';
 import useGlobalListener from '@restart/hooks/useGlobalListener';
@@ -24,6 +24,7 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderText: string,
   screenReaderInstructions?: string,
   initialValue?: string,
+  controlledQuery?: string,
   onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive: boolean, value: string) => void,
   className?: string,
@@ -37,7 +38,8 @@ export default function Dropdown(props: PropsWithChildren<{
     onSelect,
     onToggle,
     className,
-    activeClassName
+    activeClassName,
+    controlledQuery
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -45,13 +47,20 @@ export default function Dropdown(props: PropsWithChildren<{
   const [childrenWithDropdownItemsTransformed, items] = getTransformedChildrenAndItemData(children);
 
   const inputContext = useInputContextInstance(initialValue);
-  const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
+  const { value, setValue, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue } = inputContext;
 
   const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
   const { focusedIndex, updateFocusedItem } = focusContext;
 
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
   const { toggleDropdown, isActive } = dropdownContext;
+
+  useLayoutEffect(() => {
+    if (controlledQuery !== undefined && controlledQuery !== value) {
+      setValue(controlledQuery);
+      setLastTypedOrSubmittedValue(controlledQuery);
+    }
+  }, [controlledQuery, setLastTypedOrSubmittedValue, setValue, value])
 
   useRootClose(containerRef, () => {
     toggleDropdown(false);

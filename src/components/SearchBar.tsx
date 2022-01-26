@@ -268,7 +268,7 @@ export default function SearchBar({
         className={cssClasses.inputDropdownContainer}
         activeClassName={activeClassName}
         screenReaderText={screenReaderText}
-        initialValue={query}
+        controlledQuery={query}
         onToggle={(isActive, value = '') => {
           if (!isActive) {
             updateEntityPreviews(value);
