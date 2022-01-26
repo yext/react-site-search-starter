@@ -28,10 +28,8 @@ export default function DropdownInput(props: {
   const { value = '', setValue, setLastTypedOrSubmittedValue } = useInputContext();
   const {
     focusedIndex = -1,
-    setFocusedIndex,
-    setFocusedItemData,
     focusedItemData,
-    setFocusedValue
+    updateFocusedIndex
   } = useFocusContext();
 
   const handleClick = () => {
@@ -40,9 +38,7 @@ export default function DropdownInput(props: {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     toggleDropdown(true);
-    setFocusedIndex(-1);
-    setFocusedItemData(undefined);
-    setFocusedValue(null);
+    updateFocusedIndex(-1);
     setLastTypedOrSubmittedValue(e.target.value);
     setValue(e.target.value);
     onChange?.(e.target.value);
@@ -51,9 +47,7 @@ export default function DropdownInput(props: {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       toggleDropdown(false);
-      setFocusedIndex(-1);
-      setFocusedItemData(undefined);
-      setFocusedValue(null);
+      updateFocusedIndex(-1);
       setLastTypedOrSubmittedValue(value);
       inputRef.current?.blur();
       onSubmit?.(value, focusedIndex);

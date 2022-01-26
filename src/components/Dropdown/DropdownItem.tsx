@@ -1,4 +1,4 @@
-import { PropsWithChildren, useLayoutEffect } from 'react'
+import { PropsWithChildren } from 'react'
 import { useDropdownContext } from './DropdownContext'
 import { useFocusContext } from './FocusContext';
 import generateDropdownId from './generateDropdownId';
@@ -28,21 +28,14 @@ export function DropdownItemWithIndex(props: DropdownItemProps & { index: number
   } = props;
 
   const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
-  const {
-    focusedIndex,
-    setFocusedIndex,
-    setFocusedItemData,
-    setFocusedValue
-  } = useFocusContext();
+  const { focusedIndex, updateFocusedIndex } = useFocusContext();
   const { setValue, setLastTypedOrSubmittedValue } = useInputContext();
 
   const isFocused = focusedIndex === index;
 
   const handleClick = () => {
     toggleDropdown(false);
-    setFocusedIndex(-1);
-    setFocusedValue(null);
-    setFocusedItemData(undefined);
+    updateFocusedIndex(-1);
     setLastTypedOrSubmittedValue(value);
     setValue(value);
     onSelect?.(value, index, itemData);

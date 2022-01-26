@@ -1,4 +1,4 @@
-import { createElement, isValidElement, PropsWithChildren, useMemo, useRef, useState } from 'react';
+import { createElement, isValidElement, PropsWithChildren, ReactNode, useMemo, useRef, useState } from 'react';
 import DropdownContext, { DropdownContextType } from './DropdownContext';
 import InputContext, { InputContextType } from './InputContext';
 import useGlobalListener from '@restart/hooks/useGlobalListener';
@@ -39,13 +39,17 @@ export default function Dropdown(props: PropsWithChildren<{
     className,
     activeClassName
   } = props;
+
   const containerRef = useRef<HTMLDivElement>(null);
   const screenReaderUUID: string = useMemo(() => uuid(), []);
+  const [childrenWithDropdownItemsTransformed, items] = getTransformedChildrenAndItemData(children);
 
   const inputContext = useInputContextInstance(initialValue);
   const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
-  const focusContext = useFocusContextInstance();
-  const { focusedIndex, setFocusedIndex, setFocusedValue, setFocusedItemData } = focusContext;
+
+  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
+  const { focusedIndex, updateFocusedIndex } = focusContext;
+
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
   const { toggleDropdown, isActive } = dropdownContext;
 
@@ -67,22 +71,6 @@ export default function Dropdown(props: PropsWithChildren<{
       updateFocusedIndex(focusedIndex - 1);
     }
   });
-
-  let numItems = 0;
-  const items: [] = []
-  const childrenWithDropdownItemsTransformed = recursivelyMapChildren(children, (child => {
-    if (!(isValidElement(child) && child.type === DropdownItem)) {
-      return child;
-    }
-    const props: DropdownItemProps = child.props;
-    items.push({
-      value: props.value,
-      itemData: props.itemData
-    });
-    const transformedItem = createElement(DropdownItemWithIndex, { ...props, index: numItems })
-    numItems++;
-    return transformedItem;
-  }));
 
   return (
     <div ref={containerRef} className={isActive ? activeClassName : className}>
@@ -115,10 +103,15 @@ function useInputContextInstance(initialValue = ''): InputContextType {
   };
 }
 
-function useFocusContextInstance(items:): FocusContextType {
+function useFocusContextInstance(
+  items: DropdownItemData[],
+  lastTypedOrSubmittedValue: string,
+  setValue: (newValue: string) => void
+): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const [focusedItemData, setFocusedItemData] = useState<Record<string, unknown> | undefined>(undefined);
+  const numItems = items.length;
 
   function updateFocusedIndex(updatedFocusedIndex: number) {
     if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems) {
@@ -142,6 +135,8 @@ function useFocusContextInstance(items:): FocusContextType {
 
   return {
     focusedIndex,
+    focusedValue,
+    focusedItemData,
     updateFocusedIndex
   };
 }
@@ -163,4 +158,22 @@ function useDropdownContextInstance(
     onSelect,
     screenReaderUUID
   };
+}
+
+function getTransformedChildrenAndItemData(children: ReactNode): [ReactNode, DropdownItemData[]] {
+  const items: DropdownItemData [] = []
+  const childrenWithDropdownItemsTransformed = recursivelyMapChildren(children, (child => {
+    if (!(isValidElement(child) && child.type === DropdownItem)) {
+      return child;
+    }
+    const props: DropdownItemProps = child.props;
+    items.push({
+      value: props.value,
+      itemData: props.itemData
+    });
+    const transformedItem = createElement(DropdownItemWithIndex, { ...props, index: items.length })
+    return transformedItem;
+  }));
+
+  return [childrenWithDropdownItemsTransformed, items];
 }
