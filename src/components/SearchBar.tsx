@@ -50,13 +50,23 @@ const builtInCssClasses: SearchBarCssClasses = {
   ...AutocompleteResultBuiltInCssClasses
 };
 
-export interface SearchBarCssClasses
-  extends InputDropdownCssClasses, DropdownSectionCssClasses, AutocompleteResultCssClasses {
+export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
   container?: string,
   inputDropdownContainer?: string,
+  inputDropdownContainer___active?: string,
   resultIconContainer?: string,
   submitButton?: string,
-
+  dropdownContainer?: string,
+  inputElement?: string,
+  inputContainer?: string,
+  divider?: string,
+  logoContainer?: string,
+  searchButtonContainer?: string,
+  sectionContainer?: string,
+  sectionLabel?: string,
+  optionsContainer?: string,
+  optionContainer?: string,
+  focusedOption?: string,
   recentSearchesOptionContainer?: string,
   recentSearchesIcon?: string,
   recentSearchesOption?: string,
