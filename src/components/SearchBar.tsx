@@ -16,9 +16,7 @@ import Dropdown from './Dropdown/Dropdown';
 import DropdownInput from './Dropdown/DropdownInput';
 import DropdownItem from './Dropdown/DropdownItem';
 import DropdownMenu from './Dropdown/DropdownMenu';
-import { DropdownSectionCssClasses } from './DropdownSection';
 import { calculateRestrictVerticals, calculateUniversalLimit, transformEntityPreviews } from './EntityPreviews';
-import { InputDropdownCssClasses } from './InputDropdown';
 import SearchButton from './SearchButton';
 import { processTranslation } from './utils/processTranslation';
 import renderAutocompleteResult, {
