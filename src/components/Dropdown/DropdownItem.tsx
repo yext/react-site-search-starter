@@ -1,6 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { useDropdownContext } from './DropdownContext'
-import { useFocusContext } from './FocusContext';
+import { FocusedItemData, useFocusContext } from './FocusContext';
 import generateDropdownId from './generateDropdownId';
 import { useInputContext } from './InputContext';
 
@@ -8,7 +8,8 @@ export type DropdownItemProps = PropsWithChildren<{
   value: string,
   className?: string,
   focusedClassName?: string,
-  itemData?: Record<string, unknown> | undefined
+  itemData?: Record<string, unknown> | undefined,
+  onClick?: (value: string, index: number, focusedItemData: FocusedItemData | undefined ) => void
 }>
 
 /**
@@ -24,7 +25,8 @@ export function DropdownItemWithIndex(props: DropdownItemProps & { index: number
     index,
     className,
     focusedClassName,
-    itemData
+    itemData,
+    onClick
   } = props;
 
   const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
@@ -39,6 +41,7 @@ export function DropdownItemWithIndex(props: DropdownItemProps & { index: number
     setLastTypedOrSubmittedValue(value);
     setValue(value);
     onSelect?.(value, index, itemData);
+    onClick?.(value, index, itemData);
   };
 
   return (

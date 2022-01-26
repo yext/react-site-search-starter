@@ -16,6 +16,7 @@ import Dropdown from './Dropdown/Dropdown';
 import DropdownInput from './Dropdown/DropdownInput';
 import DropdownItem from './Dropdown/DropdownItem';
 import DropdownMenu from './Dropdown/DropdownMenu';
+import { FocusedItemData } from './Dropdown/FocusContext';
 import { calculateRestrictVerticals, calculateUniversalLimit, transformEntityPreviews } from './EntityPreviews';
 import SearchButton from './SearchButton';
 import { processTranslation } from './utils/processTranslation';
@@ -165,16 +166,23 @@ export default function SearchBar({
     );
   }
 
+  const handleSubmit = (value: string, _index: number, itemData?: FocusedItemData) => {
+    answersActions.setQuery(value || '');
+    if (itemData && typeof itemData.verticalLink === 'string') {
+      browserHistory.push(itemData.verticalLink, {
+        querySource: QuerySource.Autocomplete
+      });
+    } else {
+      executeQuery();
+    }
+  }
+
   function renderInput() {
     return (
       <DropdownInput
         className={cssClasses.inputElement}
         placeholder={placeholder}
-        onSubmit={(_value, index) => {
-          if (index < 0) {
-            executeQuery()
-          }
-        }}
+        onSubmit={handleSubmit}
         onFocus={(value = '') => {
           answersActions.setQuery(value);
           updateEntityPreviews(value);
@@ -206,6 +214,7 @@ export default function SearchBar({
         focusedClassName={classNames(cssClasses.recentSearchesOptionContainer, cssClasses.focusedOption)}
         key={i}
         value={result.query}
+        onClick={handleSubmit}
       >
         {renderAutocompleteResult(
           { value: result.query },
@@ -224,6 +233,7 @@ export default function SearchBar({
           className={cssClasses.optionContainer}
           focusedClassName={classNames(cssClasses.optionContainer, cssClasses.focusedOption)}
           value={result.value}
+          onClick={handleSubmit}
         >
           {renderAutocompleteResult(result, cssClasses, MagnifyingGlassIcon, `autocomplete option: ${result.value}`)}
         </DropdownItem>
@@ -234,6 +244,7 @@ export default function SearchBar({
             focusedClassName={classNames(cssClasses.optionContainer, cssClasses.focusedOption)}
             value={result.value}
             itemData={{ verticalLink: `/${verticalKey}?query=${result.value}` }}
+            onClick={handleSubmit}
           >
             {renderAutocompleteResult(
               { value: `in ${verticalKeyToLabel ? verticalKeyToLabel(verticalKey) : verticalKey}` },
@@ -258,17 +269,6 @@ export default function SearchBar({
         activeClassName={activeClassName}
         screenReaderText={screenReaderText}
         initialValue={query}
-        onSelect={(value, _index, itemData) => {
-          answersActions.setQuery(value || '');
-          if (itemData && typeof itemData.verticalLink === 'string') {
-            browserHistory.push(itemData.verticalLink, {
-              querySource: QuerySource.Autocomplete
-            });
-          } else {
-            autocompletePromiseRef.current = executeAutocomplete()
-            executeQuery();
-          }
-        }}
         onToggle={(isActive, value = '') => {
           if (!isActive) {
             updateEntityPreviews(value);

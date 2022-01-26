@@ -1,6 +1,6 @@
 import { ChangeEvent, KeyboardEvent, useRef } from 'react'
 import { useDropdownContext } from './DropdownContext'
-import { useFocusContext } from './FocusContext';
+import { useFocusContext, FocusedItemData } from './FocusContext';
 import generateDropdownId from './generateDropdownId';
 import { useInputContext } from './InputContext';
 
@@ -10,7 +10,7 @@ import { useInputContext } from './InputContext';
 export default function DropdownInput(props: {
   className?: string,
   placeholder?: string,
-  onSubmit?: (value: string, index: number) => void,
+  onSubmit?: (value: string, index: number, focusedItemData: FocusedItemData | undefined ) => void,
   onFocus?: (value: string) => void,
   onChange?: (value: string) => void
 }) {
@@ -48,7 +48,7 @@ export default function DropdownInput(props: {
       toggleDropdown(false);
       updateFocusedIndex(-1, value);
       inputRef.current?.blur();
-      onSubmit?.(value, focusedIndex);
+      onSubmit?.(value, focusedIndex, focusedItemData);
       if (focusedIndex >= 0) {
         onSelect?.(value, focusedIndex, focusedItemData);
       }

@@ -110,10 +110,10 @@ function useFocusContextInstance(
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const [focusedItemData, setFocusedItemData] = useState<Record<string, unknown> | undefined>(undefined);
-  const numItems = items.length;
 
   function updateFocusedIndex(updatedFocusedIndex: number, value?: string) {
-    if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems) {
+    const numItems = items.length;
+    if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems || numItems === 0) {
       setFocusedIndex(-1);
       setFocusedValue(value ?? lastTypedOrSubmittedValue);
       setValue(value ?? lastTypedOrSubmittedValue);
