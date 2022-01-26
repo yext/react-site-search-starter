@@ -48,6 +48,7 @@ export default function DropdownInput(props: {
     if (e.key === 'Enter') {
       toggleDropdown(false);
       updateFocusedIndex(-1);
+      setValue(value);
       setLastTypedOrSubmittedValue(value);
       inputRef.current?.blur();
       onSubmit?.(value, focusedIndex);

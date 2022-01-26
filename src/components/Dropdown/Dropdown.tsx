@@ -171,7 +171,7 @@ function getTransformedChildrenAndItemData(children: ReactNode): [ReactNode, Dro
       value: props.value,
       itemData: props.itemData
     });
-    const transformedItem = createElement(DropdownItemWithIndex, { ...props, index: items.length })
+    const transformedItem = createElement(DropdownItemWithIndex, { ...props, index: items.length - 1 })
     return transformedItem;
   }));
 
