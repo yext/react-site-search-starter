@@ -9,7 +9,7 @@ export type FocusContextType = {
   focusedIndex: number,
   focusedValue: string | null,
   focusedItemData: FocusedItemData | undefined,
-  updateFocusedIndex: (index: number, value?: string) => void
+  updateFocusedItem: (index: number, value?: string) => void
 }
 
 const focusContext = createContext<FocusContextType | null>(null);

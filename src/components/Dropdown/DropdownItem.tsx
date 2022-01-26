@@ -30,14 +30,14 @@ export function DropdownItemWithIndex(props: DropdownItemProps & { index: number
   } = props;
 
   const { toggleDropdown, onSelect, screenReaderUUID } = useDropdownContext();
-  const { focusedIndex, updateFocusedIndex } = useFocusContext();
+  const { focusedIndex, updateFocusedItem } = useFocusContext();
   const { setValue, setLastTypedOrSubmittedValue } = useInputContext();
 
   const isFocused = focusedIndex === index;
 
   const handleClick = () => {
     toggleDropdown(false);
-    updateFocusedIndex(-1);
+    updateFocusedItem(-1);
     setLastTypedOrSubmittedValue(value);
     setValue(value);
     onSelect?.(value, index, itemData);

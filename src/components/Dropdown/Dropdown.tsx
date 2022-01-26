@@ -48,7 +48,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
 
   const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
-  const { focusedIndex, updateFocusedIndex } = focusContext;
+  const { focusedIndex, updateFocusedItem } = focusContext;
 
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
   const { toggleDropdown, isActive } = dropdownContext;
@@ -65,9 +65,9 @@ export default function Dropdown(props: PropsWithChildren<{
       return;
     }
     if (e.key === 'ArrowDown') {
-      updateFocusedIndex(focusedIndex + 1);
+      updateFocusedItem(focusedIndex + 1);
     } else if (e.key === 'ArrowUp') {
-      updateFocusedIndex(focusedIndex - 1);
+      updateFocusedItem(focusedIndex - 1);
     }
   });
 
@@ -111,7 +111,7 @@ function useFocusContextInstance(
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
   const [focusedItemData, setFocusedItemData] = useState<Record<string, unknown> | undefined>(undefined);
 
-  function updateFocusedIndex(updatedFocusedIndex: number, value?: string) {
+  function updateFocusedItem(updatedFocusedIndex: number, value?: string) {
     const numItems = items.length;
     if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems || numItems === 0) {
       setFocusedIndex(-1);
@@ -136,7 +136,7 @@ function useFocusContextInstance(
     focusedIndex,
     focusedValue,
     focusedItemData,
-    updateFocusedIndex
+    updateFocusedItem
   };
 }
 
