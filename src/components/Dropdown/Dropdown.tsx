@@ -57,7 +57,6 @@ export default function Dropdown(props: PropsWithChildren<{
     toggleDropdown(false);
   }, { disabled: !isActive });
 
-
   useGlobalListener('keydown', e => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
