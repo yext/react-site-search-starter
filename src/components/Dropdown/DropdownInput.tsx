@@ -38,18 +38,15 @@ export default function DropdownInput(props: {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     toggleDropdown(true);
-    updateFocusedIndex(-1);
+    updateFocusedIndex(-1, e.target.value);
     setLastTypedOrSubmittedValue(e.target.value);
-    setValue(e.target.value);
     onChange?.(e.target.value);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       toggleDropdown(false);
-      updateFocusedIndex(-1);
-      setValue(value);
-      setLastTypedOrSubmittedValue(value);
+      updateFocusedIndex(-1, value);
       inputRef.current?.blur();
       onSubmit?.(value, focusedIndex);
       if (focusedIndex >= 0) {

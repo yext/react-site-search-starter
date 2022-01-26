@@ -112,22 +112,22 @@ function useFocusContextInstance(
   const [focusedItemData, setFocusedItemData] = useState<Record<string, unknown> | undefined>(undefined);
   const numItems = items.length;
 
-  function updateFocusedIndex(updatedFocusedIndex: number) {
+  function updateFocusedIndex(updatedFocusedIndex: number, value?: string) {
     if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems) {
       setFocusedIndex(-1);
-      setFocusedValue(lastTypedOrSubmittedValue);
-      setValue(lastTypedOrSubmittedValue);
+      setFocusedValue(value ?? lastTypedOrSubmittedValue);
+      setValue(value ?? lastTypedOrSubmittedValue);
       setFocusedItemData(undefined);
     } else if (updatedFocusedIndex < -1) {
       const loopedAroundIndex = (numItems + updatedFocusedIndex + 1) % numItems;
       setFocusedIndex(loopedAroundIndex);
-      setFocusedValue(items[loopedAroundIndex].value);
-      setValue(items[loopedAroundIndex].value);
+      setFocusedValue(value ?? items[loopedAroundIndex].value);
+      setValue(value ?? items[loopedAroundIndex].value);
       setFocusedItemData(items[loopedAroundIndex].itemData);
     } else {
       setFocusedIndex(updatedFocusedIndex);
-      setFocusedValue(items[updatedFocusedIndex].value);
-      setValue(items[updatedFocusedIndex].value);
+      setFocusedValue(value ?? items[updatedFocusedIndex].value);
+      setValue(value ?? items[updatedFocusedIndex].value);
       setFocusedItemData(items[updatedFocusedIndex].itemData);
     }
   }
