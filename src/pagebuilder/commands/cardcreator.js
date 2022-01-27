@@ -52,7 +52,7 @@ class CardCreator {
           type: 'string'
         },
         cardTemplateFilePath: {
-          displayName: 'Card Template\' File Path',
+          displayName: 'Card Template\'s File Path',
           required: true,
           type: 'string'
         }
@@ -91,7 +91,7 @@ class CardCreator {
       throw new UserError(`Template for card component does not exist in file path: ${cardTemplateFilePath}`);
     }
     this._createNewComponentFile(newComponentName, newCardFilePath, cardTemplateFilePath);
-    this._updateCardRegistry(newComponentName);
+    this._updateCardRegistry(newComponentName, newCardFilePath);
   }
 
   /**
@@ -114,12 +114,14 @@ class CardCreator {
   /**
    * Registers new component to the card registry by directly modify content in componentRegistry.ts
    * 
-   * @param {string} newComponentName 
+   * @param {string} newComponentName
+   * @param {string} newCardFilePath 
    */
-  _updateCardRegistry(newComponentName) {
+  _updateCardRegistry(newComponentName, newCardFilePath) {
     const registryFilePath = './templates/componentRegistry.ts';
     const registryContent = fs.readFileSync(registryFilePath).toString();
-    const newRegistryContent = `import { ${newComponentName} } from "../cards/${newComponentName}";\n`
+    const newCardFilePathWithoutExt = newCardFilePath.substring(0, newCardFilePath.lastIndexOf('.'));
+    const newRegistryContent = `import { ${newComponentName} } from "../${newCardFilePathWithoutExt}";\n`
       + registryContent.replace(/(export enum CardTypes {\n)(.*)/gs, `$1\t${newComponentName} = '${newComponentName}',\n$2`)
       + `\nCardRegistry[CardTypes.${newComponentName}] = ${newComponentName}`;
     fs.writeFileSync(registryFilePath, newRegistryContent);
