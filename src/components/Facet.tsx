@@ -2,7 +2,10 @@ import { useAnswersUtilities, DisplayableFacet, DisplayableFacetOption } from '@
 import { useState } from 'react';
 import useCollapse from 'react-collapsed';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
-import renderCheckboxOption, { CheckboxOptionCssClasses } from './utils/renderCheckboxOption';
+import renderCheckboxOption, {
+  CheckboxOptionCssClasses,
+  builtInCssClasses as builtInCheckboxOptionCssClasses
+} from './utils/renderCheckboxOption';
 import { ReactComponent as DropdownIcon } from '../icons/chevron.svg';
 
 export type onFacetChangeFn = (fieldId: string, option: DisplayableFacetOption) => void
@@ -18,7 +21,7 @@ export interface FacetConfig {
 interface FacetProps extends FacetConfig {
   facet: DisplayableFacet,
   onToggle: onFacetChangeFn,
-  customCssclasses?: FacetCssClasses,
+  customCssClasses?: FacetCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
 
@@ -31,6 +34,7 @@ export interface FacetCssClasses extends CheckboxOptionCssClasses {
 }
 
 const builtInCssClasses: FacetCssClasses = {
+  ...builtInCheckboxOptionCssClasses,
   label: 'text-gray-900 text-sm font-medium text-left',
   labelIcon: 'w-3',
   labelContainer: 'w-full flex justify-between items-center mb-4',
@@ -46,10 +50,10 @@ export default function Facet(props: FacetProps): JSX.Element {
     defaultExpanded,
     label,
     placeholderText='Search here...',
-    customCssclasses,
+    customCssClasses,
     cssCompositionMethod 
   } = props;
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssclasses, cssCompositionMethod);
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const answersUtilities = useAnswersUtilities();
   const hasSelectedFacet = !!facet.options.find(o => o.selected);
   const [ filterValue, setFilterValue ] = useState('');
@@ -85,7 +89,8 @@ export default function Facet(props: FacetProps): JSX.Element {
             renderCheckboxOption({
               option: { id: option.displayName, label: `${option.displayName} (${option.count})` },
               onClick: () => onToggle(facet.fieldId, option),
-              selected: option.selected
+              selected: option.selected,
+              cssClasses
             })
           )}
         </div>

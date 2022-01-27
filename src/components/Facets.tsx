@@ -75,7 +75,8 @@ export default function Facets (props: FacetsProps): JSX.Element {
           <Facet
             facet={facet}
             {...config}
-            customCssclasses={cssClasses}
+            customCssClasses={cssClasses}
+            cssCompositionMethod={cssCompositionMethod}
             onToggle={handleFacetOptionChange} />
           {!isLastFacet && <Divider customCssClasses={{ divider: cssClasses.divider }} cssCompositionMethod='replace'/>}
         </div>
