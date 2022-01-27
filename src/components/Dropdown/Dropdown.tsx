@@ -57,10 +57,9 @@ export default function Dropdown(props: PropsWithChildren<{
 
   useLayoutEffect(() => {
     if (controlledQuery !== undefined && controlledQuery !== lastTypedOrSubmittedValue) {
-      setValue(controlledQuery);
-      setLastTypedOrSubmittedValue(controlledQuery);
+      updateFocusedItem(-1, controlledQuery);
     }
-  }, [controlledQuery, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue, setValue])
+  }, [controlledQuery, lastTypedOrSubmittedValue, updateFocusedItem])
 
   useRootClose(containerRef, () => {
     toggleDropdown(false);
