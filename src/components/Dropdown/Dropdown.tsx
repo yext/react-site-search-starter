@@ -27,7 +27,6 @@ export default function Dropdown(props: PropsWithChildren<{
   controlledQuery?: string,
   onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive: boolean, value: string) => void,
-  onFocusChange?: (value: string) => void,
   className?: string,
   activeClassName?: string
 }>) {
@@ -41,7 +40,6 @@ export default function Dropdown(props: PropsWithChildren<{
     className,
     activeClassName,
     controlledQuery,
-    onFocusChange
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -51,7 +49,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const inputContext = useInputContextInstance(initialValue);
   const { value, setValue, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue } = inputContext;
 
-  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue, onFocusChange);
+  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
   const { focusedIndex, updateFocusedItem } = focusContext;
 
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
@@ -116,8 +114,7 @@ function useInputContextInstance(initialValue = ''): InputContextType {
 function useFocusContextInstance(
   items: DropdownItemData[],
   lastTypedOrSubmittedValue: string,
-  setValue: (newValue: string) => void,
-  onFocusChange?: (value: string) => void
+  setValue: (newValue: string) => void
 ): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -131,7 +128,6 @@ function useFocusContextInstance(
       setFocusedValue(updatedValue);
       setValue(updatedValue);
       setFocusedItemData(undefined);
-      onFocusChange?.(updatedValue);
     } else if (updatedFocusedIndex < -1) {
       const loopedAroundIndex = (numItems + updatedFocusedIndex + 1) % numItems;
       const updatedValue = value ?? items[loopedAroundIndex].value;
@@ -139,14 +135,12 @@ function useFocusContextInstance(
       setFocusedValue(updatedValue);
       setValue(updatedValue);
       setFocusedItemData(items[loopedAroundIndex].itemData);
-      onFocusChange?.(updatedValue);
     } else {
       const updatedValue = value ?? items[updatedFocusedIndex].value;
       setFocusedIndex(updatedFocusedIndex);
       setFocusedValue(updatedValue);
       setValue(updatedValue);
       setFocusedItemData(items[updatedFocusedIndex].itemData);
-      onFocusChange?.(updatedValue);
     }
   }
 

@@ -184,16 +184,13 @@ export default function SearchBar({
         placeholder={placeholder}
         onSubmit={handleSubmit}
         onFocus={(value = '') => {
-          console.log(value);
           answersActions.setQuery(value);
           updateEntityPreviews(value);
-          console.log('onFocus')
           autocompletePromiseRef.current = executeAutocomplete()
         }}
         onChange={(value = '') => {
           answersActions.setQuery(value);
           updateEntityPreviews(value);
-          console.log('onChange')
           autocompletePromiseRef.current = executeAutocomplete();
         }}
       />
