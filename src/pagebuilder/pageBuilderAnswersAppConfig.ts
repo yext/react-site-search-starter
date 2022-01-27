@@ -10,6 +10,11 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
   common: {
     style: {
       brandColor: '',
+    },
+    components: {
+      searchBar: {
+        placeholder: 'Search about coffee...'
+      },
     }
   },
   universal: {
