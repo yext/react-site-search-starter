@@ -47,7 +47,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const [childrenWithDropdownItemsTransformed, items] = getTransformedChildrenAndItemData(children);
 
   const inputContext = useInputContextInstance(initialValue);
-  const { value, setValue, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue } = inputContext;
+  const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
 
   const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
   const { focusedIndex, updateFocusedItem } = focusContext;
