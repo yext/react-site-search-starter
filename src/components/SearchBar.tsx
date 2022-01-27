@@ -265,7 +265,6 @@ export default function SearchBar({
             autocompletePromiseRef.current = executeAutocomplete()
           }
         }}
-        // onFocusChange={value => answersActions.setQuery(value)}
       >
         <div className={cssClasses?.inputContainer}>
           <div className={cssClasses.logoContainer}>
