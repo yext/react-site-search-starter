@@ -77,7 +77,7 @@ export default function StaticFilters(props: StaticFiltersProps): JSX.Element {
                 option: { id: `${index}`, label: option.label },
                 onClick: selected => handleFilterOptionChange(filter, selected),
                 selected: getOptionSelectStatus(option),
-                customCssClasses: cssClasses
+                cssClasses
               });
             }
             )}

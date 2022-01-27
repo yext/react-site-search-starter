@@ -90,7 +90,7 @@ export default function Facet(props: FacetProps): JSX.Element {
               option: { id: option.displayName, label: `${option.displayName} (${option.count})` },
               onClick: () => onToggle(facet.fieldId, option),
               selected: option.selected,
-              customCssClasses: cssClasses
+              cssClasses
             })
           )}
         </div>

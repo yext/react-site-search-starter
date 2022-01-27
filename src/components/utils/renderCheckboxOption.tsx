@@ -13,7 +13,7 @@ interface CheckBoxOptionProps {
   option: CheckboxOption,
   onClick: (isChecked: boolean) => void,
   selected?: boolean,
-  customCssClasses?: CheckboxOptionCssClasses
+  cssClasses?: CheckboxOptionCssClasses
 }
 
 export const builtInCssClasses: CheckboxOptionCssClasses = {
@@ -23,18 +23,18 @@ export const builtInCssClasses: CheckboxOptionCssClasses = {
 }
 
 export default function renderCheckboxOption({
-  option, selected, onClick, customCssClasses = {}
+  option, selected, onClick, cssClasses = {}
 }: CheckBoxOptionProps) {
   return (
-    <div className={customCssClasses.option} key={option.id}>
+    <div className={cssClasses.option} key={option.id}>
       <input 
         type="checkbox"
         id={option.id}
         checked={selected}
-        className={customCssClasses.optionInput}
+        className={cssClasses.optionInput}
         onChange={evt => onClick(evt.target.checked)}
       />
-      <label className={customCssClasses.optionLabel} htmlFor={option.id}>{option.label}</label>
+      <label className={cssClasses.optionLabel} htmlFor={option.id}>{option.label}</label>
     </div>
   );
 }
