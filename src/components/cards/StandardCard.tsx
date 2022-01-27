@@ -1,12 +1,9 @@
 import { CompositionMethod, useComposedCssClasses } from '../../hooks/useComposedCssClasses';
 import { CardProps } from '../../models/cardComponent';
 
-export interface StandardCardConfig {
-  showOrdinal?: boolean
-}
 
 export interface StandardCardProps extends CardProps {
-  configuration: StandardCardConfig,
+  showOrdinal?: boolean,
   customCssClasses?: StandardCardCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
@@ -57,7 +54,7 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { configuration, result, customCssClasses, cssCompositionMethod } = props;
+  const { showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
   const cta1 = isCtaData(result.rawData.c_primaryCTA) ? result.rawData.c_primaryCTA : undefined;
@@ -90,7 +87,7 @@ export function StandardCard(props: StandardCardProps): JSX.Element {
   return (
     <div className={cssClasses.container}>
       <div className={cssClasses.header}>
-        {configuration.showOrdinal && result.index && renderOrdinal(result.index)}
+        {showOrdinal && result.index && renderOrdinal(result.index)}
         {result.name && renderTitle(result.name)}
       </div>
       {(result.description ?? cta1 ?? cta2) &&
