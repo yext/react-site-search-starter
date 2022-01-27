@@ -72,7 +72,8 @@ export default function StaticFilters(props: StaticFiltersProps): JSX.Element {
               return renderCheckboxOption({
                 option: { id: `${index}`, label: option.label },
                 onClick: selected => handleFilterOptionChange(filter, selected),
-                selected: getOptionSelectStatus(option)
+                selected: getOptionSelectStatus(option),
+                customCssClasses: cssClasses
               });
             }
             )}
