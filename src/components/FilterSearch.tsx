@@ -18,8 +18,7 @@ interface FilterSearchCssClasses extends AutocompleteResultCssClasses {
   sectionLabel?: string,
   focusedOption?: string,
   optionsContainer?: string,
-  inputContainer?: string,
-  divider?: string
+  inputContainer?: string
 }
 
 const builtInCssClasses: FilterSearchCssClasses = {
@@ -92,8 +91,8 @@ export default function FilterSearch({
       <h1 className={cssClasses.label}>{label}</h1>
       <Dropdown
         screenReaderText={getScreenReaderText(sections)}
-        onSelect={(_value, _index, metadata) => {
-          const filter = metadata?.filter as Filter;
+        onSelect={(_value, _index, itemData) => {
+          const filter = itemData?.filter as Filter;
           if (filter) {
             if (selectedFilterOptionRef.current) {
               answersActions.setFilterOption({ ...selectedFilterOptionRef.current, selected: false });
@@ -109,16 +108,15 @@ export default function FilterSearch({
             className={cssClasses.inputElement}
             placeholder='Search here ...'
             onChange={query => executeFilterSearch(query)}
-            submitCriteria={(_value, index) => index >= 0}
+            submitCriteria={index => index >= 0}
           />
         </div>
         <DropdownMenu>
-          {hasResults && <>
-            <div className={cssClasses.divider} />
+          {hasResults &&
             <div className={cssClasses.dropdownContainer}>
               {renderDropdownItems()}
             </div>
-          </>}
+          }
         </DropdownMenu>
       </Dropdown>
     </div>

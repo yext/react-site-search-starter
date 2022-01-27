@@ -13,7 +13,7 @@ export default function DropdownInput(props: {
   onSubmit?: (value: string, index: number, focusedItemData: FocusedItemData | undefined ) => void,
   onFocus?: (value: string) => void,
   onChange?: (value: string) => void,
-  submitCriteria?: (value: string, index: number) => boolean
+  submitCriteria?: (index: number) => boolean
 }) {
   const {
     className,
@@ -46,7 +46,7 @@ export default function DropdownInput(props: {
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && (!submitCriteria || submitCriteria(value, focusedIndex))) {
+    if (e.key === 'Enter' && (!submitCriteria || submitCriteria(focusedIndex))) {
       toggleDropdown(false);
       updateFocusedItem(-1, value);
       inputRef.current?.blur();
