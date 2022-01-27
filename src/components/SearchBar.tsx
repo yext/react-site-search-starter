@@ -13,6 +13,7 @@ import { ReactComponent as YextLogoIcon } from '../icons/yext_logo.svg';
 import { BrowserState } from '../PageRouter';
 import '../sass/Autocomplete.scss';
 import Dropdown from './Dropdown/Dropdown';
+import { useDropdownContext } from './Dropdown/DropdownContext';
 import DropdownInput from './Dropdown/DropdownInput';
 import DropdownItem from './Dropdown/DropdownItem';
 import DropdownMenu from './Dropdown/DropdownMenu';
@@ -154,18 +155,6 @@ export default function SearchBar({
     executeEntityPreviewsQuery(query, universalLimit, restrictVerticals);
   }
 
-  function renderSearchButton() {
-    return (
-      <div className={cssClasses.searchButtonContainer}>
-        <SearchButton
-          className={cssClasses.submitButton}
-          handleClick={executeQuery}
-          isLoading={isLoading}
-        />
-      </div>
-    );
-  }
-
   const handleSubmit = (value: string, _index: number, itemData?: FocusedItemData) => {
     answersActions.setQuery(value || '');
     if (itemData && typeof itemData.verticalLink === 'string') {
@@ -273,7 +262,6 @@ export default function SearchBar({
           if (!isActive) {
             updateEntityPreviews(value);
             answersActions.setQuery(value);
-            console.log('onToggle')
             autocompletePromiseRef.current = executeAutocomplete()
           }
         }}
@@ -284,7 +272,11 @@ export default function SearchBar({
             <YextLogoIcon />
           </div>
           {renderInput()}
-          {renderSearchButton()}
+          <DropdownSearchButton
+            executeQuery={executeQuery}
+            cssClasses={cssClasses}
+            isLoading={isLoading}
+          />
         </div>
         {hasItems &&
           <StyledDropdownMenu cssClasses={cssClasses}>
@@ -334,4 +326,27 @@ function getScreenReaderText(autocompleteOptions = 0, recentSearchesOptions = 0)
     count: autocompleteOptions
   });
   return (recentSearchesText + ' ' + autocompleteText).trim();
+}
+
+function DropdownSearchButton({ executeQuery, isLoading, cssClasses }: {
+  executeQuery: () => void,
+  isLoading: boolean,
+  cssClasses: {
+    searchButtonContainer?: string,
+    submitButton?: string
+  }
+}) {
+  const { toggleDropdown } = useDropdownContext();
+  return (
+    <div className={cssClasses.searchButtonContainer}>
+      <SearchButton
+        className={cssClasses.submitButton}
+        handleClick={() => {
+          executeQuery();
+          toggleDropdown(false);
+        }}
+        isLoading={isLoading}
+      />
+    </div>
+  );
 }
