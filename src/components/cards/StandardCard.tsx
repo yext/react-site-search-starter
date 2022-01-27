@@ -61,7 +61,7 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { configuration, dataMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
+  const { dataMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
   const untypedData = collectData(result.rawData, {
