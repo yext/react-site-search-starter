@@ -31,7 +31,7 @@ const StandardSection: SectionComponent = function (props: StandardSectionConfig
       <VerticalResultsDisplay
         results={results}
         CardComponent={cardComponent}
-        {...(cardConfig && { cardConfig })}
+        {...cardConfig}
       />
     </section>
   );

@@ -1,4 +1,4 @@
-import { CardComponent, CardConfigTypes } from '../models/cardComponent';
+import { CardComponent } from '../models/cardComponent';
 import { useAnswersState, Result, useAnswersActions } from '@yext/answers-headless-react';
 import classNames from 'classnames';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
@@ -14,7 +14,7 @@ const builtInCssClasses: VerticalResultsCssClasses = {
 
 interface VerticalResultsDisplayProps {
   CardComponent: CardComponent,
-  cardConfig?: CardConfigTypes,
+  cardConfig?: Record<string, unknown>,
   isLoading?: boolean,
   results: Result[],
   customCssClasses?: VerticalResultsCssClasses,
@@ -53,13 +53,13 @@ export function VerticalResultsDisplay(props: VerticalResultsDisplayProps): JSX.
  * @param cardConfig - Any card-specific configuration.
  * @param result - The result to render.
  */
-function renderResult(CardComponent: CardComponent, cardConfig: CardConfigTypes, result: Result): JSX.Element {
-  return <CardComponent result={result} configuration={cardConfig} key={result.id || result.index}/>;
+function renderResult(CardComponent: CardComponent, cardConfig: Record<string, unknown>, result: Result): JSX.Element {
+  return <CardComponent result={result} {...cardConfig} key={result.id || result.index}/>;
 }
 
 interface VerticalResultsProps {
   CardComponent: CardComponent,
-  cardConfig?: CardConfigTypes,
+  cardConfig?: Record<string, unknown>,
   displayAllOnNoResults?: boolean,
   customCssClasses?: VerticalResultsCssClasses,
   cssCompositionMethod?: CompositionMethod,

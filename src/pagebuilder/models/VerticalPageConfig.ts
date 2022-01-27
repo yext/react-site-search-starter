@@ -1,3 +1,5 @@
+import { EnumOrLiteral } from "@yext/answers-headless-react";
+import { CardTypes } from "../templates/componentRegistry";
 import { SortingConfig } from "./SortingConfig";
 
 export interface VerticalPageConfigs {
@@ -9,6 +11,6 @@ export interface VerticalPageConfig {
   path?: string,
   sorting?: SortingConfig,
   cardConfig?: {
-    cardName?: "STANDARD" | "PRODUCT" | "ACCORDIAN" | "LOCATION"
+    cardName?: EnumOrLiteral<CardTypes>
   }
 }

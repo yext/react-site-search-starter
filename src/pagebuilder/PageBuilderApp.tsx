@@ -6,7 +6,7 @@ import VerticalStandardPage from './templates/VerticalStandardPage';
 import { AnswersAppContextProvider } from './AnswersAppContext';
 import { UniversalResultsConfig } from '../components/UniversalResults';
 import UniversalStandardPage from './templates/UniversalStandardPage';
-import { CardNameToComponentMap } from './templates/componentMapping';
+import { CardRegistry } from './templates/componentRegistry';
 import { LinkData } from '../components/Navigation';
 import { UniversalPageConfig } from './models/UniversalPageConfig';
 import { VerticalPageConfigs } from './models/VerticalPageConfig';
@@ -52,7 +52,7 @@ function constructPageRoutes(universal: UniversalPageConfig, verticals: Vertical
   const universalResultsConfig : UniversalResultsConfig = {};
   const navLinks = constructNavigationLinks(universal, verticals);
   Object.entries(verticals).forEach(([key, config]) => {
-    const CardComponent = CardNameToComponentMap[config.cardConfig?.cardName || 'STANDARD'];
+    const CardComponent = CardRegistry[config.cardConfig?.cardName || 'Standard'];
     universalResultsConfig[key] = { 
       label: config.label || key,
       cardConfig: { CardComponent }
