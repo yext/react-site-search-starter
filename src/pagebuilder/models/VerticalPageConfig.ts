@@ -5,10 +5,9 @@ export interface VerticalPageConfigs {
   [verticalKey: string]: VerticalPageConfig
 }
 
-export interface VerticalPageConfig {
+export interface VerticalPageConfig extends ComponentConfig {
   label?: string,
   path?: string,
   sorting?: SortOption[],
-  card?: "STANDARD" | "PRODUCT" | "ACCORDIAN" | "LOCATION",
-  components?: ComponentConfig
+  card?: "STANDARD" | "PRODUCT" | "ACCORDIAN" | "LOCATION"
 }

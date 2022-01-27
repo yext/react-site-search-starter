@@ -1,29 +1,74 @@
 import { get } from 'lodash';
 
+export type FieldMappingConstant = {
+  mappingType: 'CONSTANT',
+  value: string
+}
+
+export type FieldMappingAPI = {
+  mappingType: 'FIELD',
+  apiName: string | string[]
+}
+
+export type FieldMapping = FieldMappingConstant | FieldMappingAPI
+
+function processApiField(data: any, fieldMap: FieldMappingAPI): any {
+  if (!Array.isArray(fieldMap.apiName)) {
+    return get(data, fieldMap.apiName);
+  }
+  const apiNameWithData = fieldMap.apiName.find(apiName => get(data, apiName));
+  return apiNameWithData
+    ? get(data, apiNameWithData)
+    :  undefined;
+}
+
 /**
- * Collects raw data based on the provided data mappings
+ * Collects data based on the provided fields mappings
  * 
- * @remarks
- * If rawData is { faq: { question: 'What is Yext?', answer: 'An AI search platform' } }, and the
- * dataMappings are { question: 'faq.question', answer: 'faq.answer' },
- * then the function will return { question: 'What is Yext?, answer: 'An AI search platform' }
+ * @examle
+ * Suppose rawData is:
+ * {
+ *    faq: {
+ *      question: 'Which AI search platform should we leverage?'
+ *    } 
+ * }
+ * And the fieldMappings is:
+ * {
+ *    question: {
+ *      mappingType: 'FIELD',
+ *      apiName: 'faq.question,
+ *    },
+ *    answer: {
+ *      mappingType: 'CONSTANT',
+ *      value: 'Yext'
+ *    }
+ * }
+ * The function will return:
+ * { 
+ *    question: 'Which AI search platform should we leverage?',
+ *    answer: 'Yext'
+ *  }
  * 
  * @param rawData The rawData from an {@link Result}
- * @param dataMappings Indicates where data is located within the rawData field
+ * @param fieldMappings Indicates where data is located within the rawData field
  * @returns An object of fields to data
  */
-export function collectData<DataStructure extends Partial<Record<string, string>> | undefined> (
+export function collectData<FieldMappingObject extends Partial<Record<string, FieldMapping>> | undefined> (
   rawData: Record<string, unknown>,
-  dataMappings: DataStructure,
+  fieldMappings: FieldMappingObject,
 ) : Record<string, any> {
 
-  if (!dataMappings) {
+  if (!fieldMappings) {
     return {}
   }
 
-  return Object.entries(dataMappings as Record<string, any>)
+  return Object.entries(fieldMappings as Record<string, FieldMapping>)
     .reduce((acc: Record<string, any>, [field, mapping]) => {
-      acc[field] = get(rawData, mapping);
+      if (mapping.mappingType === 'CONSTANT') {
+        acc[field] = mapping.value;
+      } else {
+        acc[field] = processApiField(rawData, mapping);
+      }
       return acc;
     }, {});
 }

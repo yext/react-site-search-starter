@@ -1,13 +1,19 @@
-export default interface ComponentConfig {
-  searchBar?: {
-    placeholder?: string
-  },
-  standardCard?: {
-    dataMappings?: {
-      title?: string,
-      description?: string,
-      cta1?: string,
-      cta2?: string
-    }
+import { FieldMapping } from "../../components/utils/collectData";
+
+interface SearchBarConfig {
+  placeholder?: string
+}
+
+interface StandardCardConfig {
+  fieldMappings?: {
+    title?: FieldMapping,
+    description?: FieldMapping,
+    cta1?: FieldMapping,
+    cta2?: FieldMapping
   }
+}
+
+export default interface ComponentConfig {
+  searchBar?: SearchBarConfig,
+  standardCard?: StandardCardConfig
 }

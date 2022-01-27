@@ -1,15 +1,15 @@
 import { CompositionMethod, useComposedCssClasses } from '../../hooks/useComposedCssClasses';
 import { CardProps } from '../../models/cardComponent';
-import { collectData } from '../utils/collectData';
+import { collectData, FieldMapping } from '../utils/collectData';
 
 
 export interface StandardCardProps extends CardProps {
   showOrdinal?: boolean,
-  dataMappings?: {
-    title?: string,
-    description?: string,
-    cta1?: string,
-    cta2?: string
+  fieldMappings?: {
+    title?: FieldMapping,
+    description?: FieldMapping,
+    cta1?: FieldMapping,
+    cta2?: FieldMapping
   },
   customCssClasses?: StandardCardCssClasses,
   cssCompositionMethod?: CompositionMethod
@@ -61,15 +61,31 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { dataMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
+  const { fieldMappings: customfieldMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
+  const defaultfieldMappings: Record<string, FieldMapping> = {
+    title: {
+      mappingType: 'FIELD',
+      apiName: 'name'
+    },
+    description: {
+      mappingType: 'FIELD',
+      apiName: 'description'
+    },
+    cta1: {
+      mappingType: 'FIELD',
+      apiName: 'c_primaryCTA'
+    },
+    cta2: {
+      mappingType: 'FIELD',
+      apiName: 'c_secondaryCTA'
+    },
+  }
+
   const untypedData = collectData(result.rawData, {
-    title: 'name',
-    description: 'description',
-    cta1: 'c_primaryCTA',
-    cta2: 'c_secondaryCTA',
-    ...dataMappings
+    ...defaultfieldMappings,
+    ...customfieldMappings
   });
 
   const data = {

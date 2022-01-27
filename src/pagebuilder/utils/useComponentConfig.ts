@@ -16,11 +16,11 @@ export default function useComponentConfig<ComponentName extends keyof Component
   const verticalKey = useAnswersState(state => state.vertical.verticalKey);
 
   let pageSpecificConfig = verticalKey
-    ? answersAppContext.verticals[verticalKey].components?.[componentName] ?? {}
-    : answersAppContext.universal.components?.[componentName] ?? {}
+    ? answersAppContext.verticals[verticalKey]?.[componentName] ?? {}
+    : answersAppContext.universal?.[componentName] ?? {}
 
   return {
-    ...answersAppContext.common?.components?.[componentName],
+    ...answersAppContext.common?.[componentName],
     ...pageSpecificConfig
   }
 }

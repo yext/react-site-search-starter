@@ -11,11 +11,9 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
     style: {
       brandColor: '',
     },
-    components: {
-      searchBar: {
-        placeholder: 'Search about coffee...'
-      },
-    }
+    searchBar: {
+      placeholder: 'Search about coffee...'
+    },
   },
   universal: {
     label: 'All'
@@ -25,13 +23,14 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
       label: 'FAQS',
       path: '/faqs',
       card: 'STANDARD',
-      components: {
-        searchBar: {
-          placeholder: 'Search FAQs...'
-        },
-        standardCard: {
-          dataMappings: {
-            description: 'answer'
+      searchBar: {
+        placeholder: 'Search FAQs...'
+      },
+      standardCard: {
+        fieldMappings: {
+          description: {
+            mappingType: 'FIELD',
+            apiName: 'answer'
           }
         }
       }
@@ -47,11 +46,15 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
           direction: 'DESC'
         }
       ],
-      components: {
-        standardCard: {
-          dataMappings: {
-            title: 'name',
-            description: 'venueName'
+      standardCard: {
+        fieldMappings: {
+          title: {
+            mappingType: 'FIELD',
+            apiName: 'name'
+          },
+          description: {
+            mappingType: 'FIELD',
+            apiName: ['venueName', 'timezone']
           }
         }
       }
