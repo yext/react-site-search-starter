@@ -1,4 +1,6 @@
+import ComponentConfig from "./ComponentConfig";
 
 export interface UniversalPageConfig {
-  label?: string
+  label?: string,
+  components?: ComponentConfig
 }

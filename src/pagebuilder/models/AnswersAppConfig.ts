@@ -1,7 +1,7 @@
 import { HeadlessProviderConfig } from '../../config/answersHeadlessConfig';
-import { SearchBarConfig } from './SearchBarConfig';
 import { UniversalPageConfig } from './UniversalPageConfig';
 import { VerticalPageConfigs } from './VerticalPageConfig';
+import ComponentConfig from './ComponentConfig';
 
 export default interface AnswersAppConfig {
   providerConfig: HeadlessProviderConfig,
@@ -19,7 +19,7 @@ export default interface AnswersAppConfig {
           color?: string
       }
     },
-    searchBar?: SearchBarConfig
+    components?: ComponentConfig
   },
   universal: UniversalPageConfig,
   verticals: VerticalPageConfigs

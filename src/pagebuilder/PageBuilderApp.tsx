@@ -52,7 +52,7 @@ function constructPageRoutes(universal: UniversalPageConfig, verticals: Vertical
   const universalResultsConfig : UniversalResultsConfig = {};
   const navLinks = constructNavigationLinks(universal, verticals);
   Object.entries(verticals).forEach(([key, config]) => {
-    const CardComponent = CardNameToComponentMap[config.cardConfig?.cardName || 'STANDARD'];
+    const CardComponent = CardNameToComponentMap[config.card || 'STANDARD'];
     universalResultsConfig[key] = { 
       label: config.label || key,
       cardConfig: { CardComponent }

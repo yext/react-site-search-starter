@@ -1,12 +1,16 @@
 import { CompositionMethod, useComposedCssClasses } from '../../hooks/useComposedCssClasses';
 import { CardProps } from '../../models/cardComponent';
+import { collectData } from '../utils/collectData';
 
-export interface StandardCardConfig {
-  showOrdinal?: boolean
-}
 
 export interface StandardCardProps extends CardProps {
-  configuration: StandardCardConfig,
+  showOrdinal?: boolean,
+  dataMappings?: {
+    title?: string,
+    description?: string,
+    cta1?: string,
+    cta2?: string
+  },
   customCssClasses?: StandardCardCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
@@ -57,11 +61,23 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { configuration, result, customCssClasses, cssCompositionMethod } = props;
+  const { configuration, dataMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
-  const cta1 = isCtaData(result.rawData.c_primaryCTA) ? result.rawData.c_primaryCTA : undefined;
-  const cta2 = isCtaData(result.rawData.c_secondaryCTA) ? result.rawData.c_secondaryCTA : undefined;
+  const untypedData = collectData(result.rawData, {
+    title: 'name',
+    description: 'description',
+    cta1: 'c_primaryCTA',
+    cta2: 'c_secondaryCTA',
+    ...dataMappings
+  });
+
+  const data = {
+    title: typeof untypedData.title === 'string' ? untypedData.title : undefined,
+    description: typeof untypedData.description === 'string' ? untypedData.description : undefined,
+    cta1: isCtaData(untypedData.cta1) ? untypedData.cta1 : undefined,
+    cta2: isCtaData(untypedData.cta2) ? untypedData.cta2 : undefined,
+  }
 
   // TODO (cea2aj) We need to handle the various linkType so these CTAs are clickable
   function renderCTAs(cta1?: CtaData, cta2?: CtaData) {
@@ -90,16 +106,16 @@ export function StandardCard(props: StandardCardProps): JSX.Element {
   return (
     <div className={cssClasses.container}>
       <div className={cssClasses.header}>
-        {configuration.showOrdinal && result.index && renderOrdinal(result.index)}
-        {result.name && renderTitle(result.name)}
+        {showOrdinal && result.index && renderOrdinal(result.index)}
+        {data.title && renderTitle(data.title)}
       </div>
-      {(result.description ?? cta1 ?? cta2) &&
+      {(data.description ?? data.cta1 ?? data.cta2) &&
         <div className={cssClasses.body}>
-          {result.description &&
+          {data.description &&
           <div className={cssClasses.descriptionContainer}> 
-            <span>{result.description}</span>
+            <span>{data.description}</span>
           </div>}
-          {renderCTAs(cta1, cta2)}
+          {renderCTAs(data.cta1, data.cta2)}
         </div>
       }
     </div>

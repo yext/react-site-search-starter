@@ -19,31 +19,48 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
     faqs: {
       label: 'FAQS',
       path: '/faqs',
-      cardConfig: {
-        cardName: 'STANDARD'
+      card: 'STANDARD',
+      components: {
+        searchBar: {
+          placeholder: 'Search FAQs...'
+        },
+        standardCard: {
+          dataMappings: {
+            description: 'answer'
+          }
+        }
       }
     },
     events: {
       label: 'Event',
       path: '/events',
-      cardConfig: {
-        cardName: 'STANDARD'
+      card: 'STANDARD',
+      sorting: [
+        {
+          type: 'FIELD',
+          field: 'name',
+          direction: 'DESC'
+        }
+      ],
+      components: {
+        standardCard: {
+          dataMappings: {
+            title: 'name',
+            description: 'venueName'
+          }
+        }
       }
     },
     locations: {
       label: 'Locations',
       path: '/locations',
-      cardConfig: {
-        cardName: 'STANDARD'
-      }
+      card: 'STANDARD'
     },
     jobs: {
       label: 'Jobs',
       path: '/jobs',
-      cardConfig: {
-        cardName: 'STANDARD'
-      }
-    },
+      card: 'STANDARD'
+    }
   }
 }
 export default pageBuilderAnswersAppConfig;

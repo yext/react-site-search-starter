@@ -7,8 +7,10 @@ import { BrowserState } from "../PageRouter";
 /**
  * Sets up the state for a page
  * @param verticalKey - The verticalKey associated with the page, or undefined for universal pages
+ * @param setup - A callback for setting up the page which is called after the state is cleared and
+ *                before a search is ran
  */
-export default function usePageSetupEffect(verticalKey?: string) {
+export default function usePageSetupEffect(verticalKey?: string, setup?: () => void) {
   const answersActions = useAnswersActions();
   const browserLocation = useLocation<BrowserState>();
   useLayoutEffect(() => {
@@ -47,7 +49,7 @@ export default function usePageSetupEffect(verticalKey?: string) {
         executeSearch(answersActions, !!verticalKey);
       }
     };
-
+    setup?.();
     executeQuery();
-  }, [answersActions, verticalKey, browserLocation]);
+  }, [answersActions, verticalKey, browserLocation, setup]);
 }

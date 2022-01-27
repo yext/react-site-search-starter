@@ -6,15 +6,13 @@ export const universalResultsConfig: UniversalResultsConfig = {
     label: 'FAQs',
     viewAllButton: true,
     cardConfig: {
-      CardComponent: StandardCard,
-      showOrdinal: false
+      CardComponent: StandardCard
     }
   },
   events: {
     label: 'Events',
     cardConfig: {
-      CardComponent: StandardCard,
-      showOrdinal: false
+      CardComponent: StandardCard
     }
   },
   jobs: {

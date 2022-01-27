@@ -1,4 +1,5 @@
-import { SortingConfig } from "./SortingConfig";
+import ComponentConfig from "./ComponentConfig";
+import { SortOption } from "./SortOption";
 
 export interface VerticalPageConfigs {
   [verticalKey: string]: VerticalPageConfig
@@ -7,8 +8,7 @@ export interface VerticalPageConfigs {
 export interface VerticalPageConfig {
   label?: string,
   path?: string,
-  sorting?: SortingConfig,
-  cardConfig?: {
-    cardName?: "STANDARD" | "PRODUCT" | "ACCORDIAN" | "LOCATION"
-  }
+  sorting?: SortOption[],
+  card?: "STANDARD" | "PRODUCT" | "ACCORDIAN" | "LOCATION",
+  components?: ComponentConfig
 }
