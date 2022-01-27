@@ -48,7 +48,7 @@ export default function FilterSearch({
   cssCompositionMethod
 }: FilterSearchProps): JSX.Element {
   const answersActions = useAnswersActions();
-  const selectedFilterOptionRef = useRef<Filter | null>(null);
+  const selectedFilterOptionRef = useRef<Filter>();
   const searchParamFields = searchFields.map((searchField) => {
     return { ...searchField, fetchEntities: false }
   });
