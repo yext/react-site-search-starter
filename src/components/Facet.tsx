@@ -2,7 +2,10 @@ import { useAnswersUtilities, DisplayableFacet, DisplayableFacetOption } from '@
 import { useState } from 'react';
 import useCollapse from 'react-collapsed';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
-import renderCheckboxOption, { CheckboxOptionCssClasses } from './utils/renderCheckboxOption';
+import renderCheckboxOption, {
+  CheckboxOptionCssClasses,
+  builtInCssClasses as builtInCheckboxOptionCssClasses
+} from './utils/renderCheckboxOption';
 import { ReactComponent as DropdownIcon } from '../icons/chevron.svg';
 
 export type onFacetChangeFn = (fieldId: string, option: DisplayableFacetOption) => void
@@ -31,6 +34,7 @@ export interface FacetCssClasses extends CheckboxOptionCssClasses {
 }
 
 const builtInCssClasses: FacetCssClasses = {
+  ...builtInCheckboxOptionCssClasses,
   label: 'text-gray-900 text-sm font-medium text-left',
   labelIcon: 'w-3',
   labelContainer: 'w-full flex justify-between items-center mb-4',
