@@ -18,7 +18,7 @@ export interface FacetConfig {
 interface FacetProps extends FacetConfig {
   facet: DisplayableFacet,
   onToggle: onFacetChangeFn,
-  customCssclasses?: FacetCssClasses,
+  customCssClasses?: FacetCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
 
@@ -46,10 +46,10 @@ export default function Facet(props: FacetProps): JSX.Element {
     defaultExpanded,
     label,
     placeholderText='Search here...',
-    customCssclasses,
+    customCssClasses,
     cssCompositionMethod 
   } = props;
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssclasses, cssCompositionMethod);
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const answersUtilities = useAnswersUtilities();
   const hasSelectedFacet = !!facet.options.find(o => o.selected);
   const [ filterValue, setFilterValue ] = useState('');
