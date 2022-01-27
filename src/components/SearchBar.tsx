@@ -184,13 +184,16 @@ export default function SearchBar({
         placeholder={placeholder}
         onSubmit={handleSubmit}
         onFocus={(value = '') => {
+          console.log(value);
           answersActions.setQuery(value);
           updateEntityPreviews(value);
+          console.log('onFocus')
           autocompletePromiseRef.current = executeAutocomplete()
         }}
         onChange={(value = '') => {
           answersActions.setQuery(value);
           updateEntityPreviews(value);
+          console.log('onChange')
           autocompletePromiseRef.current = executeAutocomplete();
         }}
       />
@@ -273,9 +276,11 @@ export default function SearchBar({
           if (!isActive) {
             updateEntityPreviews(value);
             answersActions.setQuery(value);
+            console.log('onToggle')
             autocompletePromiseRef.current = executeAutocomplete()
           }
         }}
+        // onFocusChange={value => answersActions.setQuery(value)}
       >
         <div className={cssClasses?.inputContainer}>
           <div className={cssClasses.logoContainer}>
