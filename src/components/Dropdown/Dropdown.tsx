@@ -24,7 +24,7 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderText: string,
   screenReaderInstructions?: string,
   initialValue?: string,
-  controlledQuery?: string,
+  parentQuery?: string,
   onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive: boolean, value: string) => void,
   className?: string,
@@ -39,7 +39,7 @@ export default function Dropdown(props: PropsWithChildren<{
     onToggle,
     className,
     activeClassName,
-    controlledQuery,
+    parentQuery,
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -56,10 +56,10 @@ export default function Dropdown(props: PropsWithChildren<{
   const { toggleDropdown, isActive } = dropdownContext;
 
   useLayoutEffect(() => {
-    if (controlledQuery !== undefined && controlledQuery !== lastTypedOrSubmittedValue) {
-      updateFocusedItem(-1, controlledQuery);
+    if (parentQuery !== undefined && parentQuery !== lastTypedOrSubmittedValue) {
+      updateFocusedItem(-1, parentQuery);
     }
-  }, [controlledQuery, lastTypedOrSubmittedValue, updateFocusedItem])
+  }, [parentQuery, lastTypedOrSubmittedValue, updateFocusedItem])
 
   useRootClose(containerRef, () => {
     toggleDropdown(false);
