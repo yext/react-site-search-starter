@@ -24,7 +24,7 @@ export default function Dropdown(props: PropsWithChildren<{
   screenReaderText: string,
   screenReaderInstructions?: string,
   initialValue?: string,
-  controlledQuery?: string,
+  parentQuery?: string,
   onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive: boolean, value: string) => void,
   className?: string,
@@ -39,7 +39,7 @@ export default function Dropdown(props: PropsWithChildren<{
     onToggle,
     className,
     activeClassName,
-    controlledQuery
+    parentQuery,
   } = props;
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,7 +47,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const [childrenWithDropdownItemsTransformed, items] = getTransformedChildrenAndItemData(children);
 
   const inputContext = useInputContextInstance(initialValue);
-  const { value, setValue, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue } = inputContext;
+  const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
 
   const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
   const { focusedIndex, updateFocusedItem } = focusContext;
@@ -56,11 +56,10 @@ export default function Dropdown(props: PropsWithChildren<{
   const { toggleDropdown, isActive } = dropdownContext;
 
   useLayoutEffect(() => {
-    if (controlledQuery !== undefined && controlledQuery !== value) {
-      setValue(controlledQuery);
-      setLastTypedOrSubmittedValue(controlledQuery);
+    if (parentQuery !== undefined && parentQuery !== lastTypedOrSubmittedValue) {
+      updateFocusedItem(-1, parentQuery);
     }
-  }, [controlledQuery, setLastTypedOrSubmittedValue, setValue, value])
+  }, [parentQuery, lastTypedOrSubmittedValue, updateFocusedItem])
 
   useRootClose(containerRef, () => {
     toggleDropdown(false);
@@ -123,20 +122,23 @@ function useFocusContextInstance(
   function updateFocusedItem(updatedFocusedIndex: number, value?: string) {
     const numItems = items.length;
     if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems || numItems === 0) {
+      const updatedValue = value ?? lastTypedOrSubmittedValue;
       setFocusedIndex(-1);
-      setFocusedValue(value ?? lastTypedOrSubmittedValue);
-      setValue(value ?? lastTypedOrSubmittedValue);
+      setFocusedValue(updatedValue);
+      setValue(updatedValue);
       setFocusedItemData(undefined);
     } else if (updatedFocusedIndex < -1) {
       const loopedAroundIndex = (numItems + updatedFocusedIndex + 1) % numItems;
+      const updatedValue = value ?? items[loopedAroundIndex].value;
       setFocusedIndex(loopedAroundIndex);
-      setFocusedValue(value ?? items[loopedAroundIndex].value);
-      setValue(value ?? items[loopedAroundIndex].value);
+      setFocusedValue(updatedValue);
+      setValue(updatedValue);
       setFocusedItemData(items[loopedAroundIndex].itemData);
     } else {
+      const updatedValue = value ?? items[updatedFocusedIndex].value;
       setFocusedIndex(updatedFocusedIndex);
-      setFocusedValue(value ?? items[updatedFocusedIndex].value);
-      setValue(value ?? items[updatedFocusedIndex].value);
+      setFocusedValue(updatedValue);
+      setValue(updatedValue);
       setFocusedItemData(items[updatedFocusedIndex].itemData);
     }
   }

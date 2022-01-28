@@ -1,17 +1,24 @@
-import { useRef, useState } from "react";
-import { useAnswersActions, FilterSearchResponse, SearchParameterField, Filter } from '@yext/answers-headless-react';
-import InputDropdown, { InputDropdownCssClasses } from "./InputDropdown";
-import DropdownSection, { DropdownSectionCssClasses, Option } from "./DropdownSection";
-import { processTranslation } from "./utils/processTranslation";
-import { useSynchronizedRequest } from "../hooks/useSynchronizedRequest";
-import renderAutocompleteResult, { AutocompleteResultCssClasses } from "./utils/renderAutocompleteResult";
-import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
+import { AutocompleteResult, Filter, FilterSearchResponse, SearchParameterField, useAnswersActions } from '@yext/answers-headless-react';
+import { useRef } from 'react';
+import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
+import { useSynchronizedRequest } from '../hooks/useSynchronizedRequest';
+import Dropdown from './Dropdown/Dropdown';
+import DropdownInput from './Dropdown/DropdownInput';
+import DropdownItem from './Dropdown/DropdownItem';
+import DropdownMenu from './Dropdown/DropdownMenu';
+import { processTranslation } from './utils/processTranslation';
+import renderAutocompleteResult, { AutocompleteResultCssClasses } from './utils/renderAutocompleteResult';
 
-const SCREENREADER_INSTRUCTIONS = 'When autocomplete results are available, use up and down arrows to review and enter to select.'
-
-interface FilterSearchCssClasses extends InputDropdownCssClasses, DropdownSectionCssClasses, AutocompleteResultCssClasses {
+interface FilterSearchCssClasses extends AutocompleteResultCssClasses {
   container?: string,
-  label?: string
+  label?: string,
+  dropdownContainer?: string,
+  inputElement?: string,
+  sectionContainer?: string,
+  sectionLabel?: string,
+  focusedOption?: string,
+  optionsContainer?: string,
+  inputContainer?: string
 }
 
 const builtInCssClasses: FilterSearchCssClasses = {
@@ -23,7 +30,7 @@ const builtInCssClasses: FilterSearchCssClasses = {
   sectionLabel: 'text-sm text-gray-700 font-semibold pb-2',
   focusedOption: 'bg-gray-100',
   option: 'text-sm text-gray-700 pb-1 cursor-pointer',
-}
+};
 
 export interface FilterSearchProps {
   label: string,
@@ -33,7 +40,7 @@ export interface FilterSearchProps {
   cssCompositionMethod?: CompositionMethod
 }
 
-export default function FilterSearch ({
+export default function FilterSearch({
   label,
   sectioned,
   searchFields,
@@ -41,8 +48,7 @@ export default function FilterSearch ({
   cssCompositionMethod
 }: FilterSearchProps): JSX.Element {
   const answersActions = useAnswersActions();
-  const [input, setInput] = useState('');
-  const selectedFilterOptionRef = useRef<Filter|null>(null);
+  const selectedFilterOptionRef = useRef<Filter>();
   const searchParamFields = searchFields.map((searchField) => {
     return { ...searchField, fetchEntities: false }
   });
@@ -51,35 +57,76 @@ export default function FilterSearch ({
   const [filterSearchResponse, executeFilterSearch] = useSynchronizedRequest<string, FilterSearchResponse>(inputValue =>
     answersActions.executeFilterSearch(inputValue ?? '', sectioned, searchParamFields)
   );
+  const sections = filterSearchResponse?.sections.filter(section => section.results.length > 0) ?? [];
+  const hasResults = sections.flatMap(s => s.results).length > 0;
 
-  let sections: { results: Option[], label?: string }[] = [];
-  if (filterSearchResponse) {
-    sections = filterSearchResponse.sections.map(section => {
-      return {
-        results: section.results.map(result => {
-          return {
-            value: result.value,
-            onSelect: () => {
-              setInput(result.value);
-              if (result?.filter) {
-                if (selectedFilterOptionRef.current) {
-                  answersActions.setFilterOption({ ...selectedFilterOptionRef.current, selected: false });
-                }
-                selectedFilterOptionRef.current = result.filter;
-                answersActions.setFilterOption({ ...result.filter, selected: true });
-                answersActions.executeVerticalQuery();
-              }
-            },
-            display: renderAutocompleteResult(result, cssClasses)
-          };
-        }),
-        label: section.label
-      };
+  function renderDropdownItems() {
+    return sections.map((section, sectionIndex) => {
+      return (
+        <div className={cssClasses.sectionContainer} key={sectionIndex}>
+          {section.label &&
+            <div className={cssClasses.sectionLabel}>
+              {section.label}
+            </div>
+          }
+          <div className={cssClasses.optionsContainer}>
+            {section.results.map((result, index) => (
+              <DropdownItem
+                key={index}
+                focusedClassName={cssClasses.focusedOption}
+                value={result.value}
+                itemData={{ filter: result.filter }}
+              >
+                {renderAutocompleteResult(result, cssClasses)}
+              </DropdownItem>
+            ))}
+          </div>
+        </div>
+      )
     });
   }
 
-  sections = sections.filter(section => section.results.length > 0);
+  return (
+    <div className={cssClasses.container}>
+      <h1 className={cssClasses.label}>{label}</h1>
+      <Dropdown
+        screenReaderText={getScreenReaderText(sections)}
+        onSelect={(_value, _index, itemData) => {
+          const filter = itemData?.filter as Filter;
+          if (filter) {
+            if (selectedFilterOptionRef.current) {
+              answersActions.setFilterOption({ ...selectedFilterOptionRef.current, selected: false });
+            }
+            selectedFilterOptionRef.current = filter;
+            answersActions.setFilterOption({ ...filter, selected: true });
+            answersActions.executeVerticalQuery();
+          }
+        }}
+      >
+        <div className={cssClasses.inputContainer}>
+          <DropdownInput
+            className={cssClasses.inputElement}
+            placeholder='Search here ...'
+            onChange={query => executeFilterSearch(query)}
+            submitCriteria={index => index >= 0}
+          />
+        </div>
+        <DropdownMenu>
+          {hasResults &&
+            <div className={cssClasses.dropdownContainer}>
+              {renderDropdownItems()}
+            </div>
+          }
+        </DropdownMenu>
+      </Dropdown>
+    </div>
+  );
+}
 
+function getScreenReaderText(sections: {
+  results: AutocompleteResult[],
+  label?: string
+}[]) {
   let screenReaderText = processTranslation({
     phrase: `0 autocomplete option found.`,
     pluralForm: `0 autocomplete options found.`,
@@ -87,7 +134,7 @@ export default function FilterSearch ({
   });
   if (sections.length > 0) {
     const screenReaderPhrases = sections.map(section => {
-      const optionInfo = section.label 
+      const optionInfo = section.label
         ? `${section.results.length} ${section.label}`
         : `${section.results.length}`;
       return processTranslation({
@@ -98,40 +145,5 @@ export default function FilterSearch ({
     });
     screenReaderText = screenReaderPhrases.join(' ');
   }
-
-  return (
-    <div className={cssClasses.container}>
-      <h1 className={cssClasses.label}>{label}</h1>
-      <InputDropdown
-        inputValue={input}
-        placeholder='Search here ...'
-        screenReaderInstructions={SCREENREADER_INSTRUCTIONS}
-        screenReaderText={screenReaderText}
-        onlyAllowDropdownOptionSubmissions={true}
-        onInputChange={newInput => {
-          setInput(newInput);
-        }}
-        onInputFocus={(input) => {
-          executeFilterSearch(input);
-        }}
-        cssClasses={cssClasses}
-      >
-        {sections.map((section, sectionIndex) => {
-          const sectionId = section.label ? `${section.label}-${sectionIndex}` : `${sectionIndex}`;
-          return (
-            <DropdownSection
-              key={sectionId}
-              options={section.results}
-              optionIdPrefix={sectionId}
-              onFocusChange={value => {
-                setInput(value);
-              }}
-              label={section.label}
-              cssClasses={cssClasses}
-            />
-          );
-        })}
-      </InputDropdown>
-    </div>
-  );
+  return screenReaderText;
 }
