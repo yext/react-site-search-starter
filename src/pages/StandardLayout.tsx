@@ -3,7 +3,7 @@ import { SearchTypeEnum, useAnswersState } from '@yext/answers-headless-react';
 import { universalResultsConfig } from '../config/universalResultsConfig';
 import { LayoutComponent } from '../PageRouter';
 import SearchBar from '../components/SearchBar';
-import SampleVisualSearchBar from '../components/VisualAutocomplete/SampleVisualSearchBar';
+import SampleVisualSearchBar from '../components/SampleVisualSearchBar';
 
 const navLinks = [
   {
