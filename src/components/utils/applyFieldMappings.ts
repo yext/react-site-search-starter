@@ -53,17 +53,20 @@ function applyFieldDataPath(data: any, fieldMap: FieldDataPath): any {
  * @param fieldMappings Indicates where data is located within the rawData field
  * @returns An object of fields to data
  */
-export function applyFieldMappings<FieldMappingObject extends Partial<Record<string, FieldData>> | undefined> (
+export function applyFieldMappings (
   rawData: Record<string, unknown>,
-  fieldMappings: FieldMappingObject,
+  fieldMappings: Partial<Record<string, FieldData>>,
 ) : Record<string, any> {
 
   if (!fieldMappings) {
     return {}
   }
 
-  return Object.entries(fieldMappings as Record<string, FieldData>)
+  return Object.entries(fieldMappings)
     .reduce((acc: Record<string, any>, [field, mapping]) => {
+      if (!mapping) {
+        return acc;
+      }
       if (mapping.mappingType === 'CONSTANT') {
         acc[field] = mapping.value;
       } else {

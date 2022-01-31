@@ -24,7 +24,9 @@ export default function VerticalStandardPage(props: VerticalStandardPageProps) {
   const answersActions = useAnswersActions();
 
   usePageSetupEffect(verticalKey, () => {
-    const sortOptions = answersAppContext.verticals?.[verticalKey ?? ''].sorting;
+    const sortOptions = verticalKey
+      ? answersAppContext.verticals?.[verticalKey]?.sorting
+      : [];
     answersActions.setSortBys(sortOptions?.map(createSortBy) ?? []);
   });
 
