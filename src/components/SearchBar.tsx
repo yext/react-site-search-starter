@@ -252,8 +252,7 @@ export default function SearchBar({
   function renderClearButton() {
     return (
       <>
-        <div
-          role='button'
+        <button
           aria-label='Clear the search bar'
           className={cssClasses.clearButton}
           onClick={() => {
@@ -264,7 +263,7 @@ export default function SearchBar({
           }}
         >
           <CloseIcon />
-        </div>
+        </button>
         <VerticalDividerIcon className={cssClasses.verticalDivider}/>
       </>
     );
