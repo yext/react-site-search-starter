@@ -42,13 +42,13 @@ const builtInCssClasses: SearchBarCssClasses = {
   searchButtonContainer: ' w-8 h-full mx-2 flex flex-col justify-center items-center',
   submitButton: 'h-7 w-7',
   focusedOption: 'bg-gray-100',
-
+  clearButton: 'mr-3.5',
+  barIcon: 'mr-0.5',
   recentSearchesOptionContainer: 'flex items-center h-6.5 px-3.5 py-1.5 cursor-pointer hover:bg-gray-100',
   recentSearchesIcon: 'w-5 mr-1 text-gray-300',
   recentSearchesOption: 'pl-3',
   recentSearchesNonHighlighted: 'font-normal', // Swap this to semibold once we apply highlighting to recent searches
   verticalLink: 'ml-12 pl-1 text-gray-500 italic',
-
   ...AutocompleteResultBuiltInCssClasses
 };
 
@@ -73,7 +73,9 @@ export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
   recentSearchesIcon?: string,
   recentSearchesOption?: string,
   recentSearchesNonHighlighted?: string,
-  verticalLink?: string
+  verticalLink?: string,
+  clearButton?: string,
+  barIcon?: string
 }
 
 type RenderEntityPreviews = (
@@ -251,7 +253,7 @@ export default function SearchBar({
     return (
       <>
         <button
-          className='mr-3.5'
+          className={cssClasses.clearButton}
           onClick={() => {
             updateEntityPreviews('');
             answersActions.setQuery('');
@@ -261,7 +263,7 @@ export default function SearchBar({
         >
           <CloseIcon />
         </button>
-        <BarIcon className='mr-0.5'/>
+        <BarIcon className={cssClasses.barIcon}/>
       </>
     );
   }
