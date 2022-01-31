@@ -5,7 +5,7 @@ import { Result } from '@yext/answers-headless-react';
  */
 export interface CardConfig {
   CardComponent: CardComponent,
-  [otherProps: string]: unknown
+  [additionalProps: string]: unknown
 }
 
 /**
@@ -13,7 +13,7 @@ export interface CardConfig {
  */
 export interface CardProps {
   result: Result,
-  [otherProps: string]: unknown
+  [additionalProps: string]: unknown
 }
 
 /**

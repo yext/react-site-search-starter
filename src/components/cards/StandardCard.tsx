@@ -1,9 +1,19 @@
 import { CompositionMethod, useComposedCssClasses } from '../../hooks/useComposedCssClasses';
 import { CardProps } from '../../models/cardComponent';
-import { processFields, FieldMapping } from '../utils/processFields'
-import { isString } from '../utils/validateData';
+import { applyFieldMappings, FieldData } from '../utils/applyFieldMappings'
+import { isString, validateData } from '../utils/validateData';
 
-const defaultFieldMappings: Record<string, FieldMapping> = {
+export interface StandardCardConfig {
+  showOrdinal?: boolean,
+  fieldMappings?: {
+    title?: FieldData,
+    description?: FieldData,
+    cta1?: FieldData,
+    cta2?: FieldData
+  }
+}
+
+const defaultFieldMappings: Record<string, FieldData> = {
   title: {
     mappingType: 'FIELD',
     apiName: 'name'
@@ -23,13 +33,7 @@ const defaultFieldMappings: Record<string, FieldMapping> = {
 }
 
 export interface StandardCardProps extends CardProps {
-  showOrdinal?: boolean,
-  fieldMappings?: {
-    title?: FieldMapping,
-    description?: FieldMapping,
-    cta1?: FieldMapping,
-    cta2?: FieldMapping
-  },
+  config?: StandardCardConfig,
   customCssClasses?: StandardCardCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
@@ -80,13 +84,15 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { fieldMappings: customFieldMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
+  const { config = {}, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
-  const data = processFields(result.rawData, {
+  const transformedFieldData = applyFieldMappings(result.rawData, {
     ...defaultFieldMappings,
-    ...customFieldMappings
-  }, {
+    ...config.fieldMappings
+  });
+
+  const data = validateData(transformedFieldData, {
     title: isString,
     description: isString,
     cta1: isCtaData,
@@ -120,7 +126,7 @@ export function StandardCard(props: StandardCardProps): JSX.Element {
   return (
     <div className={cssClasses.container}>
       <div className={cssClasses.header}>
-        {showOrdinal && result.index && renderOrdinal(result.index)}
+        {config.showOrdinal && result.index && renderOrdinal(result.index)}
         {data.title && renderTitle(data.title)}
       </div>
       {(data.description ?? data.cta1 ?? data.cta2) &&

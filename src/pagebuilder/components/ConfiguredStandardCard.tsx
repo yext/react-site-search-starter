@@ -5,7 +5,9 @@ export default function ConfiguredStandardCard(props: StandardCardProps) {
   const cardConfig = useComponentConfig('standardCard');
   const updatedProps = {
     ...props,
-    ...cardConfig
+    config: {
+      ...cardConfig
+    }
   }
 
   return <StandardCard {...updatedProps} />

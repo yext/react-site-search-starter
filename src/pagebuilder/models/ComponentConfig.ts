@@ -1,4 +1,4 @@
-import { FieldMapping } from "../../components/utils/collectData";
+import { FieldData } from "../../components/utils/applyFieldMappings";
 
 interface SearchBarConfig {
   placeholder?: string
@@ -6,10 +6,10 @@ interface SearchBarConfig {
 
 interface StandardCardConfig {
   fieldMappings?: {
-    title?: FieldMapping,
-    description?: FieldMapping,
-    cta1?: FieldMapping,
-    cta2?: FieldMapping
+    title?: FieldData,
+    description?: FieldData,
+    cta1?: FieldData,
+    cta2?: FieldData
   }
 }
 

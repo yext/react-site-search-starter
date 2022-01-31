@@ -1,18 +1,18 @@
 import get from 'lodash/get';
 
-export type FieldMappingConstant = {
+export type FieldDataConstant = {
   mappingType: 'CONSTANT',
   value: string
 }
 
-export type FieldMappingAPI = {
+export type FieldDataPath = {
   mappingType: 'FIELD',
   apiName: string | string[]
 }
 
-export type FieldMapping = FieldMappingConstant | FieldMappingAPI
+export type FieldData = FieldDataConstant | FieldDataPath
 
-function processApiField(data: any, fieldMap: FieldMappingAPI): any {
+function applyFieldDataPath(data: any, fieldMap: FieldDataPath): any {
   if (!Array.isArray(fieldMap.apiName)) {
     return get(data, fieldMap.apiName);
   }
@@ -53,7 +53,7 @@ function processApiField(data: any, fieldMap: FieldMappingAPI): any {
  * @param fieldMappings Indicates where data is located within the rawData field
  * @returns An object of fields to data
  */
-export function collectData<FieldMappingObject extends Partial<Record<string, FieldMapping>> | undefined> (
+export function applyFieldMappings<FieldMappingObject extends Partial<Record<string, FieldData>> | undefined> (
   rawData: Record<string, unknown>,
   fieldMappings: FieldMappingObject,
 ) : Record<string, any> {
@@ -62,12 +62,12 @@ export function collectData<FieldMappingObject extends Partial<Record<string, Fi
     return {}
   }
 
-  return Object.entries(fieldMappings as Record<string, FieldMapping>)
+  return Object.entries(fieldMappings as Record<string, FieldData>)
     .reduce((acc: Record<string, any>, [field, mapping]) => {
       if (mapping.mappingType === 'CONSTANT') {
         acc[field] = mapping.value;
       } else {
-        acc[field] = processApiField(rawData, mapping);
+        acc[field] = applyFieldDataPath(rawData, mapping);
       }
       return acc;
     }, {});
