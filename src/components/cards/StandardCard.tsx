@@ -3,14 +3,18 @@ import { CardProps } from '../../models/cardComponent';
 import { applyFieldMappings, FieldData } from '../utils/applyFieldMappings'
 import { isString, validateData } from '../utils/validateData';
 
-export interface StandardCardConfig {
+
+
+export interface StandardCardProps extends CardProps {
   showOrdinal?: boolean,
   fieldMappings?: {
     title?: FieldData,
     description?: FieldData,
     cta1?: FieldData,
     cta2?: FieldData
-  }
+  },
+  customCssClasses?: StandardCardCssClasses,
+  cssCompositionMethod?: CompositionMethod
 }
 
 const defaultFieldMappings: Record<string, FieldData> = {
@@ -30,12 +34,6 @@ const defaultFieldMappings: Record<string, FieldData> = {
     mappingType: 'FIELD',
     apiName: 'c_secondaryCTA'
   },
-}
-
-export interface StandardCardProps extends CardProps {
-  config?: StandardCardConfig,
-  customCssClasses?: StandardCardCssClasses,
-  cssCompositionMethod?: CompositionMethod
 }
 
 export interface StandardCardCssClasses {
