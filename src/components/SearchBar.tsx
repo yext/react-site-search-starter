@@ -42,7 +42,7 @@ const builtInCssClasses: SearchBarCssClasses = {
   searchButtonContainer: ' w-8 h-full mx-2 flex flex-col justify-center items-center',
   submitButton: 'h-7 w-7',
   focusedOption: 'bg-gray-100',
-  clearButton: 'mr-3.5',
+  clearButton: 'mr-3.5 cursor-pointer',
   barIcon: 'mr-0.5',
   recentSearchesOptionContainer: 'flex items-center h-6.5 px-3.5 py-1.5 cursor-pointer hover:bg-gray-100',
   recentSearchesIcon: 'w-5 mr-1 text-gray-300',
@@ -252,7 +252,8 @@ export default function SearchBar({
   function renderClearButton() {
     return (
       <>
-        <button
+        <div
+          aria-label='Clear the search bar'
           className={cssClasses.clearButton}
           onClick={() => {
             updateEntityPreviews('');
@@ -262,7 +263,7 @@ export default function SearchBar({
           }}
         >
           <CloseIcon />
-        </button>
+        </div>
         <BarIcon className={cssClasses.barIcon}/>
       </>
     );
