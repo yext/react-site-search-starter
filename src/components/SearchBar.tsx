@@ -7,7 +7,7 @@ import { useEntityPreviews } from '../hooks/useEntityPreviews';
 import useRecentSearches from '../hooks/useRecentSearches';
 import useSearchWithNearMeHandling from '../hooks/useSearchWithNearMeHandling';
 import { useSynchronizedRequest } from '../hooks/useSynchronizedRequest';
-import { ReactComponent as BarIcon } from '../icons/bar.svg';
+import { ReactComponent as VerticalDividerIcon } from '../icons/bar.svg';
 import { ReactComponent as RecentSearchIcon } from '../icons/history.svg';
 import { ReactComponent as CloseIcon } from '../icons/light_x.svg';
 import { ReactComponent as MagnifyingGlassIcon } from '../icons/magnifying_glass.svg';
@@ -43,7 +43,7 @@ const builtInCssClasses: SearchBarCssClasses = {
   submitButton: 'h-7 w-7',
   focusedOption: 'bg-gray-100',
   clearButton: 'mr-3.5 cursor-pointer',
-  barIcon: 'mr-0.5',
+  verticalDivider: 'mr-0.5',
   recentSearchesOptionContainer: 'flex items-center h-6.5 px-3.5 py-1.5 cursor-pointer hover:bg-gray-100',
   recentSearchesIcon: 'w-5 mr-1 text-gray-300',
   recentSearchesOption: 'pl-3',
@@ -75,7 +75,7 @@ export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
   recentSearchesNonHighlighted?: string,
   verticalLink?: string,
   clearButton?: string,
-  barIcon?: string
+  verticalDivider?: string
 }
 
 type RenderEntityPreviews = (
@@ -253,6 +253,7 @@ export default function SearchBar({
     return (
       <>
         <div
+          role='button'
           aria-label='Clear the search bar'
           className={cssClasses.clearButton}
           onClick={() => {
@@ -264,7 +265,7 @@ export default function SearchBar({
         >
           <CloseIcon />
         </div>
-        <BarIcon className={cssClasses.barIcon}/>
+        <VerticalDividerIcon className={cssClasses.verticalDivider}/>
       </>
     );
   }
