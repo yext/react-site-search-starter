@@ -82,12 +82,12 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { config = {}, result, customCssClasses, cssCompositionMethod } = props;
+  const { fieldMappings: customFieldMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
   const transformedFieldData = applyFieldMappings(result.rawData, {
     ...defaultFieldMappings,
-    ...config.fieldMappings
+    ...customFieldMappings
   });
 
   const data = validateData(transformedFieldData, {
@@ -124,7 +124,7 @@ export function StandardCard(props: StandardCardProps): JSX.Element {
   return (
     <div className={cssClasses.container}>
       <div className={cssClasses.header}>
-        {config.showOrdinal && result.index && renderOrdinal(result.index)}
+        {showOrdinal && result.index && renderOrdinal(result.index)}
         {data.title && renderTitle(data.title)}
       </div>
       {(data.description ?? data.cta1 ?? data.cta2) &&
