@@ -1,11 +1,39 @@
 import { CompositionMethod, useComposedCssClasses } from '../../hooks/useComposedCssClasses';
 import { CardProps } from '../../models/cardComponent';
+import { applyFieldMappings, FieldData } from '../utils/applyFieldMappings'
+import { isString, validateData } from '../utils/validateData';
+
 
 
 export interface StandardCardProps extends CardProps {
   showOrdinal?: boolean,
+  fieldMappings?: {
+    title?: FieldData,
+    description?: FieldData,
+    cta1?: FieldData,
+    cta2?: FieldData
+  },
   customCssClasses?: StandardCardCssClasses,
   cssCompositionMethod?: CompositionMethod
+}
+
+const defaultFieldMappings: Record<string, FieldData> = {
+  title: {
+    mappingType: 'FIELD',
+    apiName: 'name'
+  },
+  description: {
+    mappingType: 'FIELD',
+    apiName: 'description'
+  },
+  cta1: {
+    mappingType: 'FIELD',
+    apiName: 'c_primaryCTA'
+  },
+  cta2: {
+    mappingType: 'FIELD',
+    apiName: 'c_secondaryCTA'
+  },
 }
 
 export interface StandardCardCssClasses {
@@ -54,11 +82,20 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
+  const { fieldMappings: customFieldMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
-  const cta1 = isCtaData(result.rawData.c_primaryCTA) ? result.rawData.c_primaryCTA : undefined;
-  const cta2 = isCtaData(result.rawData.c_secondaryCTA) ? result.rawData.c_secondaryCTA : undefined;
+  const transformedFieldData = applyFieldMappings(result.rawData, {
+    ...defaultFieldMappings,
+    ...customFieldMappings
+  });
+
+  const data = validateData(transformedFieldData, {
+    title: isString,
+    description: isString,
+    cta1: isCtaData,
+    cta2: isCtaData
+  });
 
   // TODO (cea2aj) We need to handle the various linkType so these CTAs are clickable
   function renderCTAs(cta1?: CtaData, cta2?: CtaData) {
@@ -88,15 +125,15 @@ export function StandardCard(props: StandardCardProps): JSX.Element {
     <div className={cssClasses.container}>
       <div className={cssClasses.header}>
         {showOrdinal && result.index && renderOrdinal(result.index)}
-        {result.name && renderTitle(result.name)}
+        {data.title && renderTitle(data.title)}
       </div>
-      {(result.description ?? cta1 ?? cta2) &&
+      {(data.description ?? data.cta1 ?? data.cta2) &&
         <div className={cssClasses.body}>
-          {result.description &&
+          {data.description &&
           <div className={cssClasses.descriptionContainer}> 
-            <span>{result.description}</span>
+            <span>{data.description}</span>
           </div>}
-          {renderCTAs(cta1, cta2)}
+          {renderCTAs(data.cta1, data.cta2)}
         </div>
       }
     </div>

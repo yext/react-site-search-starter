@@ -54,7 +54,7 @@ interface Props {
  * Renders a SearchBar that is hooked up with an InputDropdown component
  */
 export default function SearchBar({
-  placeholder,
+  placeholder = 'Search...',
   geolocationOptions,
   customCssClasses,
   cssCompositionMethod

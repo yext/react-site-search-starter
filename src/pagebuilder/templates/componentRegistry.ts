@@ -1,5 +1,5 @@
-import { StandardCard } from "../../components/cards/StandardCard";
 import { CardComponent } from "../../models/cardComponent";
+import ConfiguredStandardCard from "../components/ConfiguredStandardCard";
 
 export enum CardTypes {
   Standard = 'Standard'
@@ -9,5 +9,5 @@ export enum CardTypes {
  * Map card name to the corresponding React component.
  */
 export const CardRegistry: Record<string, CardComponent> = {
-  [CardTypes.Standard]: StandardCard
+  [CardTypes.Standard]: ConfiguredStandardCard
 }

@@ -10,7 +10,10 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
   common: {
     style: {
       brandColor: '',
-    }
+    },
+    searchBar: {
+      placeholder: 'Search about coffee...'
+    },
   },
   universal: {
     label: 'All'
@@ -19,31 +22,53 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
     faqs: {
       label: 'FAQS',
       path: '/faqs',
-      cardConfig: {
-        cardName: 'Standard'
+      card: 'Standard',
+      searchBar: {
+        placeholder: 'Search FAQs...'
+      },
+      standardCard: {
+        fieldMappings: {
+          description: {
+            mappingType: 'FIELD',
+            apiName: 'answer'
+          }
+        }
       }
     },
     events: {
       label: 'Event',
       path: '/events',
-      cardConfig: {
-        cardName: 'Standard'
+      card: 'Standard',
+      sorting: [
+        {
+          type: 'FIELD',
+          field: 'name',
+          direction: 'DESC'
+        }
+      ],
+      standardCard: {
+        fieldMappings: {
+          title: {
+            mappingType: 'FIELD',
+            apiName: 'name'
+          },
+          description: {
+            mappingType: 'FIELD',
+            apiName: ['venueName', 'timezone']
+          }
+        }
       }
     },
     locations: {
       label: 'Locations',
       path: '/locations',
-      cardConfig: {
-        cardName: 'Standard'
-      }
+      card: 'Standard'
     },
     jobs: {
       label: 'Jobs',
       path: '/jobs',
-      cardConfig: {
-        cardName: 'Standard'
-      }
-    },
+      card: 'Standard'
+    }
   }
 }
 export default pageBuilderAnswersAppConfig;
