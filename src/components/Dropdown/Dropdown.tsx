@@ -27,6 +27,7 @@ export default function Dropdown(props: PropsWithChildren<{
   parentQuery?: string,
   onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive: boolean, value: string) => void,
+  onFocusItem?: (query: string | undefined) => void,
   className?: string,
   activeClassName?: string
 }>) {
@@ -37,6 +38,7 @@ export default function Dropdown(props: PropsWithChildren<{
     initialValue,
     onSelect,
     onToggle,
+    onFocusItem,
     className,
     activeClassName,
     parentQuery,
@@ -47,9 +49,9 @@ export default function Dropdown(props: PropsWithChildren<{
   const [childrenWithDropdownItemsTransformed, items] = getTransformedChildrenAndItemData(children);
 
   const inputContext = useInputContextInstance(initialValue);
-  const { value, setValue, lastTypedOrSubmittedValue } = inputContext;
+  const { value, setValue, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue } = inputContext;
 
-  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
+  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue, onFocusItem);
   const { focusedIndex, updateFocusedItem } = focusContext;
 
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
@@ -57,9 +59,10 @@ export default function Dropdown(props: PropsWithChildren<{
 
   useLayoutEffect(() => {
     if (parentQuery !== undefined && parentQuery !== lastTypedOrSubmittedValue) {
+      setLastTypedOrSubmittedValue(parentQuery);
       updateFocusedItem(-1, parentQuery);
     }
-  }, [parentQuery, lastTypedOrSubmittedValue, updateFocusedItem])
+  }, [parentQuery, lastTypedOrSubmittedValue, updateFocusedItem, setLastTypedOrSubmittedValue])
 
   useRootClose(containerRef, () => {
     toggleDropdown(false);
@@ -113,7 +116,8 @@ function useInputContextInstance(initialValue = ''): InputContextType {
 function useFocusContextInstance(
   items: DropdownItemData[],
   lastTypedOrSubmittedValue: string,
-  setValue: (newValue: string) => void
+  setValue: (newValue: string) => void,
+  onFocusItem?: (value: string | undefined) => void,
 ): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -121,26 +125,24 @@ function useFocusContextInstance(
 
   function updateFocusedItem(updatedFocusedIndex: number, value?: string) {
     const numItems = items.length;
+    let updatedValue;
     if (updatedFocusedIndex === -1 || updatedFocusedIndex >= numItems || numItems === 0) {
-      const updatedValue = value ?? lastTypedOrSubmittedValue;
+      updatedValue = value ?? lastTypedOrSubmittedValue;
       setFocusedIndex(-1);
-      setFocusedValue(updatedValue);
-      setValue(updatedValue);
       setFocusedItemData(undefined);
     } else if (updatedFocusedIndex < -1) {
       const loopedAroundIndex = (numItems + updatedFocusedIndex + 1) % numItems;
-      const updatedValue = value ?? items[loopedAroundIndex].value;
+      updatedValue = value ?? items[loopedAroundIndex].value;
       setFocusedIndex(loopedAroundIndex);
-      setFocusedValue(updatedValue);
-      setValue(updatedValue);
       setFocusedItemData(items[loopedAroundIndex].itemData);
     } else {
-      const updatedValue = value ?? items[updatedFocusedIndex].value;
+      updatedValue = value ?? items[updatedFocusedIndex].value;
       setFocusedIndex(updatedFocusedIndex);
-      setFocusedValue(updatedValue);
-      setValue(updatedValue);
       setFocusedItemData(items[updatedFocusedIndex].itemData);
     }
+    setFocusedValue(updatedValue);
+    setValue(updatedValue);
+    onFocusItem?.(updatedValue);
   }
 
   return {
