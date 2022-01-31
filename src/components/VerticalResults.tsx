@@ -54,7 +54,7 @@ export function VerticalResultsDisplay(props: VerticalResultsDisplayProps): JSX.
  * @param result - The result to render.
  */
 function renderResult(CardComponent: CardComponent, cardConfig: Record<string, unknown>, result: Result): JSX.Element {
-  return <CardComponent result={result} configuration={cardConfig} key={result.id || result.index}/>;
+  return <CardComponent result={result} {...cardConfig} key={result.id || result.index}/>;
 }
 
 interface VerticalResultsProps {

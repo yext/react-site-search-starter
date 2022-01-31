@@ -1,9 +1,13 @@
 import { CardComponent } from "../../models/cardComponent";
 import ConfiguredStandardCard from "../components/ConfiguredStandardCard";
 
+export enum CardTypes {
+  Standard = 'Standard'
+}
+
 /**
  * Map card name to the corresponding React component.
  */
-export const CardNameToComponentMap: Record<string, CardComponent> = {
-  'STANDARD': ConfiguredStandardCard
+export const CardRegistry: Record<string, CardComponent> = {
+  [CardTypes.Standard]: ConfiguredStandardCard
 }

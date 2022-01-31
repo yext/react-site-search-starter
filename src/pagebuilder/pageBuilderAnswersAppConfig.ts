@@ -22,7 +22,7 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
     faqs: {
       label: 'FAQS',
       path: '/faqs',
-      card: 'STANDARD',
+      card: 'Standard',
       searchBar: {
         placeholder: 'Search FAQs...'
       },
@@ -38,7 +38,7 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
     events: {
       label: 'Event',
       path: '/events',
-      card: 'STANDARD',
+      card: 'Standard',
       sorting: [
         {
           type: 'FIELD',
@@ -62,12 +62,12 @@ const pageBuilderAnswersAppConfig: AnswersAppConfig = {
     locations: {
       label: 'Locations',
       path: '/locations',
-      card: 'STANDARD'
+      card: 'Standard'
     },
     jobs: {
       label: 'Jobs',
       path: '/jobs',
-      card: 'STANDARD'
+      card: 'Standard'
     }
   }
 }

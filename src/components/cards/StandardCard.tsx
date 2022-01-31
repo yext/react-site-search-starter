@@ -1,7 +1,26 @@
 import { CompositionMethod, useComposedCssClasses } from '../../hooks/useComposedCssClasses';
 import { CardProps } from '../../models/cardComponent';
-import { collectData, FieldMapping } from '../utils/collectData';
+import { processFields, FieldMapping } from '../utils/processFields'
+import { isString } from '../utils/validateData';
 
+const defaultFieldMappings: Record<string, FieldMapping> = {
+  title: {
+    mappingType: 'FIELD',
+    apiName: 'name'
+  },
+  description: {
+    mappingType: 'FIELD',
+    apiName: 'description'
+  },
+  cta1: {
+    mappingType: 'FIELD',
+    apiName: 'c_primaryCTA'
+  },
+  cta2: {
+    mappingType: 'FIELD',
+    apiName: 'c_secondaryCTA'
+  },
+}
 
 export interface StandardCardProps extends CardProps {
   showOrdinal?: boolean,
@@ -61,39 +80,18 @@ function isCtaData(data: unknown): data is CtaData {
  * @param props - An object containing the result itself.
  */
 export function StandardCard(props: StandardCardProps): JSX.Element {
-  const { fieldMappings: customfieldMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
+  const { fieldMappings: customFieldMappings, showOrdinal, result, customCssClasses, cssCompositionMethod } = props;
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
-  const defaultfieldMappings: Record<string, FieldMapping> = {
-    title: {
-      mappingType: 'FIELD',
-      apiName: 'name'
-    },
-    description: {
-      mappingType: 'FIELD',
-      apiName: 'description'
-    },
-    cta1: {
-      mappingType: 'FIELD',
-      apiName: 'c_primaryCTA'
-    },
-    cta2: {
-      mappingType: 'FIELD',
-      apiName: 'c_secondaryCTA'
-    },
-  }
-
-  const untypedData = collectData(result.rawData, {
-    ...defaultfieldMappings,
-    ...customfieldMappings
+  const data = processFields(result.rawData, {
+    ...defaultFieldMappings,
+    ...customFieldMappings
+  }, {
+    title: isString,
+    description: isString,
+    cta1: isCtaData,
+    cta2: isCtaData
   });
-
-  const data = {
-    title: typeof untypedData.title === 'string' ? untypedData.title : undefined,
-    description: typeof untypedData.description === 'string' ? untypedData.description : undefined,
-    cta1: isCtaData(untypedData.cta1) ? untypedData.cta1 : undefined,
-    cta2: isCtaData(untypedData.cta2) ? untypedData.cta2 : undefined,
-  }
 
   // TODO (cea2aj) We need to handle the various linkType so these CTAs are clickable
   function renderCTAs(cta1?: CtaData, cta2?: CtaData) {
