@@ -7,9 +7,10 @@ import { useEntityPreviews } from '../hooks/useEntityPreviews';
 import useRecentSearches from '../hooks/useRecentSearches';
 import useSearchWithNearMeHandling from '../hooks/useSearchWithNearMeHandling';
 import { useSynchronizedRequest } from '../hooks/useSynchronizedRequest';
+import { ReactComponent as BarIcon } from '../icons/bar.svg';
 import { ReactComponent as RecentSearchIcon } from '../icons/history.svg';
-import { ReactComponent as MagnifyingGlassIcon } from '../icons/magnifying_glass.svg';
 import { ReactComponent as CloseIcon } from '../icons/light_x.svg';
+import { ReactComponent as MagnifyingGlassIcon } from '../icons/magnifying_glass.svg';
 import { ReactComponent as YextLogoIcon } from '../icons/yext_logo.svg';
 import { BrowserState } from '../PageRouter';
 import '../sass/Autocomplete.scss';
@@ -248,17 +249,20 @@ export default function SearchBar({
 
   function renderClearButton() {
     return (
-      <button
-        className='w-7 mx-2.5 my-2 self-end'
-        onClick={() => {
-          updateEntityPreviews('');
-          answersActions.setQuery('');
-          executeQuery();
-          autocompletePromiseRef.current = executeAutocomplete();
-        }}
-      >
-        <CloseIcon />
-      </button>
+      <>
+        <button
+          className='mr-3.5'
+          onClick={() => {
+            updateEntityPreviews('');
+            answersActions.setQuery('');
+            executeQuery();
+            autocompletePromiseRef.current = executeAutocomplete();
+          }}
+        >
+          <CloseIcon />
+        </button>
+        <BarIcon className='mr-0.5'/>
+      </>
     );
   }
 
