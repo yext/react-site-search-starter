@@ -27,7 +27,6 @@ export default function Dropdown(props: PropsWithChildren<{
   parentQuery?: string,
   onSelect?: (value: string, index: number, focusedItemData: Record<string, unknown> | undefined) => void,
   onToggle?: (isActive: boolean, value: string) => void,
-  onFocusItem?: (query: string | undefined) => void,
   className?: string,
   activeClassName?: string
 }>) {
@@ -38,7 +37,6 @@ export default function Dropdown(props: PropsWithChildren<{
     initialValue,
     onSelect,
     onToggle,
-    onFocusItem,
     className,
     activeClassName,
     parentQuery,
@@ -51,7 +49,7 @@ export default function Dropdown(props: PropsWithChildren<{
   const inputContext = useInputContextInstance(initialValue);
   const { value, setValue, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue } = inputContext;
 
-  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue, onFocusItem);
+  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
   const { focusedIndex, updateFocusedItem } = focusContext;
 
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
@@ -116,8 +114,7 @@ function useInputContextInstance(initialValue = ''): InputContextType {
 function useFocusContextInstance(
   items: DropdownItemData[],
   lastTypedOrSubmittedValue: string,
-  setValue: (newValue: string) => void,
-  onFocusItem?: (value: string | undefined) => void,
+  setValue: (newValue: string) => void
 ): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -142,7 +139,6 @@ function useFocusContextInstance(
     }
     setFocusedValue(updatedValue);
     setValue(updatedValue);
-    onFocusItem?.(updatedValue);
   }
 
   return {
