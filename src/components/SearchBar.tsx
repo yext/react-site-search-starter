@@ -284,6 +284,13 @@ export default function SearchBar({
         activeClassName={activeClassName}
         screenReaderText={screenReaderText}
         parentQuery={query}
+        onToggle={(isActive, value = '') => {
+          if (!isActive) {
+            updateEntityPreviews(value);
+            answersActions.setQuery(value);
+            autocompletePromiseRef.current = executeAutocomplete();
+          }
+        }}
       >
         <div className={cssClasses?.inputContainer}>
           <div className={cssClasses.logoContainer}>
