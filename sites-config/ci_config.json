@@ -20,5 +20,5 @@
       "serve_setup_cmd": "echo serve setup cmd",
       "serve_cmd": "export PORT=8080 && npm run start"
   },
-  "watch_cmd": "echo npm run watch"
+  "watch_cmd": "echo watch cmd"
 }
