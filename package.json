@@ -79,8 +79,8 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "scripts": {
-    "start": "node scripts/start.js & node src/pagebuilder/scripts/generateAnswersVariables.js",
-    "build": "node scripts/build.js",
+    "start": "node scripts/start.js & node src/pagebuilder/scripts/generateAnswersVariables.js -watch",
+    "build": "node src/pagebuilder/scripts/generateAnswersVariables.js & node scripts/build.js",
     "test": "node scripts/test.js --watchAll=false",
     "wcag": "./tests/wcag/index.js",
     "eslint": "eslint",
