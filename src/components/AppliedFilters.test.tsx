@@ -5,9 +5,9 @@ import {
   Matcher,
   AnswersHeadless
 } from '@yext/answers-headless-react';
-import AppliedFilters, { AppliedFiltersCssClasses } from '../src/components/AppliedFilters';
+import AppliedFilters, { AppliedFiltersCssClasses } from './AppliedFilters';
 import { useCallback } from 'react';
-import { verticalQueryResponseWithNlpFilters } from './setup/responses/vertical-query';
+import { verticalQueryResponseWithNlpFilters } from '../../tests/setup/responses/vertical-query';
 
 const cssClasses: Required<AppliedFiltersCssClasses> = {
   filterLabel: 'filterLabel',

@@ -102,9 +102,6 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.d.ts"
     ],
-    "testMatch": [
-      "<rootDir>/tests/*.tsx"
-    ],
     "transformIgnorePatterns": [
       "node_modules/(?!@yext/answers-headless-react)",
       "^.+\\.module\\.(css|sass|scss)$"
