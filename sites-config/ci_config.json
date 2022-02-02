@@ -10,7 +10,7 @@
   "baseImageTag": "node-17",
   "dependencies": {
       "installDepsCmd": "npm install",
-      "requiredFiles": ["package.json", "package-lock.json"]
+      "requiredFiles": []
   },
   "buildArtifacts": {
       "buildSetupCmd": "npm ci",
