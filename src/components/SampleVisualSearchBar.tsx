@@ -5,6 +5,7 @@ import { universalResultsConfig } from '../config/universalResultsConfig';
 import { ReactComponent as EventIcon } from '../icons/event.svg';
 import { ReactComponent as FAQIcon } from '../icons/faq.svg';
 import renderHighlightedValue from './utils/renderHighlightedValue';
+import DropdownItem from './Dropdown/DropdownItem';
 
 /**
  * This is an example of how to use the VisualSearchBar component.
@@ -15,13 +16,24 @@ export default function SampleVisualSearchBar() {
       placeholder='Search...'
       entityPreviewsDebouncingTime={100}
       verticalKeyToLabel={verticalKey => universalResultsConfig[verticalKey]?.label ?? verticalKey}
-      renderEntityPreviews={isLoading => (
+      renderEntityPreviews={(isLoading, _results, onSubmit) => (
         <div className={isLoading ? 'opacity-50' : ''}>
           <EntityPreviews verticalKey='events'>
             {results => (<>
               {results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 mx-3.5 mt-1'>
-                {results.map((r, index) => <EventCard result={r} key={`${index}-${r.name}`} />)}
+                {results.map((r, index) =>
+                  <DropdownItem
+                    key={index}
+                    className='hover:bg-gray-100 cursor-pointer'
+                    focusedClassName='bg-gray-100'
+                    value={r.name || ''}
+                    itemData={{ verticalLink: `/events?query=${r.name}` }}
+                    onClick={onSubmit}
+                  >
+                    <EventCard result={r} key={`${index}-${r.name}`} />
+                  </DropdownItem>
+                )}
               </div>
             </>
             )}
@@ -29,7 +41,18 @@ export default function SampleVisualSearchBar() {
           <EntityPreviews verticalKey='faqs' limit={2}>
             {results => (
               <div className='flex flex-col'>
-                {results.map((r, index) => <FaqCard result={r} key={`${index}-${r.name}`} />)}
+                {results.map((r, index) =>
+                  <DropdownItem
+                    key={index}
+                    className='hover:bg-gray-100 cursor-pointer'
+                    focusedClassName='bg-gray-100'
+                    value={r.name || ''}
+                    itemData={{ verticalLink: `/faqs?query=${r.name}` }}
+                    onClick={onSubmit}
+                  >
+                    <FaqCard result={r} key={`${index}-${r.name}`} />
+                  </DropdownItem>
+                )}
               </div>
             )}
           </EntityPreviews>
