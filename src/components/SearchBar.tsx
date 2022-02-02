@@ -271,8 +271,9 @@ export default function SearchBar({
     );
   }
 
-  const hasItems = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length));
-  const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length)
+  const entityPreviewsCount = calculateEntityPreviewsCount(verticalResultsArray);
+  const hasItems = !!(autocompleteResponse?.results.length || (!isVertical && (filteredRecentSearches?.length || entityPreviewsCount)));
+  const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length, entityPreviewsCount);
   const activeClassName = classNames(cssClasses.inputDropdownContainer, {
     [cssClasses.inputDropdownContainer___active ?? '']: hasItems
   });
@@ -333,7 +334,15 @@ function StyledDropdownMenu({ cssClasses, children }: PropsWithChildren<{
   )
 }
 
-function getScreenReaderText(autocompleteOptions = 0, recentSearchesOptions = 0) {
+function calculateEntityPreviewsCount(verticalResultsArray: VerticalResults[]) {
+  let numEntityPreviews = 0;
+  verticalResultsArray.forEach((verticalResults) => {
+    numEntityPreviews += verticalResults.results.length;
+  })
+  return numEntityPreviews;
+}
+
+function getScreenReaderText(autocompleteOptions = 0, recentSearchesOptions = 0, entityPreviewsCount = 0): string {
   const recentSearchesText = recentSearchesOptions > 0
     ? processTranslation({
       phrase: `${recentSearchesOptions} recent search found.`,
@@ -341,12 +350,22 @@ function getScreenReaderText(autocompleteOptions = 0, recentSearchesOptions = 0)
       count: recentSearchesOptions
     })
     : '';
-  const autocompleteText = processTranslation({
-    phrase: `${autocompleteOptions} autocomplete suggestion found.`,
-    pluralForm: `${autocompleteOptions} autocomplete suggestions found.`,
-    count: autocompleteOptions
-  });
-  return (recentSearchesText + ' ' + autocompleteText).trim();
+  const entityPreviewsText = entityPreviewsCount > 0
+    ? ' ' + processTranslation({
+      phrase: `${entityPreviewsCount} entity preview found.`,
+      pluralForm: `${entityPreviewsCount} entity previews found.`,
+      count: entityPreviewsCount
+    })
+    : '';
+  const autocompleteText = (autocompleteOptions > 0 || !(recentSearchesText || entityPreviewsText))
+    ? ' ' + processTranslation({
+      phrase: `${autocompleteOptions} autocomplete suggestion found.`,
+      pluralForm: `${autocompleteOptions} autocomplete suggestions found.`,
+      count: autocompleteOptions
+    })
+    : '';
+  
+  return (recentSearchesText + autocompleteText + entityPreviewsText).trim();
 }
 
 function DropdownSearchButton({ executeQuery, isLoading, cssClasses }: {
