@@ -1,22 +1,22 @@
 {
-  "artifactStructure": {
-      "assets": [
-          {
-              "root": "build"
-          }
-      ],
-      "hbsTemplates": []
-  },
-  "baseImageTag": "node-17",
-  "dependencies": {
-      "installDepsCmd": "npm install",
-      "requiredFiles": []
-  },
-  "buildArtifacts": {
-      "buildSetupCmd": "npm ci",
-      "buildCmd": "npm run build"
-  },
-  "livePreview": {
-      "serveCmd": "PORT=8080 npm run start"
-  }
+    "artifactStructure": {
+        "assets": [
+            {
+                "root": "build"
+            }
+        ],
+        "hbsTemplates": []
+    },
+    "baseImageTag": "node-17",
+    "dependencies": {
+        "installDepsCmd": "npm install",
+        "requiredFiles": []
+    },
+    "buildArtifacts": {
+        "buildSetupCmd": "npm ci",
+        "buildCmd": "npm run build"
+    },
+    "livePreview": {
+        "serveCmd": "PORT=8080 npm run start"
+    }
 }
