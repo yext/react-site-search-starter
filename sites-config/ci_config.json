@@ -7,18 +7,18 @@
       ],
       "hbsTemplates": []
   },
-  "base_image_tag": "node-17",
+  "baseImageTag": "node-17",
   "dependencies": {
       "installDepsCmd": "npm install",
       "requiredFiles": []
   },
   "buildArtifacts": {
-      "build_setup_cmd": "npm install",
-      "build_cmd": "npm run build"
+      "buildSetupCmd": "npm install",
+      "buildCmd": "npm run build"
   },
   "livePreview": {
-      "serve_setup_cmd": "echo serve setup cmd",
-      "serve_cmd": "export PORT=8080 && npm run start"
+      "serveSetupCmd": "echo serve setup cmd",
+      "serveCmd": "export PORT=8080 && npm run start"
   },
-  "watch_cmd": "echo watch cmd"
+  "watchCmd": "echo watch cmd"
 }
