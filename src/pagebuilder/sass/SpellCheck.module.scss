@@ -1,0 +1,29 @@
+@import './answers-variables-default';
+@import './answers-variables';
+
+.SpellCheck {
+  &__container {
+    font-size: calc(1.125 * var(--yxt-base-font-size));
+    line-height: calc(1.75 * var(--yxt-base-font-size));
+    padding-bottom: 0.75rem;
+  }
+
+  &__helpText {
+    color: #71717A;
+  }
+
+  &___loading {
+    opacity: 0.5;
+  }
+
+  &__link {
+    color: var(--yxt-color-brand-primary);
+    font-weight: 700;
+    cursor: pointer;
+    
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
+  }
+}

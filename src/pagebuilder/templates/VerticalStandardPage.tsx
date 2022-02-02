@@ -2,8 +2,8 @@ import ResultsCount from '../../components/ResultsCount';
 import AppliedFilters from '../../components/AppliedFilters';
 import DirectAnswer from '../../components/DirectAnswer';
 import VerticalResults from '../../components/VerticalResults';
-import SpellCheck from '../../components/SpellCheck';
-import LocationBias from '../../components/LocationBias';
+import ConfiguredSpellCheck from '../components/ConfiguredSpellCheck';
+import ConfiguredLocationBias from '../components/ConfiguredLocationBias';
 import Navigation, { LinkData } from '../../components/Navigation';
 import usePageSetupEffect from '../../hooks/usePageSetupEffect';
 import { CardComponent } from '../../models/cardComponent';
@@ -35,7 +35,7 @@ export default function VerticalStandardPage(props: VerticalStandardPageProps) {
       <ConfiguredSearchBar />
       <Navigation links={navLinks || []} />
       <DirectAnswer />
-      <SpellCheck />
+      <ConfiguredSpellCheck />
       <ResultsCount />
       <AppliedFilters
         hiddenFields={['builtin.entityType']}
@@ -43,7 +43,7 @@ export default function VerticalStandardPage(props: VerticalStandardPageProps) {
       <VerticalResults
         CardComponent={cardComponent}
       />
-      <LocationBias />
+      <ConfiguredLocationBias />
     </div>
   )
 }

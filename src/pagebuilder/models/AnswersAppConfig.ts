@@ -5,15 +5,10 @@ import ComponentConfig from './ComponentConfig';
 
 interface CommonConfig extends ComponentConfig {
   style: {
-    brandColor: string,
-    font?: string,
-    header?: {
-        headline?: string,
-        subheader?: string,
-        textColor?: string
-    },
+    brandColor?: string,
+    baseFontSize?: string,
     ctas?: {
-        borderRadius?: number,
+        borderRadius?: string,
         color?: string
     }
   }
