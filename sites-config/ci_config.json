@@ -9,7 +9,7 @@
   },
   "baseImageTag": "node-17",
   "dependencies": {
-      "installDepsCmd": "npm install",
+      "installDepsCmd": "echo npm install",
       "requiredFiles": []
   },
   "buildArtifacts": {
