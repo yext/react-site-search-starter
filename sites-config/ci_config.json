@@ -9,11 +9,11 @@
   },
   "baseImageTag": "node-17",
   "dependencies": {
-      "installDepsCmd": "npm ci",
+      "installDepsCmd": "npm install",
       "requiredFiles": []
   },
   "buildArtifacts": {
-      "buildSetupCmd": "npm ci",
+      "buildSetupCmd": "npm install",
       "buildCmd": "npm run build"
   },
   "livePreview": {
