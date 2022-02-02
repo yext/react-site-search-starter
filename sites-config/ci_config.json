@@ -17,8 +17,6 @@
       "buildCmd": "npm run build"
   },
   "livePreview": {
-      "serveSetupCmd": "echo serve setup cmd",
       "serveCmd": "export PORT=8080 && npm run start"
-  },
-  "watchCmd": "echo watch cmd"
+  }
 }
