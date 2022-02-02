@@ -17,6 +17,6 @@
       "buildCmd": "npm run build"
   },
   "livePreview": {
-      "serveCmd": "PORT=8080 && npm run start"
+      "serveCmd": "PORT=8080 npm run start"
   }
 }
