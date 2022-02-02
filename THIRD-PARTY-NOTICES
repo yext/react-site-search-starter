@@ -3400,7 +3400,7 @@ The following NPM packages may be included in this product:
  - find-cache-dir@3.3.2
  - find-up@5.0.0
  - get-stream@6.0.1
- - globals@13.12.0
+ - globals@13.12.1
  - gzip-size@6.0.0
  - import-fresh@3.3.0
  - is-docker@2.2.1
