@@ -7,13 +7,13 @@
       ],
       "hbsTemplates": []
   },
-  "base_image_tag": "node-14",
+  "base_image_tag": "node-17",
   "dependencies": {
       "installDepsCmd": "npm install",
       "requiredFiles": []
   },
   "buildArtifacts": {
-      "build_setup_cmd": "npm install",
+      "build_setup_cmd": "echo build setup cmd",
       "build_cmd": "npm run build"
   },
   "livePreview": {
