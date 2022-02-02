@@ -144,13 +144,24 @@ export default function SearchBar({
     executeQueryWithNearMeHandling();
   }
 
+  function updateDropdownOptionsAndQuery(value: string) {
+    answersActions.setQuery(value);
+    if (renderEntityPreviews) {
+      const restrictVerticals = calculateRestrictVerticals(entityPreviews);
+      const universalLimit = calculateUniversalLimit(entityPreviews);
+      executeEntityPreviewsQuery(value, universalLimit, restrictVerticals);
+    }
+    autocompletePromiseRef.current = executeAutocomplete();
+  }
+
   const handleSubmit = (value: string, _index: number, itemData?: FocusedItemData) => {
-    answersActions.setQuery(value || '');
     if (itemData && typeof itemData.verticalLink === 'string') {
+      answersActions.setQuery(value);
       browserHistory.push(itemData.verticalLink, {
         querySource: QuerySource.Autocomplete
       });
     } else {
+      updateDropdownOptionsAndQuery(value);
       executeQuery();
     }
   }
@@ -158,14 +169,6 @@ export default function SearchBar({
   const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(entityPreviewsDebouncingTime);
   const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
   const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit);
-  function updateEntityPreviews(query: string) {
-    if (!renderEntityPreviews) {
-      return;
-    }
-    const restrictVerticals = calculateRestrictVerticals(entityPreviews);
-    const universalLimit = calculateUniversalLimit(entityPreviews);
-    executeEntityPreviewsQuery(query, universalLimit, restrictVerticals);
-  }
 
   function renderInput() {
     return (
@@ -173,16 +176,8 @@ export default function SearchBar({
         className={cssClasses.inputElement}
         placeholder={placeholder}
         onSubmit={handleSubmit}
-        onFocus={(value = '') => {
-          answersActions.setQuery(value);
-          updateEntityPreviews(value);
-          autocompletePromiseRef.current = executeAutocomplete()
-        }}
-        onChange={(value = '') => {
-          answersActions.setQuery(value);
-          updateEntityPreviews(value);
-          autocompletePromiseRef.current = executeAutocomplete();
-        }}
+        onFocus={updateDropdownOptionsAndQuery}
+        onChange={updateDropdownOptionsAndQuery}
       />
     );
   }
@@ -258,10 +253,8 @@ export default function SearchBar({
           aria-label='Clear the search bar'
           className={cssClasses.clearButton}
           onClick={() => {
-            updateEntityPreviews('');
-            answersActions.setQuery('');
+            updateDropdownOptionsAndQuery('');
             executeQuery();
-            autocompletePromiseRef.current = executeAutocomplete();
           }}
         >
           <CloseIcon />
@@ -284,13 +277,6 @@ export default function SearchBar({
         activeClassName={activeClassName}
         screenReaderText={screenReaderText}
         parentQuery={query}
-        onToggle={(isActive, value = '') => {
-          if (!isActive) {
-            updateEntityPreviews(value);
-            answersActions.setQuery(value);
-            autocompletePromiseRef.current = executeAutocomplete();
-          }
-        }}
       >
         <div className={cssClasses?.inputContainer}>
           <div className={cssClasses.logoContainer}>
