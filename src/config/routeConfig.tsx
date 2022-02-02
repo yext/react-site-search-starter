@@ -8,7 +8,7 @@ import LocationsPage from '../pages/LocationsPage';
 export const routeConfig = [
   {
     path: '/',
-    exact: true,
+    end: true,
     page: <UniversalSearchPage universalResultsConfig={universalResultsConfig} />
   },
   {
