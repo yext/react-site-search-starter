@@ -76,11 +76,8 @@ function constructPageRoutes(universal: UniversalPageConfig, verticals: Vertical
 }
 
 function createStyleVariables(config: StyleConfig): React.CSSProperties {
-  const styles: React.CSSProperties = {};
-  styleVariables.forEach(style => {
+  return styleVariables.reduce((allStyles: React.CSSProperties, style) => {
     const value = get(config, style.path) || style.default;
-    const thisStyle = { [style.name]: value } as React.CSSProperties;
-    Object.assign(styles, thisStyle);
-  });
-  return styles;
+    return { ...allStyles, [style.name]: value };
+  }, {});
 }

@@ -1,6 +1,6 @@
 interface StyleVariable {
   name: string,
-  path: string | string[],
+  path: string,
   default: string
 }
 
@@ -17,12 +17,12 @@ export const styleVariables: StyleVariable[]  = [
   },
   {
     name: '--yxt-cta-border-radius',
-    path: ['ctas', 'borderRadius'],
+    path: 'ctas.borderRadius',
     default: '8px'
   },
   {
     name: '--yxt-cta-color',
-    path: ['ctas', 'color'],
+    path: 'ctas.color',
     default: '#2563EB'
   }
 ];
