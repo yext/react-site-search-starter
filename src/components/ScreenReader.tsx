@@ -3,7 +3,7 @@ import '../sass/ScreenReader.scss';
 interface Props {
   instructionsId: string,
   instructions: string,
-  announcementKey: number | string,
+  announcementKey: number,
   announcementText: string
 }
 
