@@ -12,7 +12,7 @@ interface SpellCheckCssClasses {
 
 const builtInCssClasses: SpellCheckCssClasses = {
   container: 'text-lg pb-3',
-  helpText: 'text-gray-600',
+  helpText: 'text-gray-500',
   spellCheck___loading: 'opacity-50',
   link: 'text-blue-600 font-bold cursor-pointer hover:underline focus:underline'
 }

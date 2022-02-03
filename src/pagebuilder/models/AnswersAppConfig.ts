@@ -2,21 +2,10 @@ import { HeadlessProviderConfig } from '../../config/answersHeadlessConfig';
 import { UniversalPageConfig } from './UniversalPageConfig';
 import { VerticalPageConfigs } from './VerticalPageConfig';
 import ComponentConfig from './ComponentConfig';
+import { StyleConfig } from './StyleConfig';
 
 interface CommonConfig extends ComponentConfig {
-  style: {
-    brandColor: string,
-    font?: string,
-    header?: {
-        headline?: string,
-        subheader?: string,
-        textColor?: string
-    },
-    ctas?: {
-        borderRadius?: number,
-        color?: string
-    }
-  }
+  style: StyleConfig
 }
 
 export default interface AnswersAppConfig {

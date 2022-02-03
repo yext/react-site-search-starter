@@ -1,6 +1,6 @@
 import UniversalResults, { UniversalResultsConfig } from '../../components/UniversalResults';
 import DirectAnswer from '../../components/DirectAnswer';
-import SpellCheck from '../../components/SpellCheck';
+import ConfiguredSpellCheck from '../components/ConfiguredSpellCheck';
 import usePageSetupEffect from '../../hooks/usePageSetupEffect';
 import Navigation, { LinkData } from '../../components/Navigation';
 import { useAnswersAppContext } from '../AnswersAppContext';
@@ -31,7 +31,7 @@ export default function UniversalStandardPage(props: UniversalStandardPageProps)
         entityPreviewSearcher={entityPreviewSearcher}
       />
       <Navigation links={navLinks || []} />
-      <SpellCheck />
+      <ConfiguredSpellCheck />
       <DirectAnswer />
       <UniversalResults
         verticalConfigs={universalResultsConfig}

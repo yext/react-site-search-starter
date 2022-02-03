@@ -10,6 +10,10 @@ import { CardRegistry } from './templates/componentRegistry';
 import { LinkData } from '../components/Navigation';
 import { UniversalPageConfig } from './models/UniversalPageConfig';
 import { VerticalPageConfigs } from './models/VerticalPageConfig';
+import { useMemo } from 'react';
+import { StyleConfig } from './models/StyleConfig';
+import { styleVariables } from './templates/styleVariables';
+import get from 'lodash/get';
 
 interface PageBuilderAppProps {
   config: AnswersAppConfig
@@ -17,11 +21,12 @@ interface PageBuilderAppProps {
 
 export default function PageBuilderApp({ config }: PageBuilderAppProps) {
   const pageRoutes = constructPageRoutes(config.universal, config.verticals);
+  const styles = useMemo(() => createStyleVariables(config.common?.style ?? {}), [config.common?.style]);
 
   return <AnswersAppContextProvider answersAppConfig={config}>
     <AnswersHeadlessProvider {...config.providerConfig}>
       <PageViewContextProvider >
-        <div className='flex justify-center px-4 py-6'>
+        <div className='flex justify-center px-4 py-6' style={styles}>
           <div className='w-full max-w-5xl'>
             <PageRouter
               routes={pageRoutes}
@@ -68,4 +73,11 @@ function constructPageRoutes(universal: UniversalPageConfig, verticals: Vertical
     page: <UniversalStandardPage universalResultsConfig={universalResultsConfig} navLinks={navLinks}/>
   });
   return pageRoutes;
+}
+
+function createStyleVariables(config: StyleConfig): React.CSSProperties {
+  return styleVariables.reduce((allStyles: React.CSSProperties, style) => {
+    const value = get(config, style.path) || style.default;
+    return { ...allStyles, [style.name]: value };
+  }, {});
 }

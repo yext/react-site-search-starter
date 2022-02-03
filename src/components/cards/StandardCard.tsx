@@ -3,8 +3,6 @@ import { CardProps } from '../../models/cardComponent';
 import { applyFieldMappings, FieldData } from '../utils/applyFieldMappings'
 import { isString, validateData } from '../utils/validateData';
 
-
-
 export interface StandardCardProps extends CardProps {
   showOrdinal?: boolean,
   fieldMappings?: {
@@ -49,10 +47,10 @@ export interface StandardCardCssClasses {
 }
 
 const builtInCssClasses: StandardCardCssClasses = {
-  container: 'flex flex-col justify-between border rounded-lg mb-4 p-4 shadow-sm ',
+  container: 'flex flex-col justify-between border rounded-lg mb-4 p-4 shadow-sm',
   header: 'flex text-gray-800',
-  body: 'flex justify-end pt-2.5',
-  descriptionContainer: 'w-full text-base',
+  body: 'flex justify-end pt-2.5 text-base',
+  descriptionContainer: 'w-full',
   ctaContainer: 'flex flex-col justify-end ml-4',
   cta1: 'min-w-max bg-blue-600 text-white font-medium rounded-lg py-2 px-5 shadow',
   cta2: 'min-w-max bg-white text-blue-600 font-medium rounded-lg py-2 px-5 mt-2 shadow',
