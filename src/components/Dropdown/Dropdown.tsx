@@ -44,12 +44,13 @@ export default function Dropdown(props: PropsWithChildren<{
 
   const containerRef = useRef<HTMLDivElement>(null);
   const screenReaderUUID: string = useMemo(() => uuid(), []);
+  const [screenReaderKey, setScreenReaderKey] = useState<number>(0);
   const [childrenWithDropdownItemsTransformed, items] = getTransformedChildrenAndItemData(children);
 
   const inputContext = useInputContextInstance(initialValue);
   const { value, setValue, lastTypedOrSubmittedValue, setLastTypedOrSubmittedValue } = inputContext;
 
-  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue);
+  const focusContext = useFocusContextInstance(items, lastTypedOrSubmittedValue, setValue, screenReaderKey, setScreenReaderKey);
   const { focusedIndex, updateFocusedItem } = focusContext;
 
   const dropdownContext = useDropdownContextInstance(value, screenReaderUUID, onToggle, onSelect);
@@ -91,7 +92,7 @@ export default function Dropdown(props: PropsWithChildren<{
       </DropdownContext.Provider>
 
       <ScreenReader
-        announcementKey={value}
+        announcementKey={screenReaderKey}
         announcementText={isActive ? screenReaderText : ''}
         instructionsId={screenReaderUUID}
         instructions={screenReaderInstructions}
@@ -114,7 +115,9 @@ function useInputContextInstance(initialValue = ''): InputContextType {
 function useFocusContextInstance(
   items: DropdownItemData[],
   lastTypedOrSubmittedValue: string,
-  setValue: (newValue: string) => void
+  setValue: (newValue: string) => void,
+  screenReaderKey: number,
+  setScreenReaderKey: (newKey: number) => void
 ): FocusContextType {
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const [focusedValue, setFocusedValue] = useState<string | null>(null);
@@ -127,6 +130,7 @@ function useFocusContextInstance(
       updatedValue = value ?? lastTypedOrSubmittedValue;
       setFocusedIndex(-1);
       setFocusedItemData(undefined);
+      setScreenReaderKey(screenReaderKey + 1);
     } else if (updatedFocusedIndex < -1) {
       const loopedAroundIndex = (numItems + updatedFocusedIndex + 1) % numItems;
       updatedValue = value ?? items[loopedAroundIndex].value;

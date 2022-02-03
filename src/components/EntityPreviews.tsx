@@ -1,5 +1,6 @@
 import { Result, VerticalResults, UniversalLimit } from '@yext/answers-headless-react';
 import { isValidElement, ReactNode } from 'react';
+import DropdownItem from './Dropdown/DropdownItem';
 import recursivelyMapChildren from './utils/recursivelyMapChildren';
 
 interface EntityPreviewsProps {
@@ -79,4 +80,18 @@ export function calculateUniversalLimit(children: ReactNode): UniversalLimit {
     limitWithDefaults[verticalKey] = universalLimit[verticalKey] ?? 4;
     return limitWithDefaults;
   }, {})
+}
+
+/**
+ * Calculates the number of navigable entity previews from a ReactNode containing DropdownItems.
+ */
+export function calculateEntityPreviewsCount(children: ReactNode): number {
+  let count = 0;
+  recursivelyMapChildren(children, c => {
+    if (isValidElement(c) && c.type === DropdownItem) {
+      count++;
+    }
+    return c;
+  });
+  return count;
 }
