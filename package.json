@@ -24,7 +24,6 @@
     "bfj": "^7.0.2",
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
-    "chokidar": "^3.5.3",
     "classnames": "^2.3.1",
     "css-loader": "4.3.0",
     "dotenv": "8.2.0",
@@ -79,8 +78,8 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "scripts": {
-    "start": "node scripts/start.js & node src/pagebuilder/scripts/generateAnswersVariables.js -watch",
-    "build": "node src/pagebuilder/scripts/generateAnswersVariables.js & node scripts/build.js",
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js",
     "test": "node scripts/test.js --watchAll=false",
     "wcag": "./tests/wcag/index.js",
     "eslint": "eslint",
