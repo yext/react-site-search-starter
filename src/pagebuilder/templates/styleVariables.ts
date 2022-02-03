@@ -1,5 +1,5 @@
 interface StyleVariable {
-  name: string,
+  name: `--${string}`,
   path: string,
   default: string
 }
