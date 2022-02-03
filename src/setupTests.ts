@@ -1,4 +1,4 @@
-import { server } from './server';
+import { server } from '../tests/setup/server';
 import '@testing-library/jest-dom';
 
 beforeAll(() => server.listen());

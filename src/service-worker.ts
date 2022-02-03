@@ -54,10 +54,10 @@ async function respondUsingCache(request: Request, timeToLiveInMilliseconds: num
     }
   }
 
-  const [cache, freshResponse] = await Promise.all<Cache, Response>([
-    caches.open(cacheName),
-    fetch(request)
-  ]);
+  const cachePromise: Promise<Cache> = caches.open(cacheName);
+  const resPromise: Promise<Response> = fetch(request);
+  const [cache, freshResponse] = await Promise.all([cachePromise, resPromise]);
+
   const clone = freshResponse.clone();
   const headers = new Headers(freshResponse.headers);
   headers.append(swFetchedOnHeader, new Date().getTime().toString());

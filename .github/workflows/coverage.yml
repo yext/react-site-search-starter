@@ -19,7 +19,7 @@ jobs:
       with:
         node-version: 16.x
     - run: npm ci
-    - run: npx jest --coverage
+    - run: npm test -- --coverage
     - name: Coveralls
       uses: coverallsapp/github-action@master
       with:

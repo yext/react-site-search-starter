@@ -1,9 +1,12 @@
+/**
+ * Registers a service worker if the page is not in development mode.
+ */
 export default function registerServiceWorker() {
-  window.addEventListener('load', async () => {
-    const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
-    const registration = await navigator.serviceWorker.register(swUrl)
+  if (process.env.NODE_ENV !== 'development') {
+    window.addEventListener('load', async () => {
+      const swUrl = `${process.env.PUBLIC_URL}/service-worker.js`;
+      const registration = await navigator.serviceWorker.register(swUrl)
 
-    if (process.env.NODE_ENV !== 'development') {
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -18,6 +21,6 @@ export default function registerServiceWorker() {
           }
         }
       }
-    }
-  });
+    });
+  }
 }
