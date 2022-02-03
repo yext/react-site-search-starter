@@ -273,7 +273,7 @@ export default function SearchBar({
 
   const transformedEntityPreviews = entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray);
   const entityPreviewsCount = calculateEntityPreviewsCount(transformedEntityPreviews);
-  const hasItems = !!(autocompleteResponse?.results.length || (!isVertical && (filteredRecentSearches?.length || entityPreviewsCount)));
+  const hasItems = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length) || entityPreviewsCount);
   const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length, entityPreviewsCount);
   const activeClassName = classNames(cssClasses.inputDropdownContainer, {
     [cssClasses.inputDropdownContainer___active ?? '']: hasItems
