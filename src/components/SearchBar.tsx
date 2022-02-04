@@ -64,7 +64,6 @@ export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
   divider?: string,
   logoContainer?: string,
   optionContainer?: string,
-  optionIcon?: string,
   focusedOption?: string,
   recentSearchesOptionContainer?: string,
   recentSearchesIcon?: string,
@@ -227,7 +226,7 @@ export default function SearchBar({
         >
           {renderAutocompleteResult(
             result,
-            { ...cssClasses, icon: cssClasses.optionIcon },
+            cssClasses,
             MagnifyingGlassIcon,
             `autocomplete option: ${result.value}`
           )}
@@ -271,7 +270,8 @@ export default function SearchBar({
     );
   }
 
-  const transformedEntityPreviews = entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray);
+  const showEntityPreviewDivider = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length));
+  const transformedEntityPreviews = entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray, showEntityPreviewDivider);
   const entityPreviewsCount = calculateEntityPreviewsCount(transformedEntityPreviews);
   const hasItems = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length) || entityPreviewsCount);
   const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length, entityPreviewsCount);

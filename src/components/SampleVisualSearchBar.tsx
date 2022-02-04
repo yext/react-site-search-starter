@@ -19,8 +19,8 @@ export default function SampleVisualSearchBar() {
       renderEntityPreviews={(isLoading, _results, onSubmit) => (
         <div className={isLoading ? 'opacity-50' : ''}>
           <EntityPreviews verticalKey='events'>
-            {results => (<>
-              {results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
+            {(results, showDivider) => (<>
+              {showDivider && results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 mx-3.5 mt-1'>
                 {results.map((r, index) =>
                   <DropdownItem
@@ -39,7 +39,8 @@ export default function SampleVisualSearchBar() {
             )}
           </EntityPreviews>
           <EntityPreviews verticalKey='faqs' limit={2}>
-            {results => (
+            {(results, showDivider) => (<>
+              {showDivider && results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
               <div className='flex flex-col'>
                 {results.map((r, index) =>
                   <DropdownItem
@@ -54,6 +55,7 @@ export default function SampleVisualSearchBar() {
                   </DropdownItem>
                 )}
               </div>
+            </>
             )}
           </EntityPreviews>
         </div>
@@ -84,7 +86,6 @@ function FaqCard({ result }: CardProps) {
     : [];
 
   return (<div key={faqData.question}>
-    <div className='h-px bg-gray-200 mt-1 mb-4 mx-2.5'></div>
     <div tabIndex={0} className='flex flex-row mx-4 mb-3 rounded-md'>
       <FAQIcon className='w-6 mr-3 mt-1'/>
       <div>
