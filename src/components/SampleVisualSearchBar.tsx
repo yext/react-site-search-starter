@@ -16,11 +16,10 @@ export default function SampleVisualSearchBar() {
       placeholder='Search...'
       entityPreviewsDebouncingTime={100}
       verticalKeyToLabel={verticalKey => universalResultsConfig[verticalKey]?.label ?? verticalKey}
-      renderEntityPreviews={(isLoading, _results, onSubmit, showFirstDivider) => (
+      renderEntityPreviews={(isLoading, _results, onSubmit) => (
         <div className={isLoading ? 'opacity-50' : ''}>
           <EntityPreviews verticalKey='events'>
             {(results, _index) => (<>
-              {showFirstDivider && results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
               <div className='grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-4 mx-3.5 mt-1'>
                 {results.map((r, index) =>
                   <DropdownItem
@@ -40,7 +39,7 @@ export default function SampleVisualSearchBar() {
           </EntityPreviews>
           <EntityPreviews verticalKey='faqs' limit={2}>
             {(results, index) => (<>
-              {(showFirstDivider || index > 0) && results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
+              {index > 0 && results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
               <div className='flex flex-col'>
                 {results.map((r, index) =>
                   <DropdownItem

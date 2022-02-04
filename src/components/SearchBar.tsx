@@ -76,8 +76,7 @@ export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
 type RenderEntityPreviews = (
   autocompleteLoading: boolean,
   verticalResultsArray: VerticalResults[],
-  onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void,
-  showFirstDivider?: boolean
+  onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void
 ) => JSX.Element;
 
 interface Props {
@@ -157,8 +156,7 @@ export default function SearchBar({
 
   const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(entityPreviewsDebouncingTime);
   const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
-  const showEntityPreviewsDivider = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length));
-  const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit, showEntityPreviewsDivider);
+  const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit);
   function updateEntityPreviews(query: string) {
     if (!renderEntityPreviews) {
       return;
@@ -274,6 +272,7 @@ export default function SearchBar({
 
   const transformedEntityPreviews = entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray);
   const entityPreviewsCount = calculateEntityPreviewsCount(transformedEntityPreviews);
+  const showEntityPreviewsDivider = entityPreviewsCount > 0 && !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length));
   const hasItems = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length) || entityPreviewsCount);
   const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length, entityPreviewsCount);
   const activeClassName = classNames(cssClasses.inputDropdownContainer, {
@@ -311,6 +310,7 @@ export default function SearchBar({
           <StyledDropdownMenu cssClasses={cssClasses}>
             {renderRecentSearches()}
             {renderQuerySuggestions()}
+            {showEntityPreviewsDivider && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
             {transformedEntityPreviews}
           </StyledDropdownMenu>
         }
