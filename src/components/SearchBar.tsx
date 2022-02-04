@@ -76,7 +76,8 @@ export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
 type RenderEntityPreviews = (
   autocompleteLoading: boolean,
   verticalResultsArray: VerticalResults[],
-  onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void
+  onSubmit: (value: string, _index: number, itemData?: FocusedItemData) => void,
+  showFirstDivider?: boolean
 ) => JSX.Element;
 
 interface Props {
@@ -156,7 +157,8 @@ export default function SearchBar({
 
   const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(entityPreviewsDebouncingTime);
   const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
-  const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit);
+  const showEntityPreviewsDivider = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length));
+  const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit, showEntityPreviewsDivider);
   function updateEntityPreviews(query: string) {
     if (!renderEntityPreviews) {
       return;
@@ -270,8 +272,7 @@ export default function SearchBar({
     );
   }
 
-  const showEntityPreviewDivider = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length));
-  const transformedEntityPreviews = entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray, showEntityPreviewDivider);
+  const transformedEntityPreviews = entityPreviews && transformEntityPreviews(entityPreviews, verticalResultsArray);
   const entityPreviewsCount = calculateEntityPreviewsCount(transformedEntityPreviews);
   const hasItems = !!(autocompleteResponse?.results.length || (!isVertical && filteredRecentSearches?.length) || entityPreviewsCount);
   const screenReaderText = getScreenReaderText(autocompleteResponse?.results.length, filteredRecentSearches?.length, entityPreviewsCount);
