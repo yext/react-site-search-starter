@@ -119,7 +119,7 @@ export default function SearchBar({
   const isLoading = useAnswersState(state => state.searchStatus.isLoading) ?? false;
   const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
 
-  const [autocompleteResponse, executeAutocomplete] = useSynchronizedRequest(() => {
+  const [autocompleteResponse, executeAutocomplete, clearAutocompleteData] = useSynchronizedRequest(() => {
     return isVertical
       ? answersActions.executeVerticalAutocomplete()
       : answersActions.executeUniversalAutocomplete();
@@ -134,7 +134,12 @@ export default function SearchBar({
     if (hideRecentSearches) {
       clearRecentSearches();
     }
-  }, [clearRecentSearches, hideRecentSearches])
+  }, [clearRecentSearches, hideRecentSearches]);
+
+  function clearAutocomplete() {
+    clearAutocompleteData();
+    autocompletePromiseRef.current = undefined;
+  }
 
   function executeQuery() {
     if (!hideRecentSearches) {
@@ -158,6 +163,7 @@ export default function SearchBar({
   const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(entityPreviewsDebouncingTime);
   const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
   const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit);
+
   function updateEntityPreviews(query: string) {
     if (!renderEntityPreviews) {
       return;
@@ -261,7 +267,6 @@ export default function SearchBar({
             updateEntityPreviews('');
             answersActions.setQuery('');
             executeQuery();
-            autocompletePromiseRef.current = executeAutocomplete();
           }}
         >
           <CloseIcon />
@@ -286,11 +291,9 @@ export default function SearchBar({
         activeClassName={activeClassName}
         screenReaderText={screenReaderText}
         parentQuery={query}
-        onToggle={(isActive, value = '') => {
+        onToggle={isActive => {
           if (!isActive) {
-            updateEntityPreviews(value);
-            answersActions.setQuery(value);
-            autocompletePromiseRef.current = executeAutocomplete();
+            clearAutocomplete();
           }
         }}
       >
