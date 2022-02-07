@@ -164,14 +164,13 @@ export default function SearchBar({
   const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
   const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit);
 
-  function updateDropdownOptionsAndQuery(value: string) {
-    answersActions.setQuery(value);
-    if (renderEntityPreviews) {
-      const restrictVerticals = calculateRestrictVerticals(entityPreviews);
-      const universalLimit = calculateUniversalLimit(entityPreviews);
-      executeEntityPreviewsQuery(value, universalLimit, restrictVerticals);
+  function updateEntityPreviews(query: string) {
+    if (!renderEntityPreviews) {
+      return;
     }
-    autocompletePromiseRef.current = executeAutocomplete();
+    const restrictVerticals = calculateRestrictVerticals(entityPreviews);
+    const universalLimit = calculateUniversalLimit(entityPreviews);
+    executeEntityPreviewsQuery(query, universalLimit, restrictVerticals);
   }
 
   function renderInput() {
@@ -180,8 +179,16 @@ export default function SearchBar({
         className={cssClasses.inputElement}
         placeholder={placeholder}
         onSubmit={handleSubmit}
-        onFocus={updateDropdownOptionsAndQuery}
-        onChange={updateDropdownOptionsAndQuery}
+        onFocus={(value = '') => {
+          answersActions.setQuery(value);
+          updateEntityPreviews(value);
+          autocompletePromiseRef.current = executeAutocomplete()
+        }}
+        onChange={(value = '') => {
+          answersActions.setQuery(value);
+          updateEntityPreviews(value);
+          autocompletePromiseRef.current = executeAutocomplete();
+        }}
       />
     );
   }
@@ -257,7 +264,8 @@ export default function SearchBar({
           aria-label='Clear the search bar'
           className={cssClasses.clearButton}
           onClick={() => {
-            updateDropdownOptionsAndQuery('');
+            updateEntityPreviews('');
+            answersActions.setQuery('');
             handleQuery();
           }}
         >
