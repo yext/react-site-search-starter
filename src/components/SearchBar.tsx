@@ -141,7 +141,7 @@ export default function SearchBar({
     autocompletePromiseRef.current = undefined;
   }
 
-  function handleQuery() {
+  function executeQuery() {
     if (!hideRecentSearches) {
       const input = answersActions.state.query.input;
       input && setRecentSearch(input);
@@ -156,7 +156,7 @@ export default function SearchBar({
         querySource: QuerySource.Autocomplete
       });
     } else {
-      handleQuery();
+      executeQuery();
     }
   }
 
@@ -266,7 +266,7 @@ export default function SearchBar({
           onClick={() => {
             updateEntityPreviews('');
             answersActions.setQuery('');
-            handleQuery();
+            executeQuery();
           }}
         >
           <CloseIcon />
@@ -302,7 +302,7 @@ export default function SearchBar({
           {renderInput()}
           {query && renderClearButton()}
           <DropdownSearchButton
-            handleQuery={handleQuery}
+            executeQuery={executeQuery}
             cssClasses={cssClasses}
             isLoading={isLoading}
           />
@@ -352,8 +352,8 @@ function getScreenReaderText(autocompleteOptions = 0, recentSearchesOptions = 0)
   return (recentSearchesText + ' ' + autocompleteText).trim();
 }
 
-function DropdownSearchButton({ handleQuery, isLoading, cssClasses }: {
-  handleQuery: () => void,
+function DropdownSearchButton({ executeQuery, isLoading, cssClasses }: {
+  executeQuery: () => void,
   isLoading: boolean,
   cssClasses: {
     searchButtonContainer?: string,
@@ -366,7 +366,7 @@ function DropdownSearchButton({ handleQuery, isLoading, cssClasses }: {
       <SearchButton
         className={cssClasses.searchButton}
         handleClick={() => {
-          handleQuery();
+          executeQuery();
           toggleDropdown(false);
         }}
         isLoading={isLoading}
