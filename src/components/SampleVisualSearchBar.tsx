@@ -37,8 +37,7 @@ export default function SampleVisualSearchBar() {
             )}
           </EntityPreviews>
           <EntityPreviews verticalKey='faqs' limit={2}>
-            {(results, index) => (<>
-              {index > 0 && results.length > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
+            {(results, verticalIndex) => (<>
               <div className='flex flex-col'>
                 {results.map((r, index) =>
                   <DropdownItem
@@ -49,7 +48,7 @@ export default function SampleVisualSearchBar() {
                     itemData={{ verticalLink: `/faqs?query=${r.name}` }}
                     onClick={onSubmit}
                   >
-                    {index > 0 && <div className='h-px bg-gray-200 mt-1 mb-4 mx-2.5'></div>}
+                    {(verticalIndex > 0 || index > 0) && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
                     <FaqCard result={r} key={`${index}-${r.name}`} />
                   </DropdownItem>
                 )}
