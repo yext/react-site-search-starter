@@ -149,16 +149,6 @@ export default function SearchBar({
     executeQueryWithNearMeHandling();
   }
 
-  function updateDropdownOptionsAndQuery(value: string) {
-    answersActions.setQuery(value);
-    if (renderEntityPreviews) {
-      const restrictVerticals = calculateRestrictVerticals(entityPreviews);
-      const universalLimit = calculateUniversalLimit(entityPreviews);
-      executeEntityPreviewsQuery(value, universalLimit, restrictVerticals);
-    }
-    autocompletePromiseRef.current = executeAutocomplete();
-  }
-
   const handleSubmit = (value: string, _index: number, itemData?: FocusedItemData) => {
     answersActions.setQuery(value || '');
     if (itemData && typeof itemData.verticalLink === 'string') {
@@ -173,6 +163,16 @@ export default function SearchBar({
   const [entityPreviewsState, executeEntityPreviewsQuery] = useEntityPreviews(entityPreviewsDebouncingTime);
   const { verticalResultsArray, isLoading: entityPreviewsLoading } = entityPreviewsState;
   const entityPreviews = renderEntityPreviews && renderEntityPreviews(entityPreviewsLoading, verticalResultsArray, handleSubmit);
+
+  function updateDropdownOptionsAndQuery(value: string) {
+    answersActions.setQuery(value);
+    if (renderEntityPreviews) {
+      const restrictVerticals = calculateRestrictVerticals(entityPreviews);
+      const universalLimit = calculateUniversalLimit(entityPreviews);
+      executeEntityPreviewsQuery(value, universalLimit, restrictVerticals);
+    }
+    autocompletePromiseRef.current = executeAutocomplete();
+  }
 
   function renderInput() {
     return (
