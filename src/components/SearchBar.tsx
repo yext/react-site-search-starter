@@ -30,7 +30,7 @@ import renderAutocompleteResult, {
 
 const builtInCssClasses: SearchBarCssClasses = {
   container: 'h-12 mb-3',
-  divider: 'border-t border-gray-200 mx-2.5',
+  inputDivider: 'border-t border-gray-200 mx-2.5',
   dropdownContainer: 'relative bg-white pt-4 pb-3 z-10',
   inputContainer: 'inline-flex items-center justify-between w-full',
   inputDropdownContainer: 'bg-white border rounded-3xl border-gray-200 w-full overflow-hidden',
@@ -48,6 +48,7 @@ const builtInCssClasses: SearchBarCssClasses = {
   recentSearchesOption: 'pl-3',
   recentSearchesNonHighlighted: 'font-normal', // Swap this to semibold once we apply highlighting to recent searches
   verticalLink: 'ml-12 pl-1 text-gray-500 italic',
+  entityPreviewsDivider: 'h-px bg-gray-200 mt-1 mb-4 mx-3.5',
   ...AutocompleteResultBuiltInCssClasses
 };
 
@@ -57,11 +58,11 @@ export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
   inputContainer?: string,
   inputDropdownContainer?: string,
   inputDropdownContainer___active?: string,
+  inputDivider?: string,
   clearButton?: string,
   searchButton?: string,
   searchButtonContainer?: string,
   dropdownContainer?: string,
-  divider?: string,
   logoContainer?: string,
   optionContainer?: string,
   focusedOption?: string,
@@ -70,7 +71,8 @@ export interface SearchBarCssClasses extends AutocompleteResultCssClasses {
   recentSearchesOption?: string,
   recentSearchesNonHighlighted?: string,
   verticalLink?: string,
-  verticalDivider?: string
+  verticalDivider?: string,
+  entityPreviewsDivider?: string
 }
 
 type RenderEntityPreviews = (
@@ -294,7 +296,7 @@ export default function SearchBar({
           }
         }}
       >
-        <div className={cssClasses?.inputContainer}>
+        <div className={cssClasses.inputContainer}>
           <div className={cssClasses.logoContainer}>
             <YextLogoIcon />
           </div>
@@ -310,7 +312,7 @@ export default function SearchBar({
           <StyledDropdownMenu cssClasses={cssClasses}>
             {renderRecentSearches()}
             {renderQuerySuggestions()}
-            {showEntityPreviewsDivider && <div className='h-px bg-gray-200 mt-1 mb-4 mx-3.5'></div>}
+            {showEntityPreviewsDivider && <div className={cssClasses.entityPreviewsDivider}></div>}
             {transformedEntityPreviews}
           </StyledDropdownMenu>
         }
@@ -321,13 +323,13 @@ export default function SearchBar({
 
 function StyledDropdownMenu({ cssClasses, children }: PropsWithChildren<{
   cssClasses: {
-    divider?: string,
+    inputDivider?: string,
     dropdownContainer?: string
   }
 }>) {
   return (
     <DropdownMenu>
-      <div className={cssClasses.divider} />
+      <div className={cssClasses.inputDivider} />
       <div className={cssClasses.dropdownContainer}>
         {children}
       </div>
