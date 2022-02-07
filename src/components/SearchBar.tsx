@@ -119,7 +119,7 @@ export default function SearchBar({
   const isLoading = useAnswersState(state => state.searchStatus.isLoading) ?? false;
   const isVertical = useAnswersState(s => s.meta.searchType) === SearchTypeEnum.Vertical;
 
-  const [autocompleteResponse, executeAutocomplete] = useSynchronizedRequest(() => {
+  const [autocompleteResponse, executeAutocomplete, clearAutocompleteData] = useSynchronizedRequest(() => {
     return isVertical
       ? answersActions.executeVerticalAutocomplete()
       : answersActions.executeUniversalAutocomplete();
@@ -134,9 +134,14 @@ export default function SearchBar({
     if (hideRecentSearches) {
       clearRecentSearches();
     }
-  }, [clearRecentSearches, hideRecentSearches])
+  }, [clearRecentSearches, hideRecentSearches]);
 
-  function executeQuery() {
+  function clearAutocomplete() {
+    clearAutocompleteData();
+    autocompletePromiseRef.current = undefined;
+  }
+
+  function handleQuery() {
     if (!hideRecentSearches) {
       const input = answersActions.state.query.input;
       input && setRecentSearch(input);
@@ -155,14 +160,13 @@ export default function SearchBar({
   }
 
   const handleSubmit = (value: string, _index: number, itemData?: FocusedItemData) => {
+    answersActions.setQuery(value || '');
     if (itemData && typeof itemData.verticalLink === 'string') {
-      answersActions.setQuery(value);
       browserHistory.push(itemData.verticalLink, {
         querySource: QuerySource.Autocomplete
       });
     } else {
-      updateDropdownOptionsAndQuery(value);
-      executeQuery();
+      handleQuery();
     }
   }
 
@@ -254,7 +258,7 @@ export default function SearchBar({
           className={cssClasses.clearButton}
           onClick={() => {
             updateDropdownOptionsAndQuery('');
-            executeQuery();
+            handleQuery();
           }}
         >
           <CloseIcon />
@@ -277,6 +281,11 @@ export default function SearchBar({
         activeClassName={activeClassName}
         screenReaderText={screenReaderText}
         parentQuery={query}
+        onToggle={isActive => {
+          if (!isActive) {
+            clearAutocomplete();
+          }
+        }}
       >
         <div className={cssClasses?.inputContainer}>
           <div className={cssClasses.logoContainer}>
@@ -285,7 +294,7 @@ export default function SearchBar({
           {renderInput()}
           {query && renderClearButton()}
           <DropdownSearchButton
-            executeQuery={executeQuery}
+            handleQuery={handleQuery}
             cssClasses={cssClasses}
             isLoading={isLoading}
           />
@@ -335,8 +344,8 @@ function getScreenReaderText(autocompleteOptions = 0, recentSearchesOptions = 0)
   return (recentSearchesText + ' ' + autocompleteText).trim();
 }
 
-function DropdownSearchButton({ executeQuery, isLoading, cssClasses }: {
-  executeQuery: () => void,
+function DropdownSearchButton({ handleQuery, isLoading, cssClasses }: {
+  handleQuery: () => void,
   isLoading: boolean,
   cssClasses: {
     searchButtonContainer?: string,
@@ -349,7 +358,7 @@ function DropdownSearchButton({ executeQuery, isLoading, cssClasses }: {
       <SearchButton
         className={cssClasses.searchButton}
         handleClick={() => {
-          executeQuery();
+          handleQuery();
           toggleDropdown(false);
         }}
         isLoading={isLoading}
