@@ -18,8 +18,8 @@ interface NavigationCssClasses {
   menuButtonContainer?: string,
   menuButton___menuOpenNoActiveLink?: string,
   menuButton___menuOpenHasActiveLink?: string,
-  menuButton___hasActiveLink?: string,
-  menuButton___noActiveLink?: string,
+  menuButton___menuClosedHasActiveLink?: string,
+  menuButton___menuClosedNoActiveLink?: string,
   menuContainer?: string,
   menuNavLink?: string,
   menuNavLinkContainer?: string,
@@ -38,8 +38,8 @@ const builtInCssClasses: NavigationCssClasses = {
   menuButton: 'flex items-center font-medium text-md h-12 mt-1 p-3 rounded-md hover:bg-gray-200',
   menuButton___menuOpenNoActiveLink: 'bg-gray-100 text-gray-800',
   menuButton___menuOpenHasActiveLink: 'bg-gray-100 text-blue-600',
-  menuButton___hasActiveLink: 'text-blue-600',
-  menuButton___noActiveLink: 'text-gray-600',
+  menuButton___menuClosedHasActiveLink: 'text-blue-600',
+  menuButton___menuClosedNoActiveLink: 'text-gray-600',
   menuContainer: 'absolute flex-col bg-white border top-14 py-2 rounded-lg shadow-lg',
   menuNavLink: 'px-4 py-2 flex-grow',
   menuNavLinkContainer: 'flex hover:bg-gray-100 text-lg',
@@ -112,8 +112,8 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
   const menuButtonClassNames = classNames(cssClasses.menuButton, {
     [cssClasses.menuButton___menuOpenNoActiveLink ?? '']: menuOpen && !menuContainsActiveLink,
     [cssClasses.menuButton___menuOpenHasActiveLink ?? '']: menuOpen && menuContainsActiveLink,
-    [cssClasses.menuButton___hasActiveLink ?? '']: !menuOpen && menuContainsActiveLink,
-    [cssClasses.menuButton___noActiveLink ?? '']: !menuOpen && !menuContainsActiveLink
+    [cssClasses.menuButton___menuClosedHasActiveLink ?? '']: !menuOpen && menuContainsActiveLink,
+    [cssClasses.menuButton___menuClosedNoActiveLink ?? '']: !menuOpen && !menuContainsActiveLink
   });
 
   return (
