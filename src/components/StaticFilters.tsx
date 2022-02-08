@@ -1,7 +1,7 @@
 import { useAnswersActions, useAnswersState, Filter, Matcher } from '@yext/answers-headless-react';
 import { CompositionMethod } from '../hooks/useComposedCssClasses';
 import { isDuplicateFilter } from '../utils/filterutils';
-import { FilterConfig } from './FilterDisplay';
+import { FilterConfig } from './Filters';
 import Filters, { FiltersCssClasses } from './Filters';
 
 interface StaticFilterOption {

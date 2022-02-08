@@ -12,7 +12,7 @@ import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
-import { FilterConfig } from '../components/FilterDisplay';
+import { FilterConfig } from '../components/Filters';
 
 const staticFiltersConfig: FilterConfig[] = [{
   label: 'Venue',
