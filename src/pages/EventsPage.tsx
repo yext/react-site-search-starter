@@ -12,9 +12,10 @@ import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
+import { FilterConfig } from '../components/FilterDisplay';
 
-const staticFiltersConfig = [{
-  title: 'Venue',
+const staticFiltersConfig: FilterConfig[] = [{
+  label: 'Venue',
   options: [
     {
       label: 'West End Avenue',
@@ -39,7 +40,7 @@ export default function EventsPage({ verticalKey }: {
     <div className='flex'>
       <FilterDisplayManager>
         <StaticFilters
-          filterConfig={staticFiltersConfig}
+          filterConfigs={staticFiltersConfig}
         />
       </FilterDisplayManager>
       { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&

@@ -1,47 +1,29 @@
 import { useAnswersActions, useAnswersState, Filter, Matcher } from '@yext/answers-headless-react';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import { isDuplicateFilter } from '../utils/filterutils';
-import renderCheckboxOption, {
-  CheckboxOptionCssClasses,
-  builtInCssClasses as builtInCheckboxOptionCssClasses
-} from './utils/renderCheckboxOption';
+import { FilterConfig } from './FilterDisplay';
+import Filters, { FiltersCssClasses } from './Filters';
 
-interface FilterOption {
+interface StaticFilterOption {
   fieldId: string,
-  value: string,
+  value: string | number | boolean,
   label: string
 }
 
 interface StaticFiltersProps {
-  filterConfig: {
-    options: FilterOption[],
-    title: string
-  }[],
+  filterConfigs: FilterConfig[],
   customCssClasses?: StaticFiltersCssClasses,
   cssCompositionMethod?: CompositionMethod
 }
 
-interface StaticFiltersCssClasses extends CheckboxOptionCssClasses {
-  container?: string,
-  title?: string,
-  optionsContainer?: string,
-  divider?: string
-}
-
-const builtInCssClasses: StaticFiltersCssClasses = {
-  ...builtInCheckboxOptionCssClasses,
-  container: 'md:w-40',
-  title: 'text-gray-900 text-sm font-medium mb-4',
-  optionsContainer: 'flex flex-col space-y-3'
-}
+interface StaticFiltersCssClasses extends FiltersCssClasses {};
 
 export default function StaticFilters(props: StaticFiltersProps): JSX.Element {
   const answersActions = useAnswersActions();
-  const { filterConfig, customCssClasses, cssCompositionMethod } = props;
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
+  const { filterConfigs: staticFilterConfigs, customCssClasses, cssCompositionMethod } = props;
 
   const selectableFilters = useAnswersState(state =>  state.filters.static);
-  const getOptionSelectStatus = (option: FilterOption): boolean => {
+  const isOptionSelected = (option: StaticFilterOption): boolean => {
     const foundFilter = selectableFilters?.find(storedSelectableFilter => {
       const { selected, ...storedFilter } = storedSelectableFilter;
       const targetFilter = {
@@ -54,38 +36,32 @@ export default function StaticFilters(props: StaticFiltersProps): JSX.Element {
     return !!foundFilter && foundFilter.selected;
   };
 
-  const handleFilterOptionChange = (option: Filter, isChecked: boolean) => {
+  const handleFilterOptionClick = (option: Filter, isChecked: boolean) => {
     answersActions.resetFacets();
     answersActions.setFilterOption({ ...option, selected: isChecked });
     answersActions.executeVerticalQuery();
   }
 
+  const filterConfigs: FilterConfig[] = staticFilterConfigs.map(staticFilterConfig => {
+    const filterOptions = staticFilterConfig.options.map(staticFilterOption => {
+      return {
+        ...staticFilterOption,
+        onClick: handleFilterOptionClick,
+        isSelected: isOptionSelected(staticFilterOption)
+      }
+    })
+    return {
+      ...staticFilterConfig,
+      options: filterOptions,
+    }
+  })
+
   return (
-    <div className={cssClasses.container}>
-      {filterConfig.map((filterSet, index) => {
-        const isLastFilterSet = index === filterConfig.length - 1;
-        return <fieldset key={`${index}-${filterSet.title}`}>
-          <legend className={cssClasses.title}>{filterSet.title}</legend>
-          <div className={cssClasses.optionsContainer}>
-            {filterSet.options.map((option, index) => {
-              const filter = {
-                fieldId: option.fieldId,
-                matcher: Matcher.Equals,
-                value: option.value
-              }
-              return renderCheckboxOption({
-                option: { id: `${index}`, label: option.label },
-                onClick: selected => handleFilterOptionChange(filter, selected),
-                selected: getOptionSelectStatus(option),
-                cssClasses
-              });
-            }
-            )}
-          </div>
-          {!isLastFilterSet && <Divider customCssClasses={{ divider: cssClasses.divider }}/>}
-        </fieldset>
-      })}
-    </div>
+    <Filters
+      filterConfigs={filterConfigs}
+      customCssClasses={customCssClasses}
+      cssCompositionMethod={cssCompositionMethod}
+    />
   );
 }
 
