@@ -1,10 +1,9 @@
-import { Filter, Matcher } from "@yext/answers-headless-react";
+import { Filter, Matcher, useAnswersUtilities } from "@yext/answers-headless-react";
 import useCollapse from "react-collapsed";
 import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
 import renderCheckboxOption, { CheckboxOptionCssClasses } from "./utils/renderCheckboxOption";
 import { ReactComponent as DropdownIcon } from '../icons/chevron.svg';
 import { useState } from "react";
-import { isLevenshteinMatch } from "./utils/isLevenshteinMatch";
 
 interface FilterOption {
   fieldId: string,
@@ -54,9 +53,10 @@ export default function FilterDisplay(props: FilterDisplayProps) {
     customCssClasses,
     cssCompositionMethod
   } = props;
+  const answersUtilities = useAnswersUtilities();
   const [ searchTerm, setSearchTerm ] = useState('');
   const options = searchable
-    ? allOptions.filter(o => isLevenshteinMatch(o.label.toLowerCase(), searchTerm.toLowerCase()))
+    ? allOptions.filter(o => answersUtilities.isCloseMatch(o.label, searchTerm))
     : allOptions;
   const hasSelectedFilterOption = !!options.find(o => o.isSelected);
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
