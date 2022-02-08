@@ -10,7 +10,7 @@ import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import Facets from '../components/Facets';
 import FilterSearch from '../components/FilterSearch';
-import { Divider } from '../components/StaticFilters';
+import { Divider } from '../components/Filters';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';

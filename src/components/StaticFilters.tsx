@@ -1,5 +1,5 @@
 import { useAnswersActions, useAnswersState, Filter, Matcher } from '@yext/answers-headless-react';
-import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
+import { CompositionMethod } from '../hooks/useComposedCssClasses';
 import { isDuplicateFilter } from '../utils/filterutils';
 import { FilterConfig } from './FilterDisplay';
 import Filters, { FiltersCssClasses } from './Filters';
@@ -63,19 +63,4 @@ export default function StaticFilters(props: StaticFiltersProps): JSX.Element {
       cssCompositionMethod={cssCompositionMethod}
     />
   );
-}
-
-interface DividerProps {
-  customCssClasses?: {
-    divider?: string
-  },
-  cssCompositionMethod?: CompositionMethod
-}
-
-export function Divider({ customCssClasses, cssCompositionMethod }: DividerProps) {
-  const builtInCssClasses = {
-    divider: 'w-full h-px bg-gray-200 my-4'
-  }
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
-  return <div className={cssClasses.divider}></div>
 }

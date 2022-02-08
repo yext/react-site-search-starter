@@ -2,6 +2,16 @@ import { useAnswersState, useAnswersActions, Filter } from '@yext/answers-headle
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import Filters, { FiltersCssClasses } from './Filters';
 
+interface FacetsProps {
+  searchOnChange?: boolean,
+  searchable?: boolean,
+  collapsible?: boolean,
+  defaultExpanded?: boolean,
+  facetConfigs?: Record<string, FacetConfig>,
+  customCssClasses?: FacetsCssClasses,
+  cssCompositionMethod?: CompositionMethod
+}
+
 export interface FacetConfig {
   searchable?: boolean,
   placeholderText?: string,
@@ -20,16 +30,6 @@ const builtInCssClasses: FacetsCssClasses = {
   facetsContainer: 'md:w-40',
   buttonsContainer: 'flex justify-between mt-5',
   button: 'border border-gray-300 px-2.5 py-1 rounded-md',
-}
-
-interface FacetsProps {
-  searchOnChange?: boolean,
-  searchable?: boolean,
-  collapsible?: boolean,
-  defaultExpanded?: boolean,
-  facetConfigs?: Record<string, FacetConfig>,
-  customCssClasses?: FacetsCssClasses,
-  cssCompositionMethod?: CompositionMethod
 }
 
 export default function Facets(props: FacetsProps): JSX.Element {
@@ -74,7 +74,7 @@ export default function Facets(props: FacetsProps): JSX.Element {
 
   const filtersConfig = facets
     .filter(facet => facet.options?.length > 0)
-    .map((facet, index, facetArray) => {
+    .map(facet => {
       const overrideConfig = facetConfigs?.[facet.fieldId] ?? {};
       const config = {
         searchable,

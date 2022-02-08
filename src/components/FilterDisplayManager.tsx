@@ -3,7 +3,7 @@ import { PageView, PageViewContext } from "../context/PageViewContext";
 import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
 import { ReactComponent as CloseXIcon } from '../icons/x.svg';
 import Facets from "./Facets";
-import StaticFilters, { Divider } from "./StaticFilters";
+import StaticFilters, { Divider } from "./Filters";
 import recursivelyMapChildren from "./utils/recursivelyMapChildren";
 
 interface FilterDisplayManagerCssClasses {
