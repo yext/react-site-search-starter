@@ -111,7 +111,7 @@ export default function Filters(props: FiltersProps): JSX.Element {
                     value: option.value
                   }
                   return renderCheckboxOption({
-                    option: { id: `${index}`, label: option.label },
+                    option: { id: `${option.label}-${index}`, label: option.label },
                     onClick: selected => option.onClick?.(filter, selected),
                     selected: option.isSelected,
                     cssClasses
