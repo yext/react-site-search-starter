@@ -1,8 +1,6 @@
-import { useAnswersState, useAnswersActions, DisplayableFacetOption } from '@yext/answers-headless-react'
+import { useAnswersState, useAnswersActions, Filter } from '@yext/answers-headless-react'
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
-import Facet,{ FacetConfig, FacetCssClasses } from './Facet';
-import { Divider } from './StaticFilters';
-
+import Filters, { FiltersCssClasses } from './Filters';
 
 interface FacetsProps {
   searchOnChange?: boolean,
@@ -14,23 +12,28 @@ interface FacetsProps {
   cssCompositionMethod?: CompositionMethod
 }
 
-interface FacetsCssClasses extends FacetCssClasses {
-  container?: string,
-  divider?: string,
+export interface FacetConfig {
+  searchable?: boolean,
+  placeholderText?: string,
+  label?: string,
+  collapsible?: boolean,
+  defaultExpanded?: boolean
+}
+
+interface FacetsCssClasses extends FiltersCssClasses {
+  facetsContainer?: string,
   buttonsContainer?: string,
   button?: string
 }
 
 const builtInCssClasses: FacetsCssClasses = {
-  searchableInputElement: 'text-sm bg-white h-9 w-full outline-none p-2 mb-2 rounded-md border border-gray-300 focus:border-blue-600',
-  container: 'md:w-40',
+  facetsContainer: 'md:w-40',
   buttonsContainer: 'flex justify-between mt-5',
   button: 'border border-gray-300 px-2.5 py-1 rounded-md',
-  divider: 'w-full h-px bg-gray-200 my-4'
 }
 
-export default function Facets (props: FacetsProps): JSX.Element {
-  const { 
+export default function Facets(props: FacetsProps): JSX.Element {
+  const {
     searchOnChange,
     searchable,
     collapsible,
@@ -39,30 +42,39 @@ export default function Facets (props: FacetsProps): JSX.Element {
     customCssClasses,
     cssCompositionMethod
   } = props;
-  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const facets = useAnswersState(state => state.filters?.facets) || [];
+
+  const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
 
   const answersActions = useAnswersActions();
   const executeSearch = () => answersActions.executeVerticalQuery();
 
   const handleResetFacets = () => {
     answersActions.resetFacets();
-    if (searchOnChange) { 
+    if (searchOnChange) {
       executeSearch();
     }
   }
 
-  const handleFacetOptionChange = (fieldId: string, option: DisplayableFacetOption) => {
-    answersActions.setFacetOption(fieldId, option, !option.selected);
-    if (searchOnChange) { 
+  const onFacetOptionClick = (filter: Filter, selected: boolean) => {
+    if (typeof filter.value !== 'string' &&
+      typeof filter.value !== 'boolean' &&
+      typeof filter.value !== 'number') {
+      return;
+    }
+    const option = {
+      matcher: filter.matcher,
+      value: filter.value
+    }
+    answersActions.setFacetOption(filter.fieldId, option, selected);
+    if (searchOnChange) {
       executeSearch();
     }
   }
 
-  const facetComponents = facets
+  const filtersConfig = facets
     .filter(facet => facet.options?.length > 0)
-    .map((facet, index, facetArray) => {
-      const isLastFacet = index === facetArray.length -1;
+    .map(facet => {
       const overrideConfig = facetConfigs?.[facet.fieldId] ?? {};
       const config = {
         searchable,
@@ -70,24 +82,31 @@ export default function Facets (props: FacetsProps): JSX.Element {
         defaultExpanded,
         ...overrideConfig
       }
-      return (
-        <div key={facet.fieldId}>
-          <Facet
-            facet={facet}
-            {...config}
-            customCssClasses={cssClasses}
-            cssCompositionMethod={cssCompositionMethod}
-            onToggle={handleFacetOptionChange} />
-          {!isLastFacet && <Divider customCssClasses={{ divider: cssClasses.divider }} cssCompositionMethod='replace'/>}
-        </div>
-      );
+
+      const filterOptions = facet.options.map(option => {
+        return {
+          fieldId: facet.fieldId,
+          value: option.value,
+          label: `${option.displayName} (${option.count})`,
+          isSelected: option.selected,
+          onClick: onFacetOptionClick
+        }
+      });
+
+      return ({
+        label: facet.displayName,
+        options: filterOptions,
+        ...config
+      });
     });
 
   return (
-    <div className={cssClasses.container}>
-      <div>
-        {facetComponents}
-      </div>
+    <div className={cssClasses.facetsContainer}>
+      <Filters
+        filterConfigs={filtersConfig}
+        customCssClasses={customCssClasses}
+        cssCompositionMethod={cssCompositionMethod}
+      />
       <div className={cssClasses.buttonsContainer}>
         {!searchOnChange && <button onClick={executeSearch} className={cssClasses.button}>Apply</button>}
         <button onClick={handleResetFacets} className={cssClasses.button}>Reset all</button>
