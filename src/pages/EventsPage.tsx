@@ -7,18 +7,12 @@ import SpellCheck from '../components/SpellCheck';
 import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
-import StaticFilters from '../components/Filters/StaticFilters';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
-import Divider from '../components/Filters/Divider';
-import Group from '../components/Filters/Group';
-import SearchInput from '../components/Filters/SearchInput';
-import CheckboxOption from '../components/Filters/CheckboxOption';
-import CollapsibleSection from '../components/Filters/CollapsibleSection';
-import CollapsibleLabel from '../components/Filters/CollapsibleLabel';
-import Facets from '../components/Filters/Facets';
+import Facets from '../components/Facets';
+import { Filters } from '@yext/answers-react-components';
 import ResponsiveDivider from '../components/ResponsiveDivider';
 
 export default function EventsPage({ verticalKey }: {
@@ -29,17 +23,17 @@ export default function EventsPage({ verticalKey }: {
 
   function renderStaticFilters() {
     return (
-      <StaticFilters>
-        <Group defaultFieldId='venueName'>
-          <CollapsibleLabel>Payment Options</CollapsibleLabel>
-          <CollapsibleSection>
-            <SearchInput />
-            <CheckboxOption value='West End Avenue'/>
-            <CheckboxOption value='Peaceful Coffee'/>
-          </CollapsibleSection>
+      <Filters.StaticFilters>
+        <Filters.Group defaultFieldId='venueName'>
+          <Filters.CollapsibleLabel>Payment Options</Filters.CollapsibleLabel>
+          <Filters.CollapsibleSection>
+            <Filters.SearchInput />
+            <Filters.CheckboxOption value='West End Avenue'/>
+            <Filters.CheckboxOption value='Peaceful Coffee'/>
+          </Filters.CollapsibleSection>
           <ResponsiveDivider/>
-        </Group>
-      </StaticFilters>
+        </Filters.Group>
+      </Filters.StaticFilters>
     )
   }
 

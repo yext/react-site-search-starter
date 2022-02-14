@@ -1,24 +1,25 @@
-import CollapsibleLabel from './Filters/CollapsibleLabel';
-import CheckboxOption from './Filters/CheckboxOption';
-import CollapsibleSection from './Filters/CollapsibleSection';
-import { default as BaseFacets } from './Filters/Facets';
-import Group from './Filters/Group';
-import SearchInput from './Filters/SearchInput';
+import { Filters } from '@yext/answers-react-components';
 import ResponsiveDivider from './ResponsiveDivider';
 
 export default function Facets(): JSX.Element {
   return (
-    <BaseFacets>
+    <Filters.Facets>
       {facets => facets.map((f, i) =>
-        <Group key={i}>
-          <CollapsibleLabel>{f.displayName}</CollapsibleLabel>
-          <CollapsibleSection>
-            <SearchInput />
-            {f.options.map(o => <CheckboxOption key={o.displayName} value={o.value} fieldId={f.fieldId} />)}
-          </CollapsibleSection>
+        <Filters.Group key={i}>
+          <Filters.CollapsibleLabel>{f.displayName}</Filters.CollapsibleLabel>
+          <Filters.CollapsibleSection>
+            <Filters.SearchInput />
+            {f.options.map(o =>
+              <Filters.CheckboxOption
+                key={o.displayName}
+                value={o.value}
+                fieldId={f.fieldId}
+              />
+            )}
+          </Filters.CollapsibleSection>
           {(i < facets.length - 1) && <ResponsiveDivider />}
-        </Group>
+        </Filters.Group>
       )}
-    </BaseFacets>
+    </Filters.Facets>
   )
 }

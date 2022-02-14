@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { PageViewContext, PageView } from '../context/PageViewContext';
-import Divider from './Filters/Divider';
+import { Filters } from '@yext/answers-react-components';
 
 const defaultMobileClassName = 'w-screen relative right-4 border-t border-gray-200 my-4';
 
@@ -8,8 +8,8 @@ export default function ResponsiveDivider({ mobileClassName }: { mobileClassName
   const { pageView } = useContext(PageViewContext);
 
   if (pageView !== PageView.FiltersVisibleMobile) {
-    return <Divider/>
+    return <Filters.Divider/>
   }
 
-  return <Divider className={mobileClassName ?? defaultMobileClassName}/>
+  return <Filters.Divider className={mobileClassName ?? defaultMobileClassName}/>
 }
