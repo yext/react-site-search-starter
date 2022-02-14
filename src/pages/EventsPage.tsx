@@ -11,7 +11,6 @@ import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
-import Facets from '../components/Facets';
 import { Filters } from '@yext/answers-react-components';
 import ResponsiveDivider from '../components/ResponsiveDivider';
 
@@ -41,7 +40,6 @@ export default function EventsPage({ verticalKey }: {
     <div className='flex'>
       <FilterDisplayManager>
         {renderStaticFilters()}
-        <Facets/>
       </FilterDisplayManager>
       {(pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
         <div className='flex-grow'>
