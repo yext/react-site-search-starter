@@ -7,28 +7,19 @@ import SpellCheck from '../components/SpellCheck';
 import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
-import StaticFilters from '../components/StaticFilters';
+import StaticFilters from '../components/Filters/StaticFilters';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
-import { FilterConfig } from '../components/Filters';
-
-const staticFiltersConfig: FilterConfig[] = [{
-  label: 'Venue',
-  options: [
-    {
-      label: 'West End Avenue',
-      fieldId: 'venueName',
-      value: 'West End Avenue'
-    },
-    {
-      label: 'Peaceful Coffee',
-      fieldId: 'venueName',
-      value: 'Peaceful Coffee',
-    },
-  ]
-}]
+import Divider from '../components/Filters/Divider';
+import Group from '../components/Filters/Group';
+import SearchInput from '../components/Filters/SearchInput';
+import CheckboxOption from '../components/Filters/CheckboxOption';
+import CollapsibleSection from '../components/Filters/CollapsibleSection';
+import CollapsibleLabel from '../components/Filters/CollapsibleLabel';
+import Facets from '../components/Filters/Facets';
+import ResponsiveDivider from '../components/ResponsiveDivider';
 
 export default function EventsPage({ verticalKey }: {
   verticalKey: string
@@ -36,20 +27,35 @@ export default function EventsPage({ verticalKey }: {
   const { pageView } = useContext(PageViewContext);
   usePageSetupEffect(verticalKey);
 
+  function renderStaticFilters() {
+    return (
+      <StaticFilters>
+        <Group defaultFieldId='venueName'>
+          <CollapsibleLabel>Payment Options</CollapsibleLabel>
+          <CollapsibleSection>
+            <SearchInput />
+            <CheckboxOption value='West End Avenue'/>
+            <CheckboxOption value='Peaceful Coffee'/>
+          </CollapsibleSection>
+          <ResponsiveDivider/>
+        </Group>
+      </StaticFilters>
+    )
+  }
+
   return (
     <div className='flex'>
       <FilterDisplayManager>
-        <StaticFilters
-          filterConfigs={staticFiltersConfig}
-        />
+        {renderStaticFilters()}
+        <Facets/>
       </FilterDisplayManager>
-      { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
+      {(pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {pageView === PageView.FiltersHiddenMobile && 
+            {pageView === PageView.FiltersHiddenMobile &&
               <ViewFiltersButton />}
           </div>
           <AppliedFilters
