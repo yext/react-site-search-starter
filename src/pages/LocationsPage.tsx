@@ -13,7 +13,7 @@ import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
 import Facets from '../components/Facets';
-import ResponsiveDivider from '../components/ResponsiveDivider';
+import { Filters } from '@yext/answers-react-components';
 
 const filterSearchFields = [{
   fieldApiName: 'name',
@@ -39,7 +39,7 @@ export default function LocationsPage({ verticalKey }: {
           label='Filter Search'
           sectioned={true}
           searchFields={filterSearchFields}/>
-        <ResponsiveDivider />
+        <Filters.ResponsiveDivider />
         <Facets/>
       </FilterDisplayManager>
       { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&

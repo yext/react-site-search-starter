@@ -1,11 +1,10 @@
 import { Filters } from '@yext/answers-react-components';
-import ResponsiveDivider from './ResponsiveDivider';
 
 export default function Facets(): JSX.Element {
   return (
     <Filters.Facets>
       {facets => facets.map((f, i) =>
-        <Filters.Group key={i}>
+        <Filters.FilterGroup key={i}>
           <Filters.CollapsibleLabel>{f.displayName}</Filters.CollapsibleLabel>
           <Filters.CollapsibleSection>
             <Filters.SearchInput />
@@ -17,8 +16,8 @@ export default function Facets(): JSX.Element {
               />
             )}
           </Filters.CollapsibleSection>
-          {(i < facets.length - 1) && <ResponsiveDivider />}
-        </Filters.Group>
+          {(i < facets.length - 1) && <Filters.ResponsiveDivider />}
+        </Filters.FilterGroup>
       )}
     </Filters.Facets>
   )

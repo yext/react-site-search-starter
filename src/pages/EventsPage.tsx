@@ -12,7 +12,6 @@ import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
 import { Filters } from '@yext/answers-react-components';
-import ResponsiveDivider from '../components/ResponsiveDivider';
 
 export default function EventsPage({ verticalKey }: {
   verticalKey: string
@@ -23,15 +22,14 @@ export default function EventsPage({ verticalKey }: {
   function renderStaticFilters() {
     return (
       <Filters.StaticFilters>
-        <Filters.Group defaultFieldId='venueName'>
+        <Filters.FilterGroup defaultFieldId='venueName'>
           <Filters.CollapsibleLabel>Payment Options</Filters.CollapsibleLabel>
           <Filters.CollapsibleSection>
             <Filters.SearchInput />
             <Filters.CheckboxOption value='West End Avenue'/>
             <Filters.CheckboxOption value='Peaceful Coffee'/>
           </Filters.CollapsibleSection>
-          <ResponsiveDivider/>
-        </Filters.Group>
+        </Filters.FilterGroup>
       </Filters.StaticFilters>
     )
   }

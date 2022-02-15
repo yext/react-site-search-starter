@@ -2,12 +2,11 @@ import { useContext } from "react";
 import { PageView, PageViewContext } from "../context/PageViewContext";
 import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
 import { ReactComponent as CloseXIcon } from '../icons/x.svg';
-import ResponsiveDivider from './ResponsiveDivider';
+import { Filters } from '@yext/answers-react-components';
 
 interface FilterDisplayManagerCssClasses {
   container___desktop?: string,
   container___mobileFiltersExpanded?: string,
-  divider?: string,
   collapseFiltersButton?: string
 }
 
@@ -44,7 +43,7 @@ export default function FilterDisplayManager({
         >
           <CloseXIcon />
         </button>
-        <ResponsiveDivider mobileClassName={cssClasses.divider}/>
+        <Filters.ResponsiveDivider/>
         {children}
       </div>
     );
