@@ -23,7 +23,7 @@ export default function EventsPage({ verticalKey }: {
     return (
       <Filters.StaticFilters>
         <Filters.FilterGroup defaultFieldId='venueName'>
-          <Filters.CollapsibleLabel>Payment Options</Filters.CollapsibleLabel>
+          <Filters.CollapsibleLabel label='Payment Options'/>
           <Filters.CollapsibleSection>
             <Filters.SearchInput />
             <Filters.CheckboxOption value='West End Avenue'/>
