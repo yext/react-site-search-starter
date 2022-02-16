@@ -9,12 +9,12 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: 16.x
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_2 }}
       - uses: actions/checkout@v2
       # Skip post-install scripts here, as a malicious
       # script could steal the NPM_TOKEN.
       - run: npm ci --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN_2 }}
       # `npm rebuild` will run all those post-install scripts for us.
       - run: npm rebuild
       - run: npm run generate-notices
