@@ -20,7 +20,7 @@ jobs:
         node-version: 16.x
     # Skip post-install scripts here, as a malicious
     # script could steal the NPM_TOKEN.
-    - run: npm ci --ignore-scripts
+    - run: npm install --ignore-scripts
       env:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     # `npm rebuild` will run all those post-install scripts for us.
