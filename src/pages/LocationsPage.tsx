@@ -8,12 +8,12 @@ import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
 import usePageSetupEffect from '../hooks/usePageSetupEffect';
 import FilterDisplayManager from '../components/FilterDisplayManager';
-import Facets from '../components/Facets';
 import FilterSearch from '../components/FilterSearch';
-import { Divider } from '../components/Filters';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
+import Facets from '../components/Facets';
+import { Filters } from '@yext/answers-react-components';
 
 const filterSearchFields = [{
   fieldApiName: 'name',
@@ -39,12 +39,8 @@ export default function LocationsPage({ verticalKey }: {
           label='Filter Search'
           sectioned={true}
           searchFields={filterSearchFields}/>
-        <Divider />
-        <Facets
-          searchOnChange={true}
-          searchable={true}
-          collapsible={true}
-          defaultExpanded={true}/>
+        <Filters.ResponsiveDivider />
+        <Facets/>
       </FilterDisplayManager>
       { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
         <div className='flex-grow'>
