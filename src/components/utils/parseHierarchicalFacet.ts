@@ -5,15 +5,18 @@ export type HierarchicalFacetTree = {
     selected: boolean,
     hasSelectedChild: boolean,
     facetOption: FacetOption,
-    childTree: HierarchicalFacetTree
+    childTree: HierarchicalFacetTree,
+    displayNameTokens: string[],
+    lastDisplayNameToken: string
   }
 }
 
-export default function parseHierarchicalFacet(hierarchicalFacet: DisplayableFacet): HierarchicalFacetTree {
+export default function parseHierarchicalFacet(hierarchicalFacet: DisplayableFacet, divider: string): HierarchicalFacetTree {
   const optionsInAscendingLength = hierarchicalFacet?.options.map(o => {
+    const displayNameTokens = o.displayName.split(divider).map(s => s.trim());
     return {
       ...o,
-      displayNameTokens: o.displayName.split('>').map(s => s.trim())
+      displayNameTokens
     }
   }).sort((a, b) => a.displayNameTokens.length - b.displayNameTokens.length) || []
 
@@ -43,6 +46,8 @@ export default function parseHierarchicalFacet(hierarchicalFacet: DisplayableFac
     const lastDisplayNameToken = displayNameTokens[displayNameTokens.length - 1];
     subtree[lastDisplayNameToken] = {
       selected: o.selected,
+      displayNameTokens,
+      lastDisplayNameToken: displayNameTokens[displayNameTokens.length - 1],
       facetOption: {
         value: o.value,
         matcher: o.matcher

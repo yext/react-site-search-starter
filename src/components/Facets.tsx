@@ -46,126 +46,56 @@ function HierarchicalFacet({ facet, divider = '>' }: {
   divider?: string
 }) {
   const answersActions = useAnswersActions();
-  const hierarchicalFacetTree = parseHierarchicalFacet(facet);
+  const tree = parseHierarchicalFacet(facet, divider);
   
-  function renderTree(tree: HierarchicalFacetTree) {
-    let currentTree = tree;
-    const renderedOptions = []
-    while (currentTree) {
-      const nodes = Object.values(tree);
-      const selectedNode = nodes.find(n => n.selected);
+  function renderTree() {
+    let treePointer = tree;
+    const renderedOptions = [];
+  
+    while (treePointer) {
+      const childNodes = Object.values(treePointer);
+      const selectedChildNode = childNodes.find(n => n.selected);
 
-      if (!selectedNode) {
+      if (!selectedChildNode) {
+        renderedOptions.push(...childNodes.map(n => <HierarchicalFacetOption
+          selected={false}
+          className='ml-4'
+          displayName={n.lastDisplayNameToken}
+          handleClick={() => answersActions.setFacetOption(facet.fieldId, n.facetOption, true )}
+        />));
         break;
-      } else if (selectedNode.hasSelectedChild) {
+      }
+      
+      if (selectedChildNode.hasSelectedChild) {
         renderedOptions.push(<HierarchicalFacetOption
           selected
-          className='text-blue-500'
-          handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedNode.facetOption, false )}
+          displayName={selectedChildNode.lastDisplayNameToken + ' /'}
+          handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedChildNode.facetOption, false )}
         />)
-        currentTree = selectedNode.childTree;
       } else {
         renderedOptions.push(<HierarchicalFacetOption
           selected
-          className='text-red-500'
-          handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedNode.facetOption, false )}
+          className='font-bold'
+          displayName={selectedChildNode.lastDisplayNameToken}
+          handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedChildNode.facetOption, false )}
         />)
-        renderedOptions.push(...Object.values(selectedNode.childTree).map(o => {
-          <HierarchicalFacetOption
-            selected={false}
-            className='text-green-500'
-            handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedNode.facetOption, false )}
-          />
-        }))
       }
-
+      treePointer = selectedChildNode.childTree;
     }
-    
+
+    return renderedOptions;
   }
 
-  type HierarchicalFacetOption = DisplayableFacetOption & {
-    numDividers: number,
-    hierarchy: string[]
-  };
-
-  const facetOptions = facet.options.map(o => {
-    const hierarchy = o.displayName.split(divider);
-    const numDividers = hierarchy.length - 1;
-    return {
-      ...o,
-      numDividers,
-      hierarchy
-    }
-  });
-
-  const selectedOptions = facetOptions.filter(o => o.selected);
-
-  function renderUnselectedOption(option: DisplayableFacetOption) {
-    return <HierarchicalFacetOption
-      selected={false}
-      displayName={option.displayName}
-      handleClick={() => answersActions.setFacetOption(facet.fieldId, option, true)}
-    />
-  }
-
-  if (selectedOptions.length === 0) {
-    return <div className='flex flex-col items-start'>
-      {facetOptions
-        .filter(o => o.numDividers === 0)
-        .map(renderUnselectedOption)
-      }
-    </div>;
-  }
-
-  // This assumes that only one hierarchical facet "path" is selected, which should always be the case.
-  // const deepestSelectedOption = [...selectedOptions].sort((a, b) => b.displayName.length - a.displayName.length)[0];
-  // const selectedHierarchicalOptions = deepestSelectedOption.hierarchy.map((currentOptionName, i) => {
-  //   const trimmedOptionName = currentOptionName.trim();
-  //   const option = selectedOptions.find(o => o.displayName.trim() === trimmedOptionName)
-  //   if (!option) {
-  //     console.error('could not find hierarchical facet for', currentOptionName);
-  //     return null;
-  //   }
-  //   if (i === deepestSelectedOption.hierarchy.length - 1) {
-  //     return (
-  //       <HierarchicalFacetOption
-  //         selected={true}
-  //         displayName={trimmedOptionName}
-  //         className='text-red-500'
-  //         handleClick={() => {
-  //           answersActions.setFacetOption(facet.fieldId, option, false);
-  //         }}
-  //       />
-  //     )
-  //   }
-  //   return (
-  //     <HierarchicalFacetOption
-  //       selected={true}
-  //       displayName={trimmedOptionName}
-  //       className='text-blue-500'
-  //       handleClick={() => {
-  //         answersActions.setFacetOption(facet.fieldId, option, false);
-  //       }}
-  //     />
-  //   )
-  // });
-
-  // const nextOptions = facetOptions
-  //   .filter(o => o.numDividers === deepestSelectedOption.numDividers + 1)
-  //   .map(o => {
-
-
-  // })
-
-  return <div className='flex flex-col items-start'>
-    {/* {selectedHierarchicalOptions}
-    {nextOptions} */}
-  </div>;
+  return (
+    <div className='flex flex-col items-start'>
+      {renderTree()}
+    </div>
+  );
 }
 
 function HierarchicalFacetOption(props: {
   selected: boolean,
-  displayName?: string,
+  displayName: string,
   className?: string,
   handleClick?: (selected: boolean) => void
 }) {
