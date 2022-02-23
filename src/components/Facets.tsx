@@ -46,10 +46,46 @@ function HierarchicalFacet({ facet, divider = '>' }: {
   divider?: string
 }) {
   const answersActions = useAnswersActions();
+  const hierarchicalFacetTree = parseHierarchicalFacet(facet);
+  
+  function renderTree(tree: HierarchicalFacetTree) {
+    let currentTree = tree;
+    const renderedOptions = []
+    while (currentTree) {
+      const nodes = Object.values(tree);
+      const selectedNode = nodes.find(n => n.selected);
+
+      if (!selectedNode) {
+        break;
+      } else if (selectedNode.hasSelectedChild) {
+        renderedOptions.push(<HierarchicalFacetOption
+          selected
+          className='text-blue-500'
+          handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedNode.facetOption, false )}
+        />)
+        currentTree = selectedNode.childTree;
+      } else {
+        renderedOptions.push(<HierarchicalFacetOption
+          selected
+          className='text-red-500'
+          handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedNode.facetOption, false )}
+        />)
+        renderedOptions.push(...Object.values(selectedNode.childTree).map(o => {
+          <HierarchicalFacetOption
+            selected={false}
+            className='text-green-500'
+            handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedNode.facetOption, false )}
+          />
+        }))
+      }
+
+    }
+    
+  }
 
   type HierarchicalFacetOption = DisplayableFacetOption & {
     numDividers: number,
-    hierarchicalDisplayName: string
+    hierarchy: string[]
   };
 
   const facetOptions = facet.options.map(o => {
@@ -58,7 +94,7 @@ function HierarchicalFacet({ facet, divider = '>' }: {
     return {
       ...o,
       numDividers,
-      hierarchicalDisplayName: hierarchy[numDividers]
+      hierarchy
     }
   });
 
@@ -82,25 +118,48 @@ function HierarchicalFacet({ facet, divider = '>' }: {
   }
 
   // This assumes that only one hierarchical facet "path" is selected, which should always be the case.
-  const deepestSelectedOption = [...selectedOptions].sort((a, b) => b.displayName.length - a.displayName.length)[0];
+  // const deepestSelectedOption = [...selectedOptions].sort((a, b) => b.displayName.length - a.displayName.length)[0];
+  // const selectedHierarchicalOptions = deepestSelectedOption.hierarchy.map((currentOptionName, i) => {
+  //   const trimmedOptionName = currentOptionName.trim();
+  //   const option = selectedOptions.find(o => o.displayName.trim() === trimmedOptionName)
+  //   if (!option) {
+  //     console.error('could not find hierarchical facet for', currentOptionName);
+  //     return null;
+  //   }
+  //   if (i === deepestSelectedOption.hierarchy.length - 1) {
+  //     return (
+  //       <HierarchicalFacetOption
+  //         selected={true}
+  //         displayName={trimmedOptionName}
+  //         className='text-red-500'
+  //         handleClick={() => {
+  //           answersActions.setFacetOption(facet.fieldId, option, false);
+  //         }}
+  //       />
+  //     )
+  //   }
+  //   return (
+  //     <HierarchicalFacetOption
+  //       selected={true}
+  //       displayName={trimmedOptionName}
+  //       className='text-blue-500'
+  //       handleClick={() => {
+  //         answersActions.setFacetOption(facet.fieldId, option, false);
+  //       }}
+  //     />
+  //   )
+  // });
 
-  const directFacetOptionChildren = facet.options.filter(o => {
-    const numDividers = o.displayName.split(divider).length - 1;
-    return numDividers !== currentNumDividers + 1 && o.displayName.includes(deepestSelectedOption.displayName);
-  });
+  // const nextOptions = facetOptions
+  //   .filter(o => o.numDividers === deepestSelectedOption.numDividers + 1)
+  //   .map(o => {
+
+
+  // })
 
   return <div className='flex flex-col items-start'>
-    {directFacetOptionChildren.map(o => {
-      const displayName = o.displayName.split(divider).pop();
-      return (
-        <HierarchicalFacetOption
-          selected={true}
-          displayName={displayName}
-          handleClick={() => answersActions.setFacetOption(facet.fieldId, o, true)}
-          className='text-blue-500'
-        />
-      )
-    })}
+    {/* {selectedHierarchicalOptions}
+    {nextOptions} */}
   </div>;
 }
 

@@ -5,7 +5,6 @@ export type HierarchicalFacetTree = {
     selected: boolean,
     hasSelectedChild: boolean,
     facetOption: FacetOption,
-    parentFacetOption: FacetOption | null,
     childTree: HierarchicalFacetTree
   }
 }
@@ -27,7 +26,6 @@ export default function parseHierarchicalFacet(hierarchicalFacet: DisplayableFac
     } = o;
 
     let subtree: HierarchicalFacetTree = tree;
-    let parentFacetOption: FacetOption | null = null;
 
     for (const token of displayNameTokens.slice(0, -1)) {
       if (!(token in subtree)) {
@@ -39,7 +37,6 @@ export default function parseHierarchicalFacet(hierarchicalFacet: DisplayableFac
       if (o.selected) {
         subtree[token].hasSelectedChild = true
       }
-      parentFacetOption = subtree[token].facetOption;
       subtree = subtree[token].childTree;
     }
 
@@ -50,7 +47,6 @@ export default function parseHierarchicalFacet(hierarchicalFacet: DisplayableFac
         value: o.value,
         matcher: o.matcher
       },
-      parentFacetOption,
       hasSelectedChild: false,
       childTree: {}
     };
