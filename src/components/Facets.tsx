@@ -47,10 +47,33 @@ function HierarchicalFacet({ facet, divider = '>' }: {
 }) {
   const answersActions = useAnswersActions();
   const tree = parseHierarchicalFacet(facet, divider);
+
+  function deselectAllOptions(tree: HierarchicalFacetTree) {
+    Object.values(tree).forEach(n => {
+      answersActions.setFacetOption(facet.fieldId, n.facetOption, false);
+      deselectAllOptions(n.childTree);
+    });
+  }
   
   function renderTree() {
     let treePointer = tree;
     const renderedOptions = [];
+
+    if (facet.options.find(o => o.selected)) {
+      renderedOptions.push(
+        <HierarchicalFacetOption
+          displayName='All Categories /'
+          handleClick={() => facet.options.filter(o => o.selected).forEach(o => answersActions.setFacetOption(facet.fieldId, o, false))}
+        />
+      )
+    } else {
+      renderedOptions.push(
+        <HierarchicalFacetOption
+          className='font-bold'
+          displayName='All Categories'
+        />
+      )
+    }
   
     while (treePointer) {
       const childNodes = Object.values(treePointer);
@@ -61,17 +84,23 @@ function HierarchicalFacet({ facet, divider = '>' }: {
           selected={false}
           className='ml-4'
           displayName={n.lastDisplayNameToken}
-          handleClick={() => answersActions.setFacetOption(facet.fieldId, n.facetOption, true )}
+          handleClick={() => {
+            answersActions.setFacetOption(facet.fieldId, n.facetOption, true )}
+          }
         />));
         break;
       }
       
       if (selectedChildNode.hasSelectedChild) {
-        renderedOptions.push(<HierarchicalFacetOption
-          selected
-          displayName={selectedChildNode.lastDisplayNameToken + ' /'}
-          handleClick={() => answersActions.setFacetOption(facet.fieldId, selectedChildNode.facetOption, false )}
-        />)
+        renderedOptions.push(
+          <HierarchicalFacetOption
+            selected
+            displayName={selectedChildNode.lastDisplayNameToken + ' /'}
+            handleClick={() => {
+              deselectAllOptions(selectedChildNode.childTree);
+            }}
+          />
+        )
       } else {
         renderedOptions.push(<HierarchicalFacetOption
           selected
@@ -94,8 +123,8 @@ function HierarchicalFacet({ facet, divider = '>' }: {
 }
 
 function HierarchicalFacetOption(props: {
-  selected: boolean,
   displayName: string,
+  selected?: boolean,
   className?: string,
   handleClick?: (selected: boolean) => void
 }) {
