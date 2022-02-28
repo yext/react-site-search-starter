@@ -6,7 +6,7 @@ import VerticalResults from '../components/VerticalResults';
 import SpellCheck from '../components/SpellCheck';
 import LocationBias from '../components/LocationBias';
 import { StandardCard } from '../components/cards/StandardCard';
-import usePageSetupEffect from '../hooks/usePageSetupEffect';
+import useInitialSearch from '../hooks/useInitialSearch';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
@@ -17,7 +17,7 @@ export default function EventsPage({ verticalKey }: {
   verticalKey: string
 }) {
   const { pageView } = useContext(PageViewContext);
-  usePageSetupEffect(verticalKey);
+  useInitialSearch({ verticalKey });
 
   function renderStaticFilters() {
     return (

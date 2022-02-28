@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { ReactComponent as KebabIcon } from '../icons/kebab.svg';
 import { useComposedCssClasses, CompositionMethod } from '../hooks/useComposedCssClasses';
 import { useAnswersState } from '@yext/answers-headless-react';
@@ -61,7 +61,12 @@ interface NavigationProps {
 export default function Navigation({ links, customCssClasses, cssCompositionMethod }: NavigationProps) {
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const currentVertical = useAnswersState(state => state.vertical.verticalKey);
-  const query = useAnswersState(state => state.query.input) ?? '';
+  const browserLocation = useLocation();
+  let queryParam: string | null = null;
+  if (browserLocation.search) {
+    const params = new URLSearchParams(browserLocation.search);
+    queryParam = params.get('query');
+  }
 
   // Close the menu when clicking the document
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -118,7 +123,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 
   return (
     <nav className={cssClasses.nav} ref={navigationRef}>
-      {visibleLinks.map((l, index) => renderLink(l, query, index === activeVisibleLinkIndex, cssClasses))}
+      {visibleLinks.map((l, index) => renderLink(l, queryParam, index === activeVisibleLinkIndex, cssClasses))}
       {numOverflowLinks > 0 &&
         <div className={cssClasses.menuButtonContainer}>
           <button
@@ -130,7 +135,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
           </button>
           {menuOpen && 
             <div className={cssClasses.menuContainer}>
-              {menuOpen && overflowLinks.map((l, index) => renderLink(l, query, index === activeMenuLinkIndex, {
+              {menuOpen && overflowLinks.map((l, index) => renderLink(l, queryParam, index === activeMenuLinkIndex, {
                 navLink: cssClasses.menuNavLink,
                 navLinkContainer: cssClasses.menuNavLinkContainer,
                 navLinkContainer___active: cssClasses.menuNavLinkContainer___active,
@@ -146,7 +151,7 @@ export default function Navigation({ links, customCssClasses, cssCompositionMeth
 
 function renderLink(
   linkData: LinkData,
-  query: string,
+  query: string | null,
   isActiveLink: boolean,
   cssClasses: {
     navLinkContainer?: string,
@@ -160,12 +165,14 @@ function renderLink(
     [cssClasses.navLinkContainer___inActive ?? '']: !isActiveLink,
     [cssClasses.navLinkContainer___active ?? '']: isActiveLink
   });
+  
+  const path = query !== null ? `${to}?query=${query}` : `${to}`;
 
   return (
     <div className={navLinkContainerClasses} key={to}>
       <NavLink
         className={cssClasses.navLink}
-        to={`${to}?query=${query}`}
+        to={path}
         exact={true}
       >
         {label}
