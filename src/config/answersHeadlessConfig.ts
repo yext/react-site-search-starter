@@ -8,3 +8,7 @@ export const answersHeadlessConfig: HeadlessProviderProps = {
   locale: 'en',
   sessionTrackingEnabled: true
 };
+
+export const hierarchicalFacetFieldIds = [
+  'c_hierarchicalFacet'
+];
