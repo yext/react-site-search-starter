@@ -1,11 +1,11 @@
 import { useLocation } from "react-router-dom";
 
-export function useQueryParam(): string | null {
+export function useSearchParam(searchParam: string): string | null {
   const browserLocation = useLocation();
-  let queryParam: string | null = null;
+  let paramValue: string | null = null;
   if (browserLocation.search) {
     const params = new URLSearchParams(browserLocation.search);
-    queryParam = params.get('query');
+    paramValue = params.get(searchParam);
   }
-  return queryParam;
+  return paramValue;
 }

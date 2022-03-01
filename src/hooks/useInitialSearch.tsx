@@ -3,7 +3,7 @@ import { useAnswersActions, QuerySource, UniversalLimit } from "@yext/answers-he
 import { executeSearch, getSearchIntents, updateLocationIfNeeded } from "../utils/search-operations";
 import { useLocation } from "react-router";
 import { BrowserState } from "../PageRouter";
-import { useQueryParam } from "./useQueryParam";
+import { useSearchParam } from "./useSearchParam";
 
 interface InitialSearchConfig {
   /** The verticalKey associated with the page, or undefined for universal pages. */
@@ -28,7 +28,7 @@ export default function useInitialSearch(config?: InitialSearchConfig) {
   const { verticalKey, defaultInitialSearch = '', verticalLimit, universalLimit } = config ?? {};
   const answersActions = useAnswersActions();
   const browserLocation = useLocation<BrowserState>();
-  const queryParam = useQueryParam();
+  const queryParam = useSearchParam('query');
 
   useLayoutEffect(() => {
     verticalKey

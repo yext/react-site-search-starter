@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { ReactComponent as KebabIcon } from '../icons/kebab.svg';
 import { useComposedCssClasses, CompositionMethod } from '../hooks/useComposedCssClasses';
 import { useAnswersState } from '@yext/answers-headless-react';
-import { useQueryParam } from '../hooks/useQueryParam';
+import { useSearchParam } from '../hooks/useSearchParam';
 
 interface NavigationCssClasses {
   nav?: string,
@@ -62,7 +62,7 @@ interface NavigationProps {
 export default function Navigation({ links, customCssClasses, cssCompositionMethod }: NavigationProps) {
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const currentVertical = useAnswersState(state => state.vertical.verticalKey);
-  const queryParam = useQueryParam();
+  const queryParam = useSearchParam('query');
 
   // Close the menu when clicking the document
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
