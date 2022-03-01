@@ -1,9 +1,10 @@
 import classNames from 'classnames';
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { ReactComponent as KebabIcon } from '../icons/kebab.svg';
 import { useComposedCssClasses, CompositionMethod } from '../hooks/useComposedCssClasses';
 import { useAnswersState } from '@yext/answers-headless-react';
+import { useQueryParam } from '../hooks/useQueryParam';
 
 interface NavigationCssClasses {
   nav?: string,
@@ -61,12 +62,7 @@ interface NavigationProps {
 export default function Navigation({ links, customCssClasses, cssCompositionMethod }: NavigationProps) {
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   const currentVertical = useAnswersState(state => state.vertical.verticalKey);
-  const browserLocation = useLocation();
-  let queryParam: string | null = null;
-  if (browserLocation.search) {
-    const params = new URLSearchParams(browserLocation.search);
-    queryParam = params.get('query');
-  }
+  const queryParam = useQueryParam();
 
   // Close the menu when clicking the document
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -166,7 +162,7 @@ function renderLink(
     [cssClasses.navLinkContainer___active ?? '']: isActiveLink
   });
   
-  const path = query !== null ? `${to}?query=${query}` : `${to}`;
+  const path = query !== null ? `${to}?query=${query}` : to;
 
   return (
     <div className={navLinkContainerClasses} key={to}>

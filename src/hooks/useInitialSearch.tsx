@@ -3,6 +3,7 @@ import { useAnswersActions, QuerySource, UniversalLimit } from "@yext/answers-he
 import { executeSearch, getSearchIntents, updateLocationIfNeeded } from "../utils/search-operations";
 import { useLocation } from "react-router";
 import { BrowserState } from "../PageRouter";
+import { useQueryParam } from "./useQueryParam";
 
 interface InitialSearchConfig {
   /** The verticalKey associated with the page, or undefined for universal pages. */
@@ -18,7 +19,8 @@ interface InitialSearchConfig {
 }
 
 /**
- * Clears the state from the previous searcher and performs the initial search on a page.
+ * Clears the state from the previous searcher and performs the initial search when displaying
+ * a new universal or vertical page.
  *
  * @param config - The configuration options for the initial search
  */
@@ -26,6 +28,7 @@ export default function useInitialSearch(config?: InitialSearchConfig) {
   const { verticalKey, defaultInitialSearch = '', verticalLimit, universalLimit } = config ?? {};
   const answersActions = useAnswersActions();
   const browserLocation = useLocation<BrowserState>();
+  const queryParam = useQueryParam();
 
   useLayoutEffect(() => {
     verticalKey
@@ -41,11 +44,6 @@ export default function useInitialSearch(config?: InitialSearchConfig) {
         await updateLocationIfNeeded(answersActions, searchIntents);
       }
 
-      let queryParam: string | null = null;
-      if (browserLocation.search) {
-        const params = new URLSearchParams(browserLocation.search);
-        queryParam = params.get('query');
-      }
       queryParam != null
         ? answersActions.setQuery(queryParam)
         : answersActions.setQuery(defaultInitialSearch);
@@ -67,7 +65,7 @@ export default function useInitialSearch(config?: InitialSearchConfig) {
     verticalLimit,
     universalLimit,
     defaultInitialSearch,
-    browserLocation.search,
+    queryParam,
     browserLocation.state?.querySource
   ]);
 }
