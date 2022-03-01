@@ -13,7 +13,7 @@ interface FilterDisplayManagerCssClasses {
 const builtInCssClasses: FilterDisplayManagerCssClasses = {
   container___desktop: 'mr-10',
   container___mobileFiltersExpanded: 'py-5 px-4 flex flex-col overflow-x-hidden fixed bg-white inset-0 z-10',
-  collapseFiltersButton: 'w-5 h-5 p-1 self-end my-2'
+  collapseFiltersButton: 'w-5 h-5 p-1 self-end my-2 text-gray-400'
 }
 
 interface Props {
