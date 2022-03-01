@@ -36,9 +36,8 @@ export default function useInitialSearch(config?: InitialSearchConfig) {
     universalLimit && answersActions.setUniversalLimit(universalLimit);
 
     const executeQuery = async () => {
-      let searchIntents: SearchIntent[] = [];
       if (!answersActions.state.location.userLocation) {
-        searchIntents = await getSearchIntents(answersActions, !!verticalKey) || [];
+        let searchIntents = await getSearchIntents(answersActions, !!verticalKey) || [];
         await updateLocationIfNeeded(answersActions, searchIntents);
       }
 
