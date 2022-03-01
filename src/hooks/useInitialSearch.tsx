@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "react";
-import { useAnswersActions, SearchIntent, QuerySource, UniversalLimit } from "@yext/answers-headless-react";
+import { useAnswersActions, QuerySource, UniversalLimit } from "@yext/answers-headless-react";
 import { executeSearch, getSearchIntents, updateLocationIfNeeded } from "../utils/search-operations";
 import { useLocation } from "react-router";
 import { BrowserState } from "../PageRouter";
