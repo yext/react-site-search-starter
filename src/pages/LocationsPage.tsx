@@ -10,10 +10,11 @@ import useInitialSearch from '../hooks/useInitialSearch';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import FilterSearch from '../components/FilterSearch';
 import ViewFiltersButton from '../components/ViewFiltersButton';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
 import Facets from '../components/Facets';
-import { Filters } from '@yext/answers-react-components';
+import { ResponsiveDivider } from '../components/ResponsiveDivider';
+import { FilterView, FilterViewContext } from '../context/FilterViewContext';
 
 const filterSearchFields = [{
   fieldApiName: 'name',
@@ -29,26 +30,28 @@ const filterSearchFields = [{
 export default function LocationsPage({ verticalKey }: {
   verticalKey: string
 }) {
-  const { pageView } = useContext(PageViewContext);
-  useInitialSearch({ verticalKey });
+  const pageView = useContext(PageViewContext);
+  const [filterView, setFilterView] = useState<FilterView>(FilterView.Visible);
+  useInitialSearch({ verticalKey, defaultInitialSearch: 'job' });
 
   return (
     <div className='flex'> 
-      <FilterDisplayManager>
-        <FilterSearch
-          label='Filter Search'
-          sectioned={true}
-          searchFields={filterSearchFields}/>
-        <Filters.ResponsiveDivider />
-        <Facets/>
-      </FilterDisplayManager>
-      { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
+      <FilterViewContext.Provider value={{ filterView, setFilterView }}>
+        <FilterDisplayManager>
+          <FilterSearch
+            label='Filter Search'
+            sectioned={true}
+            searchFields={filterSearchFields}/>
+          <ResponsiveDivider />
+          <Facets/>
+        </FilterDisplayManager>
+        {(pageView === PageView.Desktop || filterView === FilterView.Hidden) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {pageView === PageView.FiltersHiddenMobile && 
+            {pageView === PageView.Mobile && filterView === FilterView.Hidden && 
               <ViewFiltersButton />}
           </div>
           <AppliedFilters
@@ -66,8 +69,8 @@ export default function LocationsPage({ verticalKey }: {
             CardComponent={StandardCard}
           />
           <LocationBias />
-        </div>
-      }
+        </div>}
+      </FilterViewContext.Provider>
     </div>
   )
 }

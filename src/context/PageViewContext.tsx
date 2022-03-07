@@ -1,36 +1,26 @@
 import { createContext } from 'react';
-import { usePageView } from '../hooks/usePageView';
+import { useWindowWidth } from '@react-hook/window-size';
 
 /**
  * Represents the possible views the page can display
  */
 export enum PageView {
   Desktop,
-  FiltersHiddenMobile,
-  FiltersVisibleMobile
-} 
-
-interface PageViewContextInterface {
-  pageView: PageView,
-  setPageView: (pageView: PageView) => void
+  Mobile
 }
 
-const pageViewContextDefault: PageViewContextInterface = {
-  pageView: PageView.Desktop,
-  setPageView: (pageView: PageView) => {}
-}
+export const PageViewContext = createContext<PageView>(PageView.Desktop);
 
-export const PageViewContext = createContext<PageViewContextInterface>(pageViewContextDefault);
-
-export function PageViewContextProvider(props: React.PropsWithChildren<{}>): JSX.Element {
-  const [pageView, setPageView] = usePageView();
+export function PageViewContextProvider(
+  props: React.PropsWithChildren<{ mobileWidth?: string }>
+): JSX.Element {
+  const { mobileWidth = 768 } = props;
+  const windowWidth = useWindowWidth({ wait: 50 });
+  const pageView = windowWidth <= mobileWidth ? PageView.Mobile : PageView.Desktop;
 
   return (
-    <PageViewContext.Provider value={{
-      pageView,
-      setPageView
-    }}>
+    <PageViewContext.Provider value={pageView}>
       {props.children}
     </PageViewContext.Provider>
-  )
+  );
 }

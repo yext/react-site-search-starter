@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { PageView, PageViewContext } from '../context/PageViewContext';
+import { FilterView, FilterViewContext } from '../context/FilterViewContext';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import { ReactComponent as FiltersIcon } from '../icons/filters.svg';
 
@@ -21,14 +21,14 @@ interface Props {
 interface Props {
 }
 
-export default function ViewFiltersButton ({ customCssClasses, cssCompositionMethod }: Props) {
-  const { setPageView } = useContext(PageViewContext);
+export default function ViewFiltersButton({ customCssClasses, cssCompositionMethod }: Props): JSX.Element {
+  const { setFilterView } = useContext(FilterViewContext);
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
   return (
     <div className={cssClasses.container}>
       <button
         className={cssClasses.button}
-        onClick={() => { setPageView(PageView.FiltersVisibleMobile)}}
+        onClick={() => setFilterView(FilterView.Visible)}
       >
         <FiltersIcon />
       </button>

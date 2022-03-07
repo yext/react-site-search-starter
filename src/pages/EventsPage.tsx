@@ -9,14 +9,16 @@ import { StandardCard } from '../components/cards/StandardCard';
 import useInitialSearch from '../hooks/useInitialSearch';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
 import { Filters } from '@yext/answers-react-components';
+import { FilterView, FilterViewContext } from '../context/FilterViewContext';
 
 export default function EventsPage({ verticalKey }: {
   verticalKey: string
 }) {
-  const { pageView } = useContext(PageViewContext);
+  const pageView = useContext(PageViewContext);
+  const [filterView, setFilterView] = useState<FilterView>(FilterView.Visible);
   useInitialSearch({ verticalKey });
 
   function renderStaticFilters() {
@@ -36,16 +38,17 @@ export default function EventsPage({ verticalKey }: {
 
   return (
     <div className='flex'>
-      <FilterDisplayManager>
-        {renderStaticFilters()}
-      </FilterDisplayManager>
-      {(pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
+      <FilterViewContext.Provider value={{ filterView, setFilterView }}>
+        <FilterDisplayManager>
+          {renderStaticFilters()}
+        </FilterDisplayManager>
+        {(pageView === PageView.Desktop || filterView === FilterView.Hidden) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {pageView === PageView.FiltersHiddenMobile &&
+            {pageView === PageView.Mobile && filterView === FilterView.Hidden && 
               <ViewFiltersButton />}
           </div>
           <AppliedFilters
@@ -63,8 +66,8 @@ export default function EventsPage({ verticalKey }: {
             CardComponent={StandardCard}
           />
           <LocationBias />
-        </div>
-      }
+        </div>}
+      </FilterViewContext.Provider>
     </div>
   )
 }
