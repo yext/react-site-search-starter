@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { PageView, PageViewContext } from "../context/PageViewContext";
 import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
 import { ReactComponent as CloseIcon } from '../icons/x.svg';
@@ -33,6 +33,7 @@ export default function FilterDisplayManager({
   const pageView = useContext(PageViewContext);
   const { filterView, setFilterView } = useContext(FilterViewContext);
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
+  const setFilterViewToHidden = useCallback(() => setFilterView(FilterView.Hidden), [setFilterView]);
 
   if (pageView === PageView.Desktop) {
     return <div className={cssClasses.container___desktop}>{children}</div>;
@@ -42,7 +43,7 @@ export default function FilterDisplayManager({
       <div className={cssClasses.container___mobileFiltersExpanded}>
         <button
           className={cssClasses.collapseFiltersButton}
-          onClick={() => setFilterView(FilterView.Hidden)}
+          onClick={setFilterViewToHidden}
         >
           <CloseIcon />
         </button>

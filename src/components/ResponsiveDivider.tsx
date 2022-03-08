@@ -1,4 +1,4 @@
-import { ComponentPropsWithRef, useContext } from 'react';
+import { useContext } from 'react';
 import { PageViewContext, PageView } from '../context/PageViewContext';
 
 export type ResponsiveDividerProps = {
@@ -6,7 +6,7 @@ export type ResponsiveDividerProps = {
   desktopClassName?: string,
   /** CSS class names applied to the divider equal to or below the mobileBreakpoint. */
   mobileClassName?: string
-} & ComponentPropsWithRef<'div'>;
+};
 
 
 export function ResponsiveDivider(props: ResponsiveDividerProps): JSX.Element {
@@ -19,9 +19,5 @@ export function ResponsiveDivider(props: ResponsiveDividerProps): JSX.Element {
   const pageView = useContext(PageViewContext);
   const className = pageView === PageView.Mobile ? mobileClassName : desktopClassName;
 
-  return (
-    <div {...divProps} className={className}>
-      {props.children}
-    </div>
-  );
+  return <div {...divProps} className={className}></div>;
 }

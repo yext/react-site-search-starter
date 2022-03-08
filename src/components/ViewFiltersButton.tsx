@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useCallback, useContext } from 'react';
 import { FilterView, FilterViewContext } from '../context/FilterViewContext';
 import { CompositionMethod, useComposedCssClasses } from '../hooks/useComposedCssClasses';
 import { ReactComponent as FiltersIcon } from '../icons/filters.svg';
@@ -24,11 +24,12 @@ interface Props {
 export default function ViewFiltersButton({ customCssClasses, cssCompositionMethod }: Props): JSX.Element {
   const { setFilterView } = useContext(FilterViewContext);
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
+  const setFilterViewToVisible = useCallback(() => setFilterView(FilterView.Visible), [setFilterView]);
   return (
     <div className={cssClasses.container}>
       <button
         className={cssClasses.button}
-        onClick={() => setFilterView(FilterView.Visible)}
+        onClick={setFilterViewToVisible}
       >
         <FiltersIcon />
       </button>
