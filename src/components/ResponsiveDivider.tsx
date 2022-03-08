@@ -12,12 +12,11 @@ export type ResponsiveDividerProps = {
 export function ResponsiveDivider(props: ResponsiveDividerProps): JSX.Element {
   const {
     desktopClassName = 'w-full h-px bg-gray-200 my-4',
-    mobileClassName = 'w-screen relative right-4 border-t border-gray-200 my-4',
-    ...divProps
+    mobileClassName = 'w-screen relative right-4 border-t border-gray-200 my-4'
   } = props;
 
   const pageView = useContext(PageViewContext);
   const className = pageView === PageView.Mobile ? mobileClassName : desktopClassName;
 
-  return <div {...divProps} className={className}></div>;
+  return <div className={className}></div>;
 }
