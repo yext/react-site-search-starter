@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, PropsWithChildren, useState } from "react";
 
 export enum FilterView {
   Hidden,
@@ -17,3 +17,12 @@ const filterViewContextDefault: FilterViewContextInterface = {
   }
 };
 export const FilterViewContext = createContext<FilterViewContextInterface>(filterViewContextDefault);
+
+export function FilterViewContextProvider({ children }: PropsWithChildren<{}>): JSX.Element {
+  const [filterView, setFilterView] = useState<FilterView>(FilterView.Visible);
+  return (
+    <FilterViewContext.Provider value={{ filterView, setFilterView }}>
+      {children}
+    </FilterViewContext.Provider>
+  );
+}

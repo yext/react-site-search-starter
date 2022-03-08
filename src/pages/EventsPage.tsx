@@ -9,7 +9,7 @@ import { StandardCard } from '../components/cards/StandardCard';
 import useInitialSearch from '../hooks/useInitialSearch';
 import FilterDisplayManager from '../components/FilterDisplayManager';
 import ViewFiltersButton from '../components/ViewFiltersButton';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
 import { Filters } from '@yext/answers-react-components';
 import { FilterView, FilterViewContext } from '../context/FilterViewContext';
@@ -18,7 +18,7 @@ export default function EventsPage({ verticalKey }: {
   verticalKey: string
 }) {
   const pageView = useContext(PageViewContext);
-  const [filterView, setFilterView] = useState<FilterView>(FilterView.Visible);
+  const { filterView } = useContext(FilterViewContext);
   const isFilterHiddenOnMobile = pageView === PageView.Mobile && filterView === FilterView.Hidden;
   useInitialSearch({ verticalKey });
 
@@ -39,35 +39,33 @@ export default function EventsPage({ verticalKey }: {
 
   return (
     <div className='flex'>
-      <FilterViewContext.Provider value={{ filterView, setFilterView }}>
-        <FilterDisplayManager>
-          {renderStaticFilters()}
-        </FilterDisplayManager>
-        {(pageView === PageView.Desktop || isFilterHiddenOnMobile) &&
-        <div className='flex-grow'>
-          <DirectAnswer />
-          <SpellCheck />
-          <div className='flex'>
-            <ResultsCount />
-            {isFilterHiddenOnMobile && <ViewFiltersButton />}
-          </div>
-          <AppliedFilters
-            hiddenFields={['builtin.entityType']}
-          />
-          <AlternativeVerticals
-            currentVerticalLabel='Events'
-            verticalsConfig={[
-              { label: 'FAQs', verticalKey: 'faqs' },
-              { label: 'Jobs', verticalKey: 'jobs' },
-              { label: 'Locations', verticalKey: 'locations' }
-            ]}
-          />
-          <VerticalResults
-            CardComponent={StandardCard}
-          />
-          <LocationBias />
-        </div>}
-      </FilterViewContext.Provider>
+      <FilterDisplayManager>
+        {renderStaticFilters()}
+      </FilterDisplayManager>
+      {(pageView === PageView.Desktop || isFilterHiddenOnMobile) &&
+      <div className='flex-grow'>
+        <DirectAnswer />
+        <SpellCheck />
+        <div className='flex'>
+          <ResultsCount />
+          {isFilterHiddenOnMobile && <ViewFiltersButton />}
+        </div>
+        <AppliedFilters
+          hiddenFields={['builtin.entityType']}
+        />
+        <AlternativeVerticals
+          currentVerticalLabel='Events'
+          verticalsConfig={[
+            { label: 'FAQs', verticalKey: 'faqs' },
+            { label: 'Jobs', verticalKey: 'jobs' },
+            { label: 'Locations', verticalKey: 'locations' }
+          ]}
+        />
+        <VerticalResults
+          CardComponent={StandardCard}
+        />
+        <LocationBias />
+      </div>}
     </div>
   )
 }
