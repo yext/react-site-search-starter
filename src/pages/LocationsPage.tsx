@@ -46,29 +46,30 @@ export default function LocationsPage({ verticalKey }: {
         <Facets/>
       </FilterDisplayManager>
       {(pageView === PageView.Desktop || isFilterHiddenOnMobile) &&
-      <div className='flex-grow'>
-        <DirectAnswer />
-        <SpellCheck />
-        <div className='flex'>
-          <ResultsCount />
-          {isFilterHiddenOnMobile && <ViewFiltersButton />}
+        <div className='flex-grow'>
+          <DirectAnswer />
+          <SpellCheck />
+          <div className='flex'>
+            <ResultsCount />
+            {isFilterHiddenOnMobile && <ViewFiltersButton />}
+          </div>
+          <AppliedFilters
+            hiddenFields={['builtin.entityType']}
+          />
+          <AlternativeVerticals
+            currentVerticalLabel='Locations'
+            verticalsConfig={[
+              { label: 'FAQs', verticalKey: 'faqs' },
+              { label: 'Jobs', verticalKey: 'jobs' },
+              { label: 'Events', verticalKey: 'events' }
+            ]}
+          />
+          <VerticalResults
+            CardComponent={StandardCard}
+          />
+          <LocationBias />
         </div>
-        <AppliedFilters
-          hiddenFields={['builtin.entityType']}
-        />
-        <AlternativeVerticals
-          currentVerticalLabel='Locations'
-          verticalsConfig={[
-            { label: 'FAQs', verticalKey: 'faqs' },
-            { label: 'Jobs', verticalKey: 'jobs' },
-            { label: 'Events', verticalKey: 'events' }
-          ]}
-        />
-        <VerticalResults
-          CardComponent={StandardCard}
-        />
-        <LocationBias />
-      </div>}
+      }
     </div>
   )
 }

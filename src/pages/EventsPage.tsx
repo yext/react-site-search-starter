@@ -43,29 +43,30 @@ export default function EventsPage({ verticalKey }: {
         {renderStaticFilters()}
       </FilterDisplayManager>
       {(pageView === PageView.Desktop || isFilterHiddenOnMobile) &&
-      <div className='flex-grow'>
-        <DirectAnswer />
-        <SpellCheck />
-        <div className='flex'>
-          <ResultsCount />
-          {isFilterHiddenOnMobile && <ViewFiltersButton />}
+        <div className='flex-grow'>
+          <DirectAnswer />
+          <SpellCheck />
+          <div className='flex'>
+            <ResultsCount />
+            {isFilterHiddenOnMobile && <ViewFiltersButton />}
+          </div>
+          <AppliedFilters
+            hiddenFields={['builtin.entityType']}
+          />
+          <AlternativeVerticals
+            currentVerticalLabel='Events'
+            verticalsConfig={[
+              { label: 'FAQs', verticalKey: 'faqs' },
+              { label: 'Jobs', verticalKey: 'jobs' },
+              { label: 'Locations', verticalKey: 'locations' }
+            ]}
+          />
+          <VerticalResults
+            CardComponent={StandardCard}
+          />
+          <LocationBias />
         </div>
-        <AppliedFilters
-          hiddenFields={['builtin.entityType']}
-        />
-        <AlternativeVerticals
-          currentVerticalLabel='Events'
-          verticalsConfig={[
-            { label: 'FAQs', verticalKey: 'faqs' },
-            { label: 'Jobs', verticalKey: 'jobs' },
-            { label: 'Locations', verticalKey: 'locations' }
-          ]}
-        />
-        <VerticalResults
-          CardComponent={StandardCard}
-        />
-        <LocationBias />
-      </div>}
+      }
     </div>
   )
 }
