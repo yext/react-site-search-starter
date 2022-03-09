@@ -32,7 +32,7 @@ export default function LocationsPage({ verticalKey }: {
 }) {
   const pageView = useContext(PageViewContext);
   const { filterView } = useContext(FilterViewContext);
-  const isFilterHiddenOnMobile = pageView === PageView.Mobile && filterView === FilterView.Hidden;
+  const areFiltersHiddenOnMobile = pageView === PageView.Mobile && filterView === FilterView.Hidden;
   useInitialSearch({ verticalKey });
 
   return (
@@ -45,13 +45,13 @@ export default function LocationsPage({ verticalKey }: {
         <ResponsiveDivider />
         <Facets/>
       </FilterDisplayManager>
-      {(pageView === PageView.Desktop || isFilterHiddenOnMobile) &&
+      {(pageView === PageView.Desktop || areFiltersHiddenOnMobile) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {isFilterHiddenOnMobile && <ViewFiltersButton />}
+            {areFiltersHiddenOnMobile && <ViewFiltersButton />}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}

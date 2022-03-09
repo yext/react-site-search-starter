@@ -19,7 +19,7 @@ export default function EventsPage({ verticalKey }: {
 }) {
   const pageView = useContext(PageViewContext);
   const { filterView } = useContext(FilterViewContext);
-  const isFilterHiddenOnMobile = pageView === PageView.Mobile && filterView === FilterView.Hidden;
+  const areFiltersHiddenOnMobile = pageView === PageView.Mobile && filterView === FilterView.Hidden;
   useInitialSearch({ verticalKey });
 
   function renderStaticFilters() {
@@ -42,13 +42,13 @@ export default function EventsPage({ verticalKey }: {
       <FilterDisplayManager>
         {renderStaticFilters()}
       </FilterDisplayManager>
-      {(pageView === PageView.Desktop || isFilterHiddenOnMobile) &&
+      {(pageView === PageView.Desktop || areFiltersHiddenOnMobile) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {isFilterHiddenOnMobile && <ViewFiltersButton />}
+            {areFiltersHiddenOnMobile && <ViewFiltersButton />}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}
