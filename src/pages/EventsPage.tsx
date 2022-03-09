@@ -12,11 +12,14 @@ import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
 import { Filters } from '@yext/answers-react-components';
+import { FilterView, FilterViewContext } from '../context/FilterViewContext';
 
 export default function EventsPage({ verticalKey }: {
   verticalKey: string
 }) {
-  const { pageView } = useContext(PageViewContext);
+  const pageView = useContext(PageViewContext);
+  const { filterView } = useContext(FilterViewContext);
+  const areFiltersHiddenOnMobile = pageView === PageView.Mobile && filterView === FilterView.Hidden;
   useInitialSearch({ verticalKey });
 
   function renderStaticFilters() {
@@ -39,14 +42,13 @@ export default function EventsPage({ verticalKey }: {
       <FilterDisplayManager>
         {renderStaticFilters()}
       </FilterDisplayManager>
-      {(pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
+      {(pageView === PageView.Desktop || areFiltersHiddenOnMobile) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {pageView === PageView.FiltersHiddenMobile &&
-              <ViewFiltersButton />}
+            {areFiltersHiddenOnMobile && <ViewFiltersButton />}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}

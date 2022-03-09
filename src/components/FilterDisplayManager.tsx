@@ -1,8 +1,9 @@
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { PageView, PageViewContext } from "../context/PageViewContext";
 import { CompositionMethod, useComposedCssClasses } from "../hooks/useComposedCssClasses";
-import { ReactComponent as CloseXIcon } from '../icons/x.svg';
-import { Filters } from '@yext/answers-react-components';
+import { ReactComponent as CloseIcon } from '../icons/x.svg';
+import { ResponsiveDivider } from "./ResponsiveDivider";
+import { FilterView, FilterViewContext } from "../context/FilterViewContext";
 
 interface FilterDisplayManagerCssClasses {
   container___desktop?: string,
@@ -22,28 +23,31 @@ interface Props {
 };
 
 /**
- * Responsible for managing how filters are displayed based on the current PageView
+ * Responsible for managing how filters are displayed based on the current PageView and FilterView.
  */
 export default function FilterDisplayManager({
   children,
   customCssClasses,
   cssCompositionMethod
-}: React.PropsWithChildren<Props>) {
-  const { pageView, setPageView } = useContext(PageViewContext);
+}: React.PropsWithChildren<Props>): JSX.Element | null {
+  const pageView = useContext(PageViewContext);
+  const { filterView, setFilterView } = useContext(FilterViewContext);
   const cssClasses = useComposedCssClasses(builtInCssClasses, customCssClasses, cssCompositionMethod);
+  const setFilterViewToHidden = useCallback(() => setFilterView(FilterView.Hidden), [setFilterView]);
 
   if (pageView === PageView.Desktop) {
     return <div className={cssClasses.container___desktop}>{children}</div>;
-  } else if (pageView === PageView.FiltersVisibleMobile) {
+  }
+  if (pageView === PageView.Mobile && filterView === FilterView.Visible) {
     return (
       <div className={cssClasses.container___mobileFiltersExpanded}>
         <button
           className={cssClasses.collapseFiltersButton}
-          onClick={() => setPageView(PageView.FiltersHiddenMobile)}
+          onClick={setFilterViewToHidden}
         >
-          <CloseXIcon />
+          <CloseIcon />
         </button>
-        <Filters.ResponsiveDivider/>
+        <ResponsiveDivider />
         {children}
       </div>
     );

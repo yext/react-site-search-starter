@@ -1,4 +1,5 @@
 import { Filters } from '@yext/answers-react-components';
+import { ResponsiveDivider } from './ResponsiveDivider';
 
 export default function Facets(): JSX.Element {
   return (
@@ -21,7 +22,7 @@ export default function Facets(): JSX.Element {
                 />
               )}
             </Filters.CollapsibleSection>
-            {(i < facets.length - 1) && <Filters.ResponsiveDivider />}
+            {(i < facets.length - 1) && <ResponsiveDivider />}
           </Filters.FilterGroup>
         )
       })}

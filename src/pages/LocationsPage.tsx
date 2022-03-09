@@ -13,7 +13,8 @@ import ViewFiltersButton from '../components/ViewFiltersButton';
 import { useContext } from 'react';
 import { PageView, PageViewContext } from '../context/PageViewContext';
 import Facets from '../components/Facets';
-import { Filters } from '@yext/answers-react-components';
+import { ResponsiveDivider } from '../components/ResponsiveDivider';
+import { FilterView, FilterViewContext } from '../context/FilterViewContext';
 
 const filterSearchFields = [{
   fieldApiName: 'name',
@@ -29,7 +30,9 @@ const filterSearchFields = [{
 export default function LocationsPage({ verticalKey }: {
   verticalKey: string
 }) {
-  const { pageView } = useContext(PageViewContext);
+  const pageView = useContext(PageViewContext);
+  const { filterView } = useContext(FilterViewContext);
+  const areFiltersHiddenOnMobile = pageView === PageView.Mobile && filterView === FilterView.Hidden;
   useInitialSearch({ verticalKey });
 
   return (
@@ -39,17 +42,16 @@ export default function LocationsPage({ verticalKey }: {
           label='Filter Search'
           sectioned={true}
           searchFields={filterSearchFields}/>
-        <Filters.ResponsiveDivider />
+        <ResponsiveDivider />
         <Facets/>
       </FilterDisplayManager>
-      { (pageView === PageView.Desktop || pageView === PageView.FiltersHiddenMobile) &&
+      {(pageView === PageView.Desktop || areFiltersHiddenOnMobile) &&
         <div className='flex-grow'>
           <DirectAnswer />
           <SpellCheck />
           <div className='flex'>
             <ResultsCount />
-            {pageView === PageView.FiltersHiddenMobile && 
-              <ViewFiltersButton />}
+            {areFiltersHiddenOnMobile && <ViewFiltersButton />}
           </div>
           <AppliedFilters
             hiddenFields={['builtin.entityType']}
