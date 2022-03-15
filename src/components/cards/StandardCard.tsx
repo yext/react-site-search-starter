@@ -29,8 +29,8 @@ const builtInCssClasses: StandardCardCssClasses = {
   body: 'flex justify-end pt-2.5',
   descriptionContainer: 'w-full text-base',
   ctaContainer: 'flex flex-col justify-end ml-4',
-  cta1: 'min-w-max bg-blue-600 text-white font-medium rounded-lg py-2 px-5 shadow',
-  cta2: 'min-w-max bg-white text-blue-600 font-medium rounded-lg py-2 px-5 mt-2 shadow',
+  cta1: 'whitespace-nowrap bg-blue-600 text-white font-medium rounded-lg py-2 px-5 shadow',
+  cta2: 'whitespace-nowrap bg-white text-blue-600 font-medium rounded-lg py-2 px-5 mt-2 shadow',
   ordinal: 'mr-1.5 text-lg font-medium',
   title: 'text-lg font-medium'
 }
