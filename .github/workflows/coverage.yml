@@ -9,25 +9,10 @@ on:
   pull_request:
 
 jobs:
-  Coveralls:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js 16.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: 16.x
-        registry-url: 'https://registry.npmjs.org'
-    # Skip post-install scripts here, as a malicious
-    # script could steal the NPM_TOKEN.
-    - run: npm ci --ignore-scripts
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-    # `npm rebuild` will run all those post-install scripts for us.
-    - run: npm rebuild
-    - run: npm test -- --coverage
-    - name: Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+  call_code_coverage:
+    uses: yext/slapshot-reusable-workflows/.github/workflows/coverage.yml@v1
+    with:
+      test_script: npm test -- --coverage
+    secrets:
+      caller_github_token: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
