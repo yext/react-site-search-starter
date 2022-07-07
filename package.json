@@ -1,16 +1,15 @@
 {
   "name": "@yext/react-site-search-starter",
   "version": "1.0.1",
-  "description": "The React Site Search Starter is an example repo of an Answers experience built with React and Answers Headless using Answers Headless React bindings. It is intended to be forked and modified to create a custom Answers experience",
+  "description": "an example repo of an Answers experience built with React and Answers Headless using Answers Headless React bindings. It is intended to be forked and modified to create a custom Answers experience",
   "private": true,
   "keywords": [
     "search",
-    "nlp",
-    "ai",
-    "answers",
-    "yext",
-    "react",
-    "components"
+    "React",
+    "Starter",
+    "Answers",
+    "Tailwindcss",
+    "Yext"
   ],
   "dependencies": {
     "@babel/core": "^7.14.8",
