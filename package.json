@@ -1,7 +1,16 @@
 {
   "name": "@yext/react-site-search-starter",
   "version": "1.0.1",
+  "description": "An example repo of a Search experience built with React and Search Headless using Search Headless React bindings. It is intended to be forked and modified to create a custom Search experience",
   "private": true,
+  "keywords": [
+    "search",
+    "react",
+    "starter",
+    "answers",
+    "tailwindcss",
+    "yext"
+  ],
   "dependencies": {
     "@css-modules-theme/core": "^2.3.0",
     "@react-hook/window-size": "^3.0.7",
